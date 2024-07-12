@@ -1,0 +1,15 @@
+export const emailSetSchema = {
+  editDate: 'string',
+  editUser: 'string',
+  email: 'string',
+  employeeName: 'string',
+  isExportAll: true,
+  language: 'string',
+  moduleName: 'string',
+  pageNo: 0,
+  pageSize: 0,
+  searchType: 'string',
+  sortAscOrDesc: 'string',
+  sortByColumn: 'string',
+  totalElement: 0,
+}

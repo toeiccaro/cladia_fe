@@ -1,0 +1,3 @@
+export const MutationTypes = {
+  SET_EMPLOYEE_CURRENT_PAGE: 'SET_EMPLOYEE_CURRENT_PAGE',
+}

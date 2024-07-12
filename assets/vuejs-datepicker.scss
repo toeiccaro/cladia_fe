@@ -1,0 +1,103 @@
+.vdp-datepicker__calendar {
+  width: 242px !important;
+  height: fit-content !important;
+  padding-bottom: 3px;
+
+  header {
+    min-height: 28px !important;
+    background-color: #5180d8;
+    font-weight: bold;
+    color: #ffffff;
+    display: flex !important;
+    justify-content: center;
+    margin: 4px 4px 0 4px;
+  }
+
+  .day__month_btn {
+    max-height: 28px !important;
+  }
+
+  .prev,
+  .next {
+    position: relative;
+    max-width: 23px;
+    max-height: 23px;
+    display: block;
+    margin: auto;
+    color: #ffffff;
+    z-index: 10;
+  }
+
+  .prev::before,
+  .next::before {
+    content: "";
+    position: absolute;
+    background: url("@/assets/icon/ui-icon-2.png") no-repeat;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+  }
+
+  .prev:hover,
+  .next:hover {
+    background: #fdeaa6 !important;
+  }
+
+  .prev::before {
+    background-position: -80px -192px;
+  }
+
+  .next::before {
+    background-position: -48px -192px;
+  }
+
+  .prev::after,
+  .next::after {
+    display: none !important;
+  }
+
+  .day__month_btn:hover {
+    background: #5180d8 !important;
+  }
+
+  .day__month_btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  div {
+    padding-left: 6px;
+    .cell {
+      width: 31px !important;
+      height: 23px !important;
+      display: inline-flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+      position: relative !important;
+      padding: 0 3px 0 0 !important;
+      margin: 1px;
+      text-align: right;
+      font-weight: bold;
+    }
+    .day:not(.blank) {
+      border: 1px solid #5180d8;
+      &:hover {
+        background-color: #fdeaa6;
+      }
+    }
+    .highlighted {
+      background: #fbec88 !important;
+      border: 1px solid #fad42e !important;
+    }
+    .selected {
+      background: #f5f8f9 !important;
+      border: 1px solid #79b7e7 !important;
+      color: #e17009 !important;
+      font-weight: 700 !important;
+    }
+  }
+}

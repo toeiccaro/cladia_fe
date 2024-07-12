@@ -1,0 +1,18 @@
+export const productPlanSchema = {
+  createOrderLineNO: 0,
+  createOrderNO: 'string',
+  demandQty: 0,
+  endDate: 'string',
+  itemCode: 'string',
+  leadTime: 0,
+  lineID: 0,
+  memo: 'string',
+  mrpID: 0,
+  needDays: 0,
+  needQty: 0,
+  orderNO: 'string',
+  orderType: 'string',
+  relateOrderNO: 'string',
+  startDate: 'string',
+  itemName: '',
+}

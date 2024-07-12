@@ -1,0 +1,88 @@
+export default {
+  computed: {
+    headerMockData() {
+      return [
+        {
+          fieldName: 'OrderNO',
+          fieldOrder: 1,
+          fieldWide: 120,
+          labelName: this.$t('lbl_OrderNO_0'),
+          gridName: 'ReceiveBrowse',
+          hidden: false,
+        },
+        {
+          fieldName: 'InvoiceNo',
+          fieldOrder: 1,
+          fieldWide: 120,
+          labelName: this.$t('lbl_InvoiceNo_0'),
+          gridName: 'ReceiveBrowse',
+          hidden: false,
+        },
+        {
+          fieldName: 'CustomerName',
+          fieldOrder: 1,
+          fieldWide: 200,
+          labelName: this.$t(`lbl_CustomerName_0`),
+          gridName: 'ReceiveBrowse',
+          hidden: false,
+        },
+        {
+          fieldName: 'Currency',
+          fieldOrder: 1,
+          fieldWide: 90,
+          labelName: this.$t(`lbl_Currency_0`),
+          gridName: 'ReceiveBrowse',
+          hidden: false,
+        },
+        {
+          fieldName: 'ReceiveDate',
+          fieldOrder: 1,
+          fieldWide: 90,
+          labelName: this.$t(`lbl_ReceiveBrowseDate_0`),
+          gridName: 'ReceiveBrowse',
+          hidden: false,
+        },
+        {
+          fieldName: 'Amount',
+          fieldOrder: 1,
+          fieldWide: 90,
+          labelName: this.$t(`lbl_TotalAmount_0`),
+          gridName: 'ReceiveBrowse',
+          hidden: false,
+        },
+        {
+          fieldName: 'ARAmount',
+          fieldOrder: 1,
+          fieldWide: 90,
+          labelName: this.$t('lbl_ARAmount_0'),
+          gridName: 'ReceiveBrowse',
+          hidden: false,
+        },
+        {
+          fieldName: 'BlanceAmount',
+          fieldOrder: 1,
+          fieldWide: 90,
+          labelName: this.$t('lbl_BlanceAmount_0'),
+          gridName: 'ReceiveBrowse',
+          hidden: false,
+        },
+        {
+          fieldName: 'Date',
+          fieldOrder: 1,
+          fieldWide: 90,
+          labelName: this.$t('lbl_ARDate_0'),
+          gridName: 'ReceiveBrowse',
+          hidden: false,
+        },
+        {
+          fieldName: 'IsStop',
+          fieldOrder: 1,
+          fieldWide: 90,
+          labelName: this.$t('lbl_IsStop_0'),
+          gridName: 'ReceiveBrowse',
+          hidden: false,
+        },
+      ]
+    },
+  },
+}

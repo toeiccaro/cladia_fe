@@ -1,0 +1,26 @@
+<template>
+  <div class="add-order-page">
+    <PageAddOutwardInvoice />
+  </div>
+</template>
+<script>
+import PageAddOutwardInvoice from '@/components/Outward/OutwardInvoice/PageAddOutwardInvoice.vue'
+export default {
+  components: { PageAddOutwardInvoice },
+  middleware: ['authenticated'],
+}
+</script>
+<style lang="scss" scoped>
+.add-order-page {
+  background: #fff 50% bottom repeat-x;
+  color: #222;
+  position: relative;
+  padding: 0.2em 0.2em 0;
+  zoom: 1;
+  font-family: Lucida Grande, Lucida Sans, Arial, sans-serif;
+  font-size: 1.1em;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+</style>

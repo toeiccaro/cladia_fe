@@ -1,0 +1,15 @@
+export default {
+  getHistoryMemos: (state) => state.historyMemos,
+  getHistoryTotalPages: (state) => state.historyTotalPages,
+  getDemandSupplyTotalPages: (state) => state.demandSupplyTotalPages,
+  getDemandSupplyMemos: (state) => state.demandSupplyMemos,
+  getPurchasePlanTotalPages: (state) => state.purchasePlanTotalPages,
+  getPurchasePlanMemos: (state) => state.purchasePlanMemos,
+  getGeneratedPurchaseOrder: (state) => state.generatedPurchaseOrder,
+  getProductPlanTotalPages: (state) => state.productPlanTotalPages,
+  getProductPlanMemos: (state) => state.productPlanMemos,
+  getGeneratedProductionOrder: (state) => state.generatedProductionOrder,
+  getOutwardPlanTotalPages: (state) => state.outwardPlanTotalPages,
+  getOutwardPlanMemos: (state) => state.outwardPlanMemos,
+  getGeneratedOutwardOrder: (state) => state.generatedOutwardOrder,
+}

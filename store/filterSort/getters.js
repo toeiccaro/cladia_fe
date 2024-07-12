@@ -1,0 +1,74 @@
+export default {
+  getPayloadSystemConfigSecurity: (state) => state.payloadSystemConfigSecurity,
+  getPayloadSaleReturnImport: (state) => state.payloadSaleReturnImport,
+  getPayloadSaleInvoiceImport: (state) => state.payloadSaleInvoiceImport,
+  getPayloadPurchaseReturnImport: (state) => state.payloadPurchaseReturnImport,
+  getPayloadPurchaseArrivalImport: (state) =>
+    state.payloadPurchaseArrivalImport,
+  getPayloadPurchaseOrderImport: (state) => state.payloadPurchaseOrderImport,
+  getPayloadPurchaseInvoiceImport: (state) =>
+    state.payloadPurchaseInvoiceImport,
+  getPayloadStockDetail: (state) => state.payloadStockDetail,
+  getPayloadInventoryAdjustment: (state) => state.payloadInventoryAdjustment,
+  getPayloadAttachmentBrowse: (state) => state.payloadAttachmentBrowse,
+  getPayloadExchangeRate: (state) => state.payloadExchangeRate,
+  getPayloadItemMaster: (state) => state.payloadItemMaster,
+  getPayloadSaleStatement: (state) => state.payloadSaleStatement,
+  getPayloadSaleDNBrowse: (state) => state.payloadSaleDNBrowse,
+  getPayloadSaleQuotation: (state) => state.payloadSaleQuotation,
+  getPayloadSaleOrder: (state) => state.payloadSaleOrder,
+  getPayloadSaleInvoice: (state) => state.payloadSaleInvoice,
+  getPayloadReceiveBrowse: (state) => state.payloadReceiveBrowse,
+  getPayloadPurchaseOrder: (state) => state.payloadPurchaseOrder,
+  getPayloadPurchasePrice: (state) => state.payloadPurchasePrice,
+  getPayloadPurchaseBrowse: (state) => state.payloadPurchaseBrowse,
+  getPayloadSaleReturn: (state) => state.payloadSaleReturn,
+  getPayloadSalePrice: (state) => state.payloadSalePrice,
+  getPayloadPurchaseArrival: (state) => state.payloadPurchaseArrival,
+  getPayloadPurchaseInvoice: (state) => state.payloadPurchaseInvoice,
+  getPayloadEnterprise: (state) => state.payloadEnterprise,
+  getPayloadEmployee: (state) => state.payloadEmployee,
+  getPayloadPurchaseReturn: (state) => state.payloadPurchaseReturn,
+  getPayloadSaleView: (state) => state.payloadSaleView,
+  getPayloadBom: (state) => state.payloadBom,
+  getPayloadBox: (state) => state.payloadBox,
+  getPayloadParameter: (state) => state.payloadParameter,
+  getPayloadUserManage: (state) => state.payloadUserManage,
+  getPayloadEmailSet: (state) => state.payloadEmailSet,
+  getIsDifferentRoute: (state) => state.isDifferentRoute,
+  getKeyRouter: (state) => state.keyRouter,
+  getPayloadInventoryQuery: (state) => state.payloadInventoryQuery,
+  getPayloadOutwardOrder: (state) => state.payloadOutwardOrder,
+  getPayloadOutwardReturn: (state) => state.payloadOutwardReturn,
+  getPayloadOutwardInvoice: (state) => state.payloadOutwardInvoice,
+  getPayloadOutwardInvoiceImport: (state) => state.payloadOutwardInvoiceImport,
+  getPayloadOutwardWarehousing: (state) => state.payloadOutwardWarehousing,
+  getPayloadOutwardDelivery: (state) => state.payloadOutwardDelivery,
+  getPayloadOutwardDeliveryImport: (state) =>
+    state.payloadOutwardDeliveryImport,
+  getPayloadOutwardWarehousingImport: (state) =>
+    state.payloadOutwardWarehousingImport,
+  getPayloadManufacturingProcess: (state) => state.payloadManufacturingProcess,
+  getPayloadManufacturingProcessImport: (state) =>
+    state.payloadManufacturingProcessImport,
+  getPayloadProductionOrderImport: (state) =>
+    state.payloadProductionOrderImport,
+  getPayloadProductionOrder: (state) => state.payloadProductionOrder,
+  getPayloadOutwardReturnImport: (state) => state.payloadOutwardReturnImport,
+  getPayloadMaterialDeliveryImport: (state) =>
+    state.payloadMaterialDeliveryImport,
+  getPayloadMaterialDelivery: (state) => state.payloadMaterialDelivery,
+
+  // Completion Report
+  getPayloadCompletionReport: (state) => state.payloadCompletionReport,
+  getPayloadCompletionReportImport: (state) =>
+  state.payloadCompletionReportImport,
+
+  // MRP
+  getPayloadMRPHistory: (state) => state.payloadMRPHistory,
+  getPayloadDemandSupply: (state) => state.payloadDemandSupply,
+  getPayloadPurchasePlan: (state) => state.payloadPurchasePlan,
+  getPayloadProductPlan: (state) => state.payloadProductPlan,
+  getPayloadOutwardPlan: (state) => state.payloadOutwardPlan,
+  getPayloadPurchaseRNBrowse: (state) => state.payloadPurchaseRNBrowse,
+}

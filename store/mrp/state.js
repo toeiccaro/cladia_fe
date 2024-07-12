@@ -1,0 +1,15 @@
+export default () => ({
+  historyMemos: [],
+  historyTotalPages: 0,
+  demandSupplyTotalPages: 0,
+  demandSupplyMemos: [],
+  purchasePlanTotalPages: 0,
+  purchasePlanMemos: [],
+  generatedPurchaseOrder: null,
+  productPlanTotalPages: 0,
+  productPlanMemos: [],
+  generatedProductionOrder: null,
+  outwardPlanTotalPages: 0,
+  outwardPlanMemos: [],
+  generatedOutwardOrder: null,
+})
