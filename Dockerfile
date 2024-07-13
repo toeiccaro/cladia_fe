@@ -9,6 +9,8 @@ WORKDIR ${APP_ROOT}
 COPY package.json ${APP_ROOT}
 RUN npm install
 
+RUN echo "profile + ${ACTIVE_PROFILE}"
+
 ADD . ${APP_ROOT}
 COPY ./.env.${ACTIVE_PROFILE} ${APP_ROOT}/.env
 
