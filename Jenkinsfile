@@ -2,19 +2,10 @@ pipeline {
     agent any
 
     stages {
-        stage('Build') {
-            steps {
-                sh 'npm install'
-                sh 'npm run build'
-            }
-        }
-
         stage('Deploy') {
             steps {
-                script {
-                    dockerComposeBuild()
-                    dockerComposeUp()
-                }
+                sh 'sudo docker-compose -f docker-compose.yml build'
+                sh 'sudo docker-compose -f docker-compose.yml up -d'
             }
         }
     }
