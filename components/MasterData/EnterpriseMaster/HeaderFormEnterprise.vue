@@ -102,7 +102,7 @@
           </td>
           <td class="info">&nbsp;</td>
           <td class="label">
-            <span id="COCustom1">{{ $t('lbl_COCustom1_0') }}</span>
+            <span id="COCustom1">税タイプ</span>  <!-- Name đang fix cứng và {{ $t('lbl_COCustom1_0') }} Vue I18n-->
           </td>
           <td class="input">
             <b-form-select
@@ -124,7 +124,7 @@
           </td>
           <td class="info"></td>
           <td class="label">
-            <span id="COCustom2">{{ $t('lbl_COCustom2_0') }}</span>
+            <span id="COCustom2">契約タイプ</span> <!-- Name đang fix cứng và {{ $t('lbl_COCustom2_0') }} Vue I18n-->
           </td>
           <td class="input">
             <b-form-select
@@ -205,8 +205,16 @@
             />
           </td>
           <td class="info"></td>
-          <td class="label"></td>
-          <td class="input"></td>
+          <td class="label" style="width: 4%">
+            <span id="Email">税率</span>   <!-- New-->
+          </td>
+          <td class="input">
+            <input
+              v-model="paramsEnterprise.email"
+              name="txtEmail"
+              type="text"
+            />
+          </td>
           <td class="info"></td>
         </tr>
         <tr>
@@ -219,8 +227,16 @@
             />
           </td>
           <td class="info"></td>
-          <td class="label"></td>
-          <td class="input"></td>
+           <td class="label" style="width: 4%">
+            <span id="Email">値引き率</span>   <!-- New-->
+          </td>
+          <td class="input">
+            <input
+              v-model="paramsEnterprise.email"
+              name="txtEmail"
+              type="text"
+            />
+          </td>
           <td class="info"></td>
         </tr>
         <tr>
@@ -411,7 +427,9 @@ export default {
   },
   data() {
     return {
-      paramsEnterprise: {},
+      paramsEnterprise: {
+ 
+      },
       listRelatedCompany: [],
       highlighted: {
         dates: [new Date()],
@@ -427,7 +445,6 @@ export default {
       listCOCustom1: 'getListCOCustom1',
       listCOCustom2: 'getListCOCustom2'
     }),
-
     listRelatedCompanyName() {
       const result = []
       Object.keys(this.listRelatedCompany).forEach((key) => {
@@ -444,10 +461,16 @@ export default {
     },
   },
   watch: {
+    listCOCustom1(defaultValue) {
+      if (!this.paramsEnterprise.cocustom1 && defaultValue.length) {
+        this.paramsEnterprise.cocustom1 = defaultValue[1].value
+      }
+    },
     dataFormEnterprise: {
       handler(val) {
         this.paramsEnterprise = val
       },
+      
     },
   },
   async created() {
