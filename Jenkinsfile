@@ -17,7 +17,7 @@ pipeline {
                 // Ensure the old container is removed if it exists
                 sh '''
                 CONTAINER_NAME="its-system-fe"
-                if [ $(docker ps -a -q -f name=$CONTAINER_NAME) ]; then
+                if sudo docker ps -a -q -f name=$CONTAINER_NAME; then
                     sudo docker rm -f $CONTAINER_NAME
                 fi
                 '''
