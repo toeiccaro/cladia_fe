@@ -34,7 +34,7 @@
               <td align="left">{{ convertDateTime(item.invoiceOrderDate) }}</td>
               <td align="left">{{ convertDateTime(item.deliveryDate) }}</td>
               <td align="left">{{ item.currency }}</td>
-              <td align="left">
+              <td align="right">
                 {{ makeFormatNumberWithCommas(item.amount) }}
               </td>
               <td align="left">{{ item.editUser }}</td>
