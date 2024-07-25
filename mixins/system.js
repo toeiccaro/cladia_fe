@@ -653,10 +653,11 @@ export default {
           key: 'FN1001',
           options: [
             {
-              path: '/debit-credit',
-              text: this.$t('lbl_Finance_OtherCost_0'),
+              path: '/finance/subject-setting',
+              text: this.$t('lbl_Finance_SubjectSetting_0'),
               icon: BIconCaretRight,
-              selected: this.path.includes('/debit-credit'),
+              key: 'FM010',
+              selected: this.path.includes('/finance/subject-setting'),
             },
             {
               path: '/finance/receive-browse',
@@ -673,18 +674,32 @@ export default {
               selected: this.path.includes('/pay-browse'),
             },
             {
-              path: '/profit-browse',
-              text: this.$t('lbl_Finance_Profit_0'),
+              path: '/finance/transaction-detail',
+              text: this.$t('lbl_Finance_TransactionDetail_0'),
               icon: BIconCaretRight,
-              key: 'CC040',
-              selected: this.path.includes('/profit-browse'),
+              key: 'FM040',
+              selected: this.path.includes('/finance/transaction-detail'),
             },
             {
-              path: '/actual-profit',
-              text: this.$t('lbl_ActualProfit_0'),
+              path: '/finance/accounts-receivable-annual',
+              text: this.$t('lbl_Finance_AccountsReceivableAnnual_0'),
               icon: BIconCaretRight,
-              key: 'CC050',
-              selected: this.path.includes('/actual-profit'),
+              key: 'FM060',
+              selected: this.path.includes('/finance/accounts-receivable-annual'),
+            },
+            {
+              path: '/finance/accounts-payable-annual',
+              text: this.$t('lbl_Finance_AccountsPayableAnnual_0'),
+              icon: BIconCaretRight,
+              key: 'FM070',
+              selected: this.path.includes('/finance/accounts-payable-annual'),
+            },
+            {
+              path: '/finance/bank-balance',
+              text: this.$t('lbl_Finance_BankBalance_0'),
+              icon: BIconCaretRight,
+              key: 'FM080',
+              selected: this.path.includes('/finance/bank-balance'),
             },
               // New option added here
             {
