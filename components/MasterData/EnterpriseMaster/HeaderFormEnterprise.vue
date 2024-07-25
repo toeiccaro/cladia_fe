@@ -102,7 +102,7 @@
           </td>
           <td class="info">&nbsp;</td>
           <td class="label">
-            <span id="COCustom1">税タイプ</span>  <!-- Name đang fix cứng và {{ $t('lbl_COCustom1_0') }} Vue I18n-->
+            <span id="COCustom1">{{ $t('lbl_COCustom1_0') }}</span>  
           </td>
           <td class="input">
             <b-form-select
@@ -124,7 +124,7 @@
           </td>
           <td class="info"></td>
           <td class="label">
-            <span id="COCustom2">契約タイプ</span> <!-- Name đang fix cứng và {{ $t('lbl_COCustom2_0') }} Vue I18n-->
+            <span id="COCustom2">{{ $t('lbl_COCustom2_0') }}</span> 
           </td>
           <td class="input">
             <b-form-select
@@ -228,12 +228,12 @@
           </td>
           <td class="info"></td>
            <td class="label" style="width: 4%">
-            <span id="Email">値引き率</span>   <!-- New-->
+            <span id="discountRate">値引き率</span>   <!-- New-->
           </td>
           <td class="input">
             <input
-              v-model="paramsEnterprise.email"
-              name="txtEmail"
+              v-model="paramsEnterprise.discountRate"
+              name="txtDiscountRate"
               type="text"
             />
           </td>

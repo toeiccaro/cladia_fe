@@ -181,6 +181,17 @@ export default {
           hidden: false,
         },
         {
+          key: 'discountRate',
+          name: "値引き率",   // New <span id="discountRate">値引き率</span> 
+          filter: 'input',
+          width: 150,
+          align: 'left',
+          typeInput: 'input',
+          disabled: false,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
           key: 'price',
           name: this.$t('lbl_Price_0'),
           filter: 'number',

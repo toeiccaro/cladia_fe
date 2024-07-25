@@ -308,6 +308,17 @@ export default {
           fieldRequired: true,
           hidden: false,
         },
+         {
+          key: 'discountRate',
+          name: "値引き率",   // New <span id="discountRate">値引き率</span> 
+          filter: 'input',
+          width: 150,
+          align: 'left',
+          typeInput: 'input',
+          disabled: this.isCheck,
+          fieldRequired: false,
+          hidden: false,
+        },
         {
           key: 'price',
           name: this.$t('lbl_Price_0'),
@@ -363,6 +374,7 @@ export default {
         description: '',
         unitID: '',
         quantity: 0,
+        discountRate: 0,
         price: 0,
         amount: 0,
         promiseDate: this.convertDate(new Date()),
