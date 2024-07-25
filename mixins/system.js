@@ -686,6 +686,14 @@ export default {
               key: 'CC050',
               selected: this.path.includes('/actual-profit'),
             },
+              // New option added here
+            {
+              path: '/finance/new-option',
+              text: this.$t('New Option'),
+              icon: BIconCaretRight,
+              key: 'NEW_OPTION',
+              selected: this.path.includes('/finance/new-option'),
+            },
           ],
           value: 'Finance',
         },

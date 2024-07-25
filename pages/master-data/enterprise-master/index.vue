@@ -140,8 +140,8 @@ export default {
         Address3: this.$t('lbl_Address3_0'),
         Email: this.$t('lbl_Email_0'),
         MemoryCode: this.$t('lbl_MemoryCode_0'),
-        COCustom1: "税タイプ" , //this.$t('lbl_COCustom1_0')
-        COCustom2: "契約タイプ", //this.$t('lbl_COCustom2_0')
+        COCustom1: this.$t('lbl_COCustom1_0') , 
+        COCustom2: this.$t('lbl_COCustom2_0'), 
         BTransDate: this.$t('lbl_BTransDate_0'),
         ETransDate: this.$t('lbl_ETransDate_0'),
         Fax: this.$t('lbl_Fax_0'),

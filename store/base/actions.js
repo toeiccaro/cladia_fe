@@ -112,7 +112,6 @@ export default {
   },
   async getCompanyTypeOptions({ commit }, language) {
     const listOptions = await getParameterOptionsCommon('CompanyType', language)
-    console.log(4324343241,listOptions);
     commit('SET_COMAPNY_TYPE_OPTIONS', listOptions)
   },
   async getApparelOptions({ commit }, language) {
@@ -195,13 +194,11 @@ export default {
     commit('SET_LIST_BOX12', listOptions)
   },
   async getListCOCustom1OptionFromAPI({ commit }, language) {
-    // const listOptions = await getParameterOptionsCommon('COCustom1', language)
-    const listOptions = await getMockParameterOptionsCommonCustom1('COCustom1', language)
+    const listOptions = await getParameterOptionsCommon('COCustom1', language)
     commit('SET_LIST_CO_CUSTOM1', listOptions)
   },
   async getListCOCustom2OptionFromAPI({ commit }, language) {
-    // const listOptions = await getParameterOptionsCommon('COCustom2', language)
-    const listOptions = await getMockParameterOptionsCommonCustom2('COCustom2', language)
+    const listOptions = await getParameterOptionsCommon('COCustom2', language)
     commit('SET_LIST_CO_CUSTOM2', listOptions)
   },
   async getProcessStatus({ commit }, language) {
@@ -244,33 +241,4 @@ export default {
       console.log(err)
     }
   },
-}
-
-
-// Mock function
-async function getMockParameterOptionsCommonCustom1(type, language) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const options = [
-        { text: "", value: "" },
-        { text: "非保税", value: "0" },
-        { text: "保税", value: "1" },
-      ];
-      resolve(options);
-    }, 1000);
-  });
-}
-
-async function getMockParameterOptionsCommonCustom2(type, language) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const options = [
-        { text: "", value: "0" },
-        { text: "契約顧客", value: "1" },
-        { text: "非契約顧客", value: "2" },
-        { text: "潜在顧客", value: "3" },
-      ];
-      resolve(options);
-    }, 1000);
-  });
 }
