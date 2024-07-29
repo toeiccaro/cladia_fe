@@ -59,6 +59,7 @@
               :items="finalListCustomerNames"
               :initial-text="newInvoiceData.companyName"
               :initial-value="newInvoiceData.customerId"
+              @change-selected-item="changeSelectedItem" 
             />
           </td>
           <td class="info">*</td>
@@ -331,6 +332,7 @@ export default {
         text: item.companyName,
         value: item.id,
         appendText: `(${item.companyCode})`,
+        payPeriod: item.payPeriod,
       }))
     },
   },
@@ -374,6 +376,12 @@ export default {
       const response = await api('getEnterpriseCustomerNames')
       this.listCustomers = response.data
     },
+
+    changeSelectedItem(item) {
+      const date = new Date();
+      date.setDate(item.payPeriod)
+      this.newInvoiceData.payDate = this.convertDate(date)
+    }
   },
 }
 </script>

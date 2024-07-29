@@ -145,6 +145,7 @@ export default {
         if (this.flagChooseByOption) {
           this.flagChooseByOption = false
         }
+        this.$emit('change-selected-item', value)
       },
     },
     'selectedItem.text': {
