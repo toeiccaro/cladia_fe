@@ -313,6 +313,46 @@ export default {
           fieldRequired: false,
           hidden: false,
         },
+        {
+          key: 'SOPriceIncludeTax',
+          name: this.$t('lbl_SOPriceIncludeTax_0'),
+          filter: 'input',
+          width: 150,
+          align: 'left',
+          disabled: this.isCheck,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
+          key: 'SOAmountIncludeTax',
+          name: this.$t('lbl_SOAmountIncludeTax_0'),
+          filter: 'input',
+          width: 150,
+          align: 'left',
+          disabled: this.isCheck,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
+          key: 'SODiscountRate',
+          name: this.$t('lbl_SODiscountRate_0'),
+          filter: 'input',
+          width: 150,
+          align: 'left',
+          disabled: this.isCheck,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
+          key: 'SOPriceIncludeDiscount',
+          name: this.$t('lbl_SOPriceIncludeDiscount_0'),
+          filter: 'input',
+          width: 150,
+          align: 'left',
+          disabled: this.isCheck,
+          fieldRequired: false,
+          hidden: false,
+        },
       ]
     },
     listToolBars() {
@@ -439,6 +479,7 @@ export default {
           'getScolumnHideDetail',
           DETAIL_ITEM_TABLE.PURCHASE_ORDER_DETAIL
         )
+
         this.columnHides = response?.data
         this.loading = false
       } catch (error) {

@@ -293,6 +293,46 @@ export default {
           fieldRequired: false,
           hidden: false,
         },
+        {
+          key: 'SOPriceIncludeTax',
+          name: this.$t('lbl_SOPriceIncludeTax_0'),
+          filter: 'input',
+          width: 150,
+          align: 'left',
+          disabled: this.isCheck,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
+          key: 'SOAmountIncludeTax',
+          name: this.$t('lbl_SOAmountIncludeTax_0'),
+          filter: 'input',
+          width: 150,
+          align: 'left',
+          disabled: this.isCheck,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
+          key: 'SODiscountRate',
+          name: this.$t('lbl_SODiscountRate_0'),
+          filter: 'input',
+          width: 150,
+          align: 'left',
+          disabled: this.isCheck,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
+          key: 'SOPriceIncludeDiscount',
+          name: this.$t('lbl_SOPriceIncludeDiscount_0'),
+          filter: 'input',
+          width: 150,
+          align: 'left',
+          disabled: this.isCheck,
+          fieldRequired: false,
+          hidden: false,
+        },
       ]
     },
 
@@ -434,6 +474,7 @@ export default {
     async getData() {
       try {
         const res = await api('getOrderById', this.$route.query?.sono)
+        console.log('res', this.form);
         if (res.status === 200) {
           this.form = res.data._1
           this.form.orderDate = this.convertDate(this.form.orderDate)
@@ -444,6 +485,7 @@ export default {
           this.dataDetail = JSON.parse(JSON.stringify(this.form))
           this.joinAttachmentString(compact(this.dataDetail.attachments))
 
+          console.log('this.dataTable', this.dataTable);
           this.dataTable = res?.data._2.map((item, index) => {
             item.promiseDate = this.convertDate(item.promiseDate)
             item.lineID = index + 1
