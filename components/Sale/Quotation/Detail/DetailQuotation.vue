@@ -661,6 +661,7 @@ export default {
                 responsibleMan: payload.responsibleMan,
                 taxRate: this.parseStringToFloat(payload.taxRate),
                 totalAmount: this.parseStringToFloat(payload.totalAmount),
+                discountRate: this.parseStringToFloat(payload.discountRate),
               },
               quotationDTLRequest: selectedItems.map((item) => {
                 return {
@@ -709,6 +710,7 @@ export default {
               paymentId: payload.paymentId,
               responsibleMan: payload.responsibleMan,
               taxRate: this.parseStringToFloat(payload.taxRate),
+              discountRate: this.parseStringToFloat(payload.discountRate),
             },
             fsoQuotationDTL: selectedItems.map((item) => {
               return {
@@ -768,6 +770,7 @@ export default {
           this.form.editDate = this.convertDate(this.form.editDate)
           this.form.checkDate = this.convertDate(this.form.checkDate)
           this.form.taxRate = formatNumberWithCommas(this.form.taxRate)
+          this.form.discountRate = formatNumberWithCommas(this.form.discountRate)
           this.dataAttach = JSON.parse(JSON.stringify(this.form))
           this.joinAttachmentString(this.form.attachments)
         }

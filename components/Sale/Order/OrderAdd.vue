@@ -149,6 +149,7 @@ export default {
         orderNumber: '',
         attachments: [],
         customerId: null,
+        discountRate: 0,
       },
       form: {},
       dataTable: [
@@ -306,17 +307,6 @@ export default {
           align: 'right',
           disabled: this.isCheck,
           fieldRequired: true,
-          hidden: false,
-        },
-         {
-          key: 'discountRate',
-          name: "値引き率",   // New <span id="discountRate">値引き率</span> 
-          filter: 'input',
-          width: 150,
-          align: 'left',
-          typeInput: 'input',
-          disabled: this.isCheck,
-          fieldRequired: false,
           hidden: false,
         },
         {
@@ -598,7 +588,7 @@ export default {
           respondsibleMan: payload.responsibleMan,
           saler: payload.saler,
           taxRate: payload.taxRate,
-          discountRate: '10',
+          discountRate: payload.discountRate,
           salesOrderDtlRequestList: dataTableFilter.map((item) => {
             return {
               customerPO: item.customerPO,

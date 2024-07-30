@@ -70,6 +70,7 @@ export default {
         orderDate: this.convertDate(new Date()),
         taxRate: 0,
         totalAmount: 0,
+        discountRate: 0
       },
       loading: false,
       dataTable: [],
@@ -178,17 +179,6 @@ export default {
           align: 'right',
           typeInput: 'number',
           fieldRequired: true,
-          hidden: false,
-        },
-        {
-          key: 'discountRate',
-          name: "値引き率",   // New <span id="discountRate">値引き率</span> 
-          filter: 'input',
-          width: 150,
-          align: 'left',
-          typeInput: 'input',
-          disabled: false,
-          fieldRequired: false,
           hidden: false,
         },
         {
@@ -442,6 +432,7 @@ export default {
               paymentId: payload.paymentId,
               responsibleMan: payload.responsibleMan,
               taxRate: this.parseStringToFloat(payload.taxRate),
+              discountRate: this.parseStringToFloat(payload.discountRate),
             },
             fsoQuotationDTL: selectedItems.map((item) => {
               return {

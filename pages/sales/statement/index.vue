@@ -125,6 +125,11 @@ export default {
         Memo: this.$t('lbl_Memo_0'),
         DeliveryDate: this.$t('lbl_DeliveryDate_0'),
         PayDate: this.$t('lbl_PayDate_0'),
+        //mock
+        SOPriceIncludeTax: this.$t('lbl_SOPriceIncludeTax_0'),
+        SOAmountIncludeTax: this.$t('lbl_SOAmountIncludeTax_0'),
+        SODiscountRate: this.$t('lbl_SODiscountRate_0'),
+        SOPriceIncludeDiscount: this.$t('lbl_SOPriceIncludeDiscount_0'),
       }
     },
   },

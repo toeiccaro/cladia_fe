@@ -193,9 +193,22 @@
 
         <tr class="tr-6">
           <td class="label">
+            <span>{{ $t('lbl_QDiscountRate_0') }}</span>
+          </td>
+          <td class="input">
+            <input
+              v-model="form.discountRate"
+              disabled
+              type="text"
+              class="number"
+            />
+          </td>
+          
+          <td class="info"></td>
+          <td class="label">
             <span id="Memo">{{ $t('lbl_Memo_0') }}</span>
           </td>
-          <td rows="1" colspan="4" class="input">
+          <td rows="1" class="input">
             <input
               v-model="form.memo"
               name="Memo"
