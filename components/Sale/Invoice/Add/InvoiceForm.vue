@@ -379,8 +379,19 @@ export default {
 
     changeSelectedItem(item) {
       const date = new Date();
-      date.setDate(item.payPeriod)
-      this.newInvoiceData.payDate = this.convertDate(date)
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+
+      if(item.payPeriod){
+        const lastDayOfMonth = new Date(year, month, 0).getDate();
+        if (item.payPeriod > lastDayOfMonth) {
+          item.payPeriod = lastDayOfMonth;
+        }
+
+        date.setDate(item.payPeriod);
+      } 
+      
+      this.newInvoiceData.payDate = this.convertDate(date);
     }
   },
 }

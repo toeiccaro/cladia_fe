@@ -598,6 +598,7 @@ export default {
           respondsibleMan: payload.responsibleMan,
           saler: payload.saler,
           taxRate: payload.taxRate,
+          discountRate: '10',
           salesOrderDtlRequestList: dataTableFilter.map((item) => {
             return {
               customerPO: item.customerPO,

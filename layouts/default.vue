@@ -12,7 +12,7 @@
           class="main-frame-right px-1 h-100"
           :style="{
             width: is_expand_sidebar
-              ? `calc(100% - 180px)`
+              ? `calc(100% - 215px)`
               : `calc(100% - 20px)`,
           }"
         >

@@ -810,6 +810,7 @@ export default {
           saler: payload.saler,
           sono: payload.orderNumber,
           taxRate: this.parseStringToFloat(payload.taxRate),
+          discountRate: '10',
           salesOrderDtlRequestList: dataTableFilter.map((item) => {
             return {
               customerPO: item.customerPO,

@@ -124,7 +124,7 @@ export default {
       }
 
       if (this.getStatusExpandSideBar) {
-        return 'calc(100% - 180px)'
+        return 'calc(100% - 215px)'
       }
 
       return 'calc(100% - 20px)'
