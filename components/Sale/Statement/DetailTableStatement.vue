@@ -7,41 +7,42 @@
             <th class="th-0"></th>
             <th
               v-for="(item, index) in headers"
+              align="center"
               :key="index"
-              align="left"
               scope="col"
               :class="`th-${index}`"
+              style="text-align: center;"
             >
               {{ item }}
             </th>
           </tr>
           <template v-if="dataImport.length === 0">
             <tr class="hover">
-              <td align="left" colspan="10" style="height: 100px">
+              <td align="center" colspan="10" style="height: 100px">
                 {{ $t('msg_InputDetails_0') }}
               </td>
             </tr>
           </template>
           <template v-else>
             <tr v-for="(item, index) in dataImport" :key="index" class="hover">
-              <td align="left" class="delete">
+              <td align="center" class="delete">
                 <span @click="handleDelete(item.lineID)">x</span>
               </td>
-              <td align="left" class="th-0">
+              <td align="center" class="th-0">
                 {{ index + 1 }}
               </td>
-              <td align="left">{{ item.orderNo }}</td>
-              <td align="left">{{ convertDateTime(item.invoiceOrderDate) }}</td>
-              <td align="left">{{ convertDateTime(item.deliveryDate) }}</td>
-              <td align="left">{{ item.currency }}</td>
+              <td align="center">{{ item.orderNo }}</td>
+              <td align="center">{{ convertDateTime(item.invoiceOrderDate) }}</td>
+              <td align="center">{{ convertDateTime(item.deliveryDate) }}</td>
+              <td align="center">{{ item.currency }}</td>
               <td align="right">
                 {{ makeFormatNumberWithCommas(item.amount) }}
               </td>
-              <td align="left">{{ item.editUser }}</td>
-              <td align="left">
+              <td align="center">{{ item.editUser }}</td>
+              <td align="center">
                 {{ convertDateTime(item.editDate) }}
               </td>
-              <td align="left">{{ item.orderMemo }}</td>
+              <td align="center">{{ item.orderMemo }}</td>
             </tr>
           </template>
         </tbody>

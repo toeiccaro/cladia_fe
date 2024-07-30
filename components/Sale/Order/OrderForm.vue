@@ -198,9 +198,9 @@
           <td class="input">
             <input
               v-model="form.discountRate"
-              disabled
               type="text"
               class="number"
+              oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
             />
           </td>
           
@@ -329,6 +329,8 @@ export default {
         text: item.companyName,
         value: item.id,
         appendText: `(${item.companyCode})`,
+        taxRate: item.taxRate,
+        discountRate: item.discountRate,
       }))
     },
   },
@@ -364,6 +366,9 @@ export default {
     },
 
     changeCustomer(select) {
+      this.form.taxRate = select?.taxRate
+      this.form.discountRate = select?.discountRate
+      
       this.form.customerId = select?.value
       const result = this.listAllCustomerName.find(
         (item) => item.id === select?.value

@@ -131,6 +131,7 @@ export default {
       defaultForm: {
         orderDate: this.convertDate(new Date()),
         taxRate: 0,
+        discountRate: 0,
         totalAmount: 0,
         detail: [],
       },
