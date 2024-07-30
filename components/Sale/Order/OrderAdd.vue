@@ -598,6 +598,7 @@ export default {
           respondsibleMan: payload.responsibleMan,
           saler: payload.saler,
           taxRate: payload.taxRate,
+          discountRate: '10',
           salesOrderDtlRequestList: dataTableFilter.map((item) => {
             return {
               customerPO: item.customerPO,
@@ -607,6 +608,7 @@ export default {
               price: this.parseStringToFloat(item.price),
               promiseDate: item.promiseDate,
               quantity: this.parseStringToFloat(item.quantity),
+              discountRate: '10'
             }
           }),
         }

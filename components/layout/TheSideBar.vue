@@ -426,7 +426,7 @@ export default {
   cursor: e-resize;
 }
 .side-bar-left {
-  width: 180px;
+  width: 215px;
   height: 100%;
   transition: all 0.3s linear;
 }
