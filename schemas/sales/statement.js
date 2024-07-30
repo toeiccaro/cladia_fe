@@ -20,4 +20,8 @@ export const statementSchema = {
   statementDate: 'string',
   statementNo: 'string',
   year: 'string',
+  SOPriceIncludeTax: 'string',
+  SOAmountIncludeTax: 'string',
+  SODiscountRate: 'string',
+  SOPriceIncludeDiscount: 'string'
 }
