@@ -465,7 +465,7 @@ export default {
   watch: {
     listCOCustom1(defaultValue) {
       if (!this.paramsEnterprise.cocustom1 && defaultValue.length) {
-        this.paramsEnterprise.cocustom1 = defaultValue[1].value
+        this.paramsEnterprise.cocustom1 = defaultValue[2].value
       }
     },
     dataFormEnterprise: {
