@@ -129,8 +129,9 @@
           <td class="label">
             <span id="Memo">{{ $t('lbl_Memo_0') }}</span>
           </td>
-          <td class="input" colspan="4">
+          <td class="input" >
             <input
+              colspan="4"
               v-model="form.memo"
               name="Memo"
               type="text"
@@ -143,6 +144,19 @@
           </td>
           <td class="input">
             <input v-model="totalAmount" disabled type="text" class="number" />
+          </td>
+          <td class="info"></td>
+          <td class="label">
+            <span>{{ $t('lbl_QDiscountRate_0') }}</span>
+          </td>
+          <td class="input">
+            <input 
+              v-model="form.discountRate"
+              type="text"
+              class="number"
+              oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
+              :disabled="isDisabled"
+            />
           </td>
           <td class="info"></td>
         </tr>
@@ -274,6 +288,8 @@ export default {
         text: item.companyName,
         value: item.id,
         appendText: `(${item.companyCode})`,
+        discountRate: item?.discountRate,
+        taxRate: item?.taxRate,
       }))
     },
     totalAmount() {
@@ -309,6 +325,12 @@ export default {
       }
     },
     changeSupplierName(select) {
+      if(select?.taxRate > 0)
+        this.form.taxRate = select?.taxRate
+
+      if(select?.discountRate > 0)
+        this.form.discountRate = select?.discountRate
+      
       this.form.supplierID = select?.value
       const result = this.listSupplierName.find(
         (item) => item.id === select?.value
