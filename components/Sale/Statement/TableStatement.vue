@@ -150,6 +150,12 @@ export default {
           keyRow: item.statementNo,
         }
         this.listDataShow.forEach((headerItem, headerIndex) => {
+          //mock
+          item.SOPriceIncludeTax = 0
+          item.SOAmountIncludeTax = 0
+          item.SODiscountRate = 0
+          item.SOPriceIncludeDiscount = 0
+
           const mappingFieldName = this.mappingProperty(
             item,
             headerItem.fieldName

@@ -206,13 +206,14 @@
           </td>
           <td class="info"></td>
           <td class="label" style="width: 4%">
-            <span id="Email">税率</span>   <!-- New-->
+            <span id="TaxRate">{{ $t('lbl_TaxRate_0') }}</span>
           </td>
           <td class="input">
             <input
-              v-model="paramsEnterprise.email"
-              name="txtEmail"
+              v-model="paramsEnterprise.taxRate"
+              name="txtTaxRate"
               type="text"
+              class="number"
             />
           </td>
           <td class="info"></td>
@@ -228,13 +229,14 @@
           </td>
           <td class="info"></td>
            <td class="label" style="width: 4%">
-            <span id="discountRate">値引き率</span>   <!-- New-->
+            <span id="discountRate">{{ $t('lbl_QDiscountRate_0') }}</span>
           </td>
           <td class="input">
             <input
               v-model="paramsEnterprise.discountRate"
               name="txtDiscountRate"
               type="text"
+              class="number"
             />
           </td>
           <td class="info"></td>

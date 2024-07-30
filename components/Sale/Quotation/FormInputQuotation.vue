@@ -224,16 +224,17 @@
           <td class="info"></td>
 
           <td class="label">
-            <span id="TotalAmount">{{ $t('lbl_TotalAmount_0') }}</span>
+            <span id="discountRate">{{ $t('lbl_QDiscountRate_0') }}</span>
           </td>
           <td class="input">
             <input
-              v-model="form.totalAmount"
+              v-model="form.discountRate"
               disabled
               type="text"
               class="number"
             />
           </td>
+          
           <td class="info"></td>
         </tr>
 
@@ -247,6 +248,19 @@
               disabled
               name="Attachments"
               type="text"
+            />
+          </td>
+          <td class="info"></td>
+
+          <td class="label">
+            <span id="TotalAmount">{{ $t('lbl_TotalAmount_0') }}</span>
+          </td>
+          <td class="input">
+            <input
+              v-model="form.totalAmount"
+              disabled
+              type="text"
+              class="number"
             />
           </td>
         </tr>
