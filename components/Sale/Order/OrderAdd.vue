@@ -608,7 +608,6 @@ export default {
               price: this.parseStringToFloat(item.price),
               promiseDate: item.promiseDate,
               quantity: this.parseStringToFloat(item.quantity),
-              discountRate: '10'
             }
           }),
         }
