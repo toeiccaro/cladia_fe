@@ -46,17 +46,17 @@
   </div>
 </template>
 <script>
-import { mapMutations, mapGetters } from 'vuex'
-import systemMixins from '@/mixins/system'
-import dateTimeMixins from '@/mixins/dateTime'
-import { SERVER_RESPONSE_CODE } from '@/constants'
-import api from '@/api/api'
-import BasePagination from '~/components/UI/BasePagination'
-import BaseTableDraggable from '~/components/MasterData/Parameter/BaseTableDraggable'
-import BaseTableLoader from '~/components/loaders/BaseTableLoader'
+import { mapMutations, mapGetters } from "vuex";
+import systemMixins from "@/mixins/system";
+import dateTimeMixins from "@/mixins/dateTime";
+import { SERVER_RESPONSE_CODE } from "@/constants";
+import api from "@/api/api";
+import BasePagination from "~/components/UI/BasePagination";
+import BaseTableDraggable from "~/components/MasterData/Parameter/BaseTableDraggable";
+import BaseTableLoader from "~/components/loaders/BaseTableLoader";
 
 export default {
-  name: 'TableParameter',
+  name: "TableParameter",
   components: { BaseTableDraggable, BasePagination, BaseTableLoader },
   mixins: [systemMixins, dateTimeMixins],
   data() {
@@ -68,60 +68,60 @@ export default {
       total: 0,
       currentPage: 1,
       perPage: 30,
-      sortKey: '',
+      sortKey: "",
       isAscending: false,
       isLoadingTable: false,
       parameterTypeDataTable: [],
       parameterTypeDataHeader: [
         {
-          key: 'name',
-          name: '',
+          key: "name",
+          name: "",
           width: 155,
         },
       ],
       lang: this.$i18n.locale,
-      parameterType: '',
-      chosenParameter: '',
-    }
+      parameterType: "",
+      chosenParameter: "",
+    };
   },
   async fetch() {
     try {
-      this.loading = true
+      this.loading = true;
       this.UPDATE_PAYLOAD_PARAMETER({
         language: this.lang,
-      })
-      await this.getData()
+      });
+      await this.getData();
     } catch (err) {
-      console.error(err)
+      console.error(err);
     } finally {
-      this.loading = false
+      this.loading = false;
     }
   },
   computed: {
     ...mapGetters({
-      payloadParameter: 'filterSort/getPayloadParameter',
+      payloadParameter: "filterSort/getPayloadParameter",
     }),
+
     parameterTypeHeaderMapping() {
       const header = [
         {
-          key: 'index',
-          name: '',
+          key: "index",
+          name: "",
           width: 30,
         },
-      ]
+      ];
 
       this.parameterTypeDataHeader.forEach((item, index) => {
         const headerItem = {
           key: item.key,
-          filter: 'input',
+          filter: "input",
           width: item.width,
           fieldName: item.name,
           fieldOrder: index,
-        }
-
-        header.push(headerItem)
-      })
-      return header
+        };
+        header.push(headerItem);
+      });
+      return header;
     },
 
     parameterTypeDataTableMapping() {
@@ -129,96 +129,127 @@ export default {
         const obj = {
           index: {
             value: this.perPage * (this.currentPage - 1) + index + 1,
-            align: 'center',
-            type: 'index',
+            align: "center",
+            type: "index",
           },
           keyRow: item.receiptNO,
-        }
+        };
         this.parameterTypeDataHeader.forEach((headerItem, headerIndex) => {
-          const mappingFieldName = this.mappingProperty(item, headerItem.key)
+          const mappingFieldName = this.mappingProperty(item, headerItem.key);
           obj[mappingFieldName] = {
             value: this.$t(item[mappingFieldName]),
             keyName: item[mappingFieldName],
-          }
-        })
-        return obj
-      })
-      return data
+          };
+        });
+        return obj;
+      });
+      return data;
     },
 
     dataTableMapping() {
+      const hasCodeField = this.shouldShowCodeField();
       const data = this.dataTable.map((item, index) => {
         const obj = {
           index: {
             value: this.perPage * (this.currentPage - 1) + index + 1,
-            align: 'center',
-            type: 'index',
+            align: "center",
+            type: "index",
           },
           parameterDetailId: item.parameterDetailId,
           parameterTypeId: item.parameterTypeId,
           isUpdate: item.isUpdate,
           isNew: item.isNew,
-        }
+        };
         this.scolumnHides.forEach((headerItem, headerIndex) => {
-          const fieldKey = headerItem.fieldName
+          const fieldKey = headerItem.fieldName;
 
           obj[fieldKey] = {
             value: item[fieldKey],
+          };
+          if (hasCodeField) {
+            obj["code"] = {
+              value: item.code,
+            };
           }
-        })
-        return obj
-      })
-      return data
+        });
+        return obj;
+      });
+      return data;
     },
+
     getMappingHeader() {
+      const hasCodeField = this.shouldShowCodeField();
       const result = [
         {
-          key: 'index',
-          name: '',
+          key: "index",
+          name: "",
           width: 40,
         },
-      ]
+      ];
+      if (hasCodeField) {
+        result.push({
+          key: "code",
+          name: "Code",
+          width: 100,
+          filter: "input",
+          fieldOrder: 0,
+          fieldName: "Code",
+        });
+      }
 
       this.dataHeader.forEach((item, index) => {
         const headerItem = {
           key: item.languageName,
-          filter: 'input',
+          filter: "input",
           name: this.$t(item.displayName),
           width: 150,
           fieldName: item.languageName,
           fieldOrder: index,
-        }
+        };
 
-        result.push(headerItem)
-      })
-      return result
+        result.push(headerItem);
+      });
+      return result;
     },
+
     getMappingHeaderScolumnHides() {
+      const hasCodeField = this.shouldShowCodeField();
       const result = [
         {
-          key: 'index',
-          name: '',
+          key: "index",
+          name: "",
           width: 40,
         },
-      ]
+      ];
+      if (hasCodeField) {
+        result.push({
+          key: "code",
+          name: "Code",
+          width: 100,
+          filter: "input",
+          fieldOrder: 0,
+          fieldName: "Code",
+        });
+      }
       this.scolumnHides.forEach((item, index) => {
         const headerItem = {
           key: item.fieldName,
-          filter: 'input',
+          filter: "input",
           name: this.$t(`lan_${item.fieldName}_0`),
           width: 150,
           fieldName: item.fieldName,
           fieldOrder: index,
-        }
+        };
 
-        result.push(headerItem)
-      })
-      return result
+        result.push(headerItem);
+      });
+      return result;
     },
+
     headerMapping() {
       return this.scolumnHides?.length > 0
         ? this.getMappingHeaderScolumnHides
-        : this.getMappingHeader
+        : this.getMappingHeader;
     },
   },
   created() {
@@ -226,185 +257,205 @@ export default {
       language: this.lang,
       pageNo: 1,
       pageSize: 30,
-    }
+    };
 
-    this.SET_PAYLOAD_PARAMETER(payload)
+    this.SET_PAYLOAD_PARAMETER(payload);
   },
   methods: {
     ...mapMutations({
-      UPDATE_PAYLOAD_PARAMETER: 'filterSort/UPDATE_PAYLOAD_PARAMETER',
-      SET_PAYLOAD_PARAMETER: 'filterSort/SET_PAYLOAD_PARAMETER',
+      UPDATE_PAYLOAD_PARAMETER: "filterSort/UPDATE_PAYLOAD_PARAMETER",
+      SET_PAYLOAD_PARAMETER: "filterSort/SET_PAYLOAD_PARAMETER",
     }),
+
     handleSelectRow(data) {
-      this.$emit('handleSelectRow', data)
+      this.$emit("handleSelectRow", data);
     },
+
     handleChooseParameterType(data) {
-      this.chosenParameter = data
-      this.$emit('resetChosenRowIndex')
+      this.chosenParameter = data;
+      this.$emit("resetChosenRowIndex");
       this.SET_PAYLOAD_PARAMETER({
         pageSize: 30,
         pageNo: 1,
-      })
-      this.resetFiltersTable()
-      this.fetchLanguageData()
+      });
+      this.resetFiltersTable();
+      this.fetchLanguageData();
     },
 
     async fetchLanguageData() {
       try {
-        this.loading = true
-        this.$refs.tableParameterDetail.activeRow = null
-        this.parameterType = this.chosenParameter?.item?.name?.keyName
+        this.loading = true;
+        this.$refs.tableParameterDetail.activeRow = null;
+        this.parameterType = this.chosenParameter?.item?.name?.keyName;
         const payload = {
           ...this.payloadParameter,
           language: this.lang,
           keyCode: this.parameterType,
-        }
+        };
 
-        const res = await api('getParameterLanguage', payload)
-        const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK
+        const res = await api("getParameterLanguage", payload);
+        const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK;
         if (validResponse) {
-          this.dataTable = res.data?.tableContent?.content
-          this.scolumnHides = res.data?.scolumnHides
-          this.total = res.data.tableContent?.totalElements
+          // this.dataTable = res.data?.tableContent?.content
+          this.dataTable = res.data?.tableContent?.content.map(
+            (item, index) => ({
+              ...item,
+              ...(this.shouldShowCodeField()
+                ? { code: `B00${index + 1}` }
+                : {}),
+            })
+          );
+          this.scolumnHides = res.data?.scolumnHides;
+          this.total = res.data.tableContent?.totalElements;
         }
 
-        this.$emit('resetData')
+        this.$emit("resetData");
       } catch (err) {
-        console.error(err)
+        console.error(err);
       } finally {
-        this.loading = false
+        this.loading = false;
       }
     },
 
     changePerPage(value) {
-      this.perPage = Number(value)
-      this.currentPage = 1
+      this.perPage = Number(value);
+      this.currentPage = 1;
       this.SET_PAYLOAD_PARAMETER({
         pageSize: this.perPage,
         pageNo: this.currentPage,
-      })
+      });
 
-      this.fetchLanguageData()
+      this.fetchLanguageData();
     },
+
     setCurrentPage(value) {
-      this.currentPage = Number(value)
+      this.currentPage = Number(value);
       this.SET_PAYLOAD_PARAMETER({
         pageNo: this.currentPage,
-      })
-      this.fetchLanguageData()
+      });
+      this.fetchLanguageData();
     },
 
     async getData() {
       try {
-        this.isLoadingTable = true
+        this.isLoadingTable = true;
         const [languageResponse, paramTypeResponse] = await Promise.all([
-          api('getLanguage'),
-          api('getParameterKeyCodeName'),
-        ])
+          api("getLanguage"),
+          api("getParameterKeyCodeName"),
+        ]);
 
         if (languageResponse.length) {
-          this.dataHeader = languageResponse
+          this.dataHeader = languageResponse;
         }
 
         const validParamTypeResponse =
           paramTypeResponse &&
-          paramTypeResponse.status === SERVER_RESPONSE_CODE.OK
+          paramTypeResponse.status === SERVER_RESPONSE_CODE.OK;
 
         if (validParamTypeResponse) {
-          const data = paramTypeResponse.data || []
+          const data = paramTypeResponse.data || [];
           this.parameterTypeDataTable = data.map((item) => ({
             name: item,
-          }))
+          }));
         }
       } catch (err) {
-        console.error(err)
+        console.error(err);
       } finally {
-        this.isLoadingTable = false
+        this.isLoadingTable = false;
       }
     },
+
     async filterAndSort({ sortParams, filterParams }, type) {
       try {
-        this.sortKey = sortParams.sortKey
-        this.isAscending = !sortParams.isAscending
+        this.sortKey = sortParams.sortKey;
+        this.isAscending = !sortParams.isAscending;
 
-        const finalFilterParams = {}
+        const finalFilterParams = {};
 
-        const ACTION_FILTER = 'filter'
+        const ACTION_FILTER = "filter";
         if (type === ACTION_FILTER) {
-          this.currentPage = 1
+          this.currentPage = 1;
         }
 
         const finalPayloadParams = {
           pageNo: this.currentPage,
           pageSize: this.perPage,
           sortByColumn: this.sortKey,
-          sortAscOrDesc: this.isAscending ? 'ASC' : 'DESC',
+          sortAscOrDesc: this.isAscending ? "ASC" : "DESC",
           language: this.lang,
           keyCode: this.parameterType,
-        }
+        };
 
         for (const property in filterParams) {
           if (filterParams[property]) {
-            finalFilterParams[property] = filterParams[property]
+            finalFilterParams[property] = filterParams[property];
           }
         }
 
-        this.loading = true
+        this.loading = true;
 
         const finalApiPayload = Object.assign(
           {},
           finalFilterParams,
           finalPayloadParams
-        )
+        );
 
-        this.SET_PAYLOAD_PARAMETER(finalApiPayload)
-        const res = await api('getParameterLanguage', this.payloadParameter)
+        this.SET_PAYLOAD_PARAMETER(finalApiPayload);
+        const res = await api("getParameterLanguage", this.payloadParameter);
 
-        this.loading = false
-        const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK
+        this.loading = false;
+        const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK;
         if (validResponse) {
-          this.dataTable = res.data.tableContent?.content || []
-          this.total = res.data.tableContent?.totalElements
+          this.dataTable = res.data.tableContent?.content || [];
+          this.total = res.data.tableContent?.totalElements;
         }
       } catch (err) {
-        window.alert(err?.data?.response?.data?.message)
+        window.alert(err?.data?.response?.data?.message);
       }
     },
+
     mappingProperty(item, fieldName) {
       for (const property in item) {
         if (property.toLowerCase() === fieldName.toLowerCase()) {
-          return property
+          return property;
         }
       }
-      return ''
+      return "";
     },
+
     saveData() {
-      this.$emit('saveData')
+      this.$emit("saveData");
     },
+
     async searchKeyCodeName({ sortParams, filterParams }) {
-      const { name } = filterParams
-      const language = this.$i18n.locale
-      const res = await api('searchKeyCodeName', {
+      const { name } = filterParams;
+      const language = this.$i18n.locale;
+      const res = await api("searchKeyCodeName", {
         searchValue: name,
         language,
-      })
-      const { status, data } = res
+      });
+      const { status, data } = res;
       if (status === SERVER_RESPONSE_CODE.OK) {
         this.parameterTypeDataTable = data.map((item) => ({
           name: item,
-        }))
-        this.dataTable = []
+        }));
+        this.dataTable = [];
       }
     },
+
     resetFiltersTable() {
-      this.sortKey = ''
-      this.isAscending = false
+      this.sortKey = "";
+      this.isAscending = false;
       for (const filter in this.$refs.tableParameterDetail.filters) {
-        this.$refs.tableParameterDetail.filters[filter] = ''
+        this.$refs.tableParameterDetail.filters[filter] = "";
       }
+    },
+
+    shouldShowCodeField() {
+      return this.$route.name.includes("finance");
     },
   },
-}
+};
 </script>
 <style lang="scss" scoped>
 .table-parameter {
