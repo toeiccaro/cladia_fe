@@ -214,6 +214,7 @@
               name="txtTaxRate"
               type="text"
               class="number"
+              oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
             />
           </td>
           <td class="info"></td>
@@ -237,6 +238,7 @@
               name="txtDiscountRate"
               type="text"
               class="number"
+              oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
             />
           </td>
           <td class="info"></td>
@@ -430,7 +432,7 @@ export default {
   data() {
     return {
       paramsEnterprise: {
- 
+        
       },
       listRelatedCompany: [],
       highlighted: {

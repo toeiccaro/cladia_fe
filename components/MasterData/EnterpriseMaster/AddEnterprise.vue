@@ -75,6 +75,8 @@ export default {
         payPeriod: 0,
         settleDate: 0,
         attachments: [],
+        taxRate: 0,
+        discountRate: 0
       },
     }
   },

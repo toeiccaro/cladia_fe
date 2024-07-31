@@ -200,7 +200,7 @@
               v-model="form.discountRate"
               type="text"
               class="number"
-              oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
+              disabled
             />
           </td>
           
