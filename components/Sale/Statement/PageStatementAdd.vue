@@ -63,6 +63,7 @@ export default {
         year: this.getYearDate(),
         totalAmount: 0,
         month: this.getMonthDate(),
+        endDate: ''
       },
     }
   },
@@ -272,6 +273,8 @@ export default {
             customerID: this.form.customerID,
             localLanguge: this.lang,
             endDate: this.convertDate(this.form.endDate) ?? '',
+            month: this.form.month ?? '',
+            year: this.form.year ?? '',
           }
           const res = await api('queryStatement', payload)
           this.loading = false

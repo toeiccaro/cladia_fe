@@ -197,6 +197,7 @@ export default {
         text: item.companyName,
         value: item.id,
         appendText: `(${item.companyCode})`,
+        payPeriod: item.payPeriod
       }))
     },
     totalAmount() {
@@ -206,11 +207,13 @@ export default {
   watch: {
     dataForm: {
       handler(val) {
+        console.log(val);
         this.form = val
       },
     },
   },
   created() {
+    console.log('this.dataForm', this.dataForm);
     this.form = this.dataForm
     this.getCustomerName()
   },
@@ -220,6 +223,20 @@ export default {
       this.listAllCustomerName = response.data
     },
     changeCustomer(select) {
+      const date = new Date();
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+
+      if(select.payPeriod){
+        const lastDayOfMonth = new Date(year, month, 0).getDate();
+        if (select.payPeriod > lastDayOfMonth) {
+          select.payPeriod = lastDayOfMonth;
+        }
+
+        date.setDate(select.payPeriod);
+      } 
+      this.form.endDate = this.convertDate(date);
+
       this.form.customerID = select?.value
       this.form.customerName =
         this.form.customerName ??

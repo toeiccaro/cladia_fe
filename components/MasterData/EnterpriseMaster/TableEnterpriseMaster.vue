@@ -273,7 +273,6 @@ export default {
         this.isLoadingTable = true
 
         const res = await api('getEnterpriseMaster', this.payloadEnterprise)
-        console.log(11111111,res);
         const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK
         if (validResponse) {
           this.dataHeader = res.data?.scolumnHides

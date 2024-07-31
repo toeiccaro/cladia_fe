@@ -150,13 +150,7 @@
             <span>{{ $t('lbl_QDiscountRate_0') }}</span>
           </td>
           <td class="input">
-            <input 
-              v-model="form.discountRate"
-              type="text"
-              class="number"
-              oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
-              :disabled="isDisabled"
-            />
+            <input v-model="form.discountRate" disabled type="text" class="number" />
           </td>
           <td class="info"></td>
         </tr>
