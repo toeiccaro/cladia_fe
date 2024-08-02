@@ -72,8 +72,8 @@ export default {
         },
       ],
       paramsAddEnterprise: {
-        payPeriod: 0,
-        settleDate: 0,
+        payPeriod: null,
+        settleDate: null,
         attachments: [],
         taxRate: 0,
         discountRate: 0
@@ -154,6 +154,22 @@ export default {
                 fieldName: this.$t(`lbl_${requiredFields[prop]}_0`),
                 text: this.$t('msg_NoInput_0'),
               })
+            }
+          }
+
+          const enterDay = {
+            payPeriod: 'PayPeriod',
+            settleDate: 'SettleDate',
+          }
+
+          for (const prop in enterDay) {
+            if (params[prop]) {
+              if(params[prop] < 1 || params[prop] > 31) {
+                this.listErrorMessage.push({
+                  fieldName: this.$t(`lbl_${enterDay[prop]}_0`),
+                  text: this.$t('msg_NoInput_0'),
+                })
+              }
             }
           }
 

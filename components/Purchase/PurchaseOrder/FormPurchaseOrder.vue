@@ -137,7 +137,9 @@
             <span>{{ $t('lbl_QDiscountRate_0') }}</span>
           </td>
           <td class="input">
-            <input v-model="form.discountRate" disabled type="text" class="number" />
+            <input v-model="form.discountRate" type="text" class="number" 
+            :disabled="isDisabled"
+            />
           </td>
           <td class="info">&nbsp;</td>
         </tr>

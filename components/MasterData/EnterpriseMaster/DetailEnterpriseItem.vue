@@ -54,6 +54,16 @@ export default {
           fieldName: this.$t('lbl_CompanyType_0'),
         },
       ],
+      enterDay: [
+        {
+          key: 'payPeriod',
+          fieldName: this.$t('lbl_PayPeriod_0'),
+        },
+        {
+          key: 'settleDate',
+          fieldName: this.$t('lbl_SettleDate_0'),
+        },
+      ],
       listToolBars: [
         {
           key: 'addNewEnterprise',
@@ -172,12 +182,39 @@ export default {
     async handleButtonSaveEnterprise() {
       const confirm = window.confirm(this.$t('msg_ConfirmSave_0'))
       if (confirm) {
-        if (
+        this.listErrorMessage = []
+        if (!(
           this.dataItem.companyCode &&
           this.dataItem.companyName &&
           this.dataItem.companyTypeID
-        ) {
-          const finalDataItem = Object.assign({}, this.dataItem, {
+        )) {
+          this.listFieldRequired.forEach((item) => {
+            if (this.dataItem[item.key] === '') {
+              this.listErrorMessage.push({
+                fieldName: item.fieldName,
+                text: this.$t('msg_NoInput_0'),
+              })
+            }
+          })
+        }
+        this.enterDay.forEach((item) => {
+          if (this.dataItem[item.key]) {
+            if(this.dataItem[item.key] < 1 || this.dataItem[item.key] > 31) {
+              this.listErrorMessage.push({
+                fieldName: item.fieldName,
+                text: this.$t('msg_NoInput_0'),
+              })
+            }
+          }
+        })
+
+        this.$emit('validateMessage', this.listErrorMessage)
+        const hasError = this.listErrorMessage.length > 0
+        if (hasError) {
+          return
+        }
+
+        const finalDataItem = Object.assign({}, this.dataItem, {
             attachments: this.form.attachments,
           })
 
@@ -198,7 +235,6 @@ export default {
             finalDataItem[key] =
               this.parseStringToFloat(finalDataItem[key]) || 0
           }
-
           const response = await api('updateItemEnterprise', finalDataItem)
           const errorCode = response?.data?.response?.status
 
@@ -212,43 +248,14 @@ export default {
           } else {
             window.alert(`${response?.message}`)
           }
-        } else {
-          this.listErrorMessage = []
-          this.listFieldRequired.forEach((item) => {
-            if (this.dataItem[item.key] === '') {
-              this.listErrorMessage.push({
-                fieldName: item.fieldName,
-                text: this.$t('msg_NoInput_0'),
-              })
-            }
-          })
-          this.$emit('validateMessage', this.listErrorMessage)
-        }
       }
     },
     handleNewSave() {
       const confirm = window.confirm(this.$t('msg_ConfirmSave_0'))
       if (confirm) {
-        if (
-          this.dataItem.companyCode &&
-          this.dataItem.companyName &&
-          this.dataItem.companyTypeID
-        ) {
           this.$router.push(
             this.localePath({ path: '/master-data/enterprise-master/add' })
           )
-        } else {
-          this.listErrorMessage = []
-          this.listFieldRequired.forEach((item) => {
-            if (this.dataItem[item.key] === '') {
-              this.listErrorMessage.push({
-                fieldName: item.fieldName,
-                text: this.$t('msg_NoInput_0'),
-              })
-            }
-          })
-          this.$emit('validateMessage', this.listErrorMessage)
-        }
       }
     },
     async handleButtonDeleteEnterprise() {

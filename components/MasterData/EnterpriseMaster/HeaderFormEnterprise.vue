@@ -265,7 +265,7 @@
               name="txtPayPeriod"
               type="text"
               class="number"
-              oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+              oninput="this.value = this.value.replace(/[^0-9.]/g, '');"
             />
           </td>
           <td class="info"></td>
@@ -280,6 +280,7 @@
               name="txtSettleDate"
               type="text"
               class="number"
+              oninput="this.value = this.value.replace(/[^0-9.]/g, '');"
             />
           </td>
           <td class="info"></td>

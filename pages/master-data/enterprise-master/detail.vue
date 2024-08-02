@@ -85,7 +85,7 @@ export default {
 
       const formatNumberFields = ['payPeriod', 'settleDate']
       for (const key of formatNumberFields) {
-        this.recordItem[key] = formatNumberWithCommas(res.data[key]) || 0
+        this.recordItem[key] = formatNumberWithCommas(res.data[key]) || null
       }
     },
     validateMessage(listErrorMessage) {
