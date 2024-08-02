@@ -167,6 +167,14 @@ export default {
           if (alignRightFields.includes(headerItem.fieldName)) {
             obj[mappingFieldName].align = 'right'
           }
+          switch (headerItem.fieldName) {
+            case 'POPriceIncludeTax':
+            case 'POAmountIncludeTax':
+            case 'POPriceIncludeDiscount':
+            case 'PODiscountRate':
+              obj[mappingFieldName].value = obj[mappingFieldName].value == 0 ? 0 : obj[mappingFieldName].value
+              break
+          }
           if (headerItem.fieldName === 'IsCheck') {
             obj[mappingFieldName].type = 'slot'
           }

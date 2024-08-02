@@ -181,6 +181,12 @@ export default {
           }
 
           switch (headerItem.fieldName) {
+            case 'OPPriceIncludeTax':
+            case 'OPAmountIncludeTax':
+            case 'OPPriceIncludeDiscount':
+            case 'OPDiscountRate':
+              obj[mappingFieldName].value = obj[mappingFieldName].value == 0 ? 0 : obj[mappingFieldName].value
+              break
             case 'IsCheck':
               obj[fieldKey].type = 'slot'
               break
@@ -316,61 +322,6 @@ export default {
         )
 
         const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK
-        res.data.scolumnHides.push({
-            "id": 1001,
-            "loginId": 1,
-            "gridName": "SOPriceIncludeTax",
-            "fieldName": "SOPriceIncludeTax",
-            "fieldWide": "150",
-            "fieldOrder": "17",
-            "editUser": "admin",
-            "fieldKey": null,
-            "hidden": false,
-            "system": false,
-            "editDate": "2023-04-17T17:31:11.967+00:00"
-          })
-
-          res.data.scolumnHides.push({
-            "id": 1001,
-            "loginId": 1,
-            "gridName": "SOAmountIncludeTax",
-            "fieldName": "SOAmountIncludeTax",
-            "fieldWide": "150",
-            "fieldOrder": "17",
-            "editUser": "admin",
-            "fieldKey": null,
-            "hidden": false,
-            "system": false,
-            "editDate": "2023-04-17T17:31:11.967+00:00"
-          })
-
-          res.data.scolumnHides.push({
-            "id": 1001,
-            "loginId": 1,
-            "gridName": "SODiscountRate",
-            "fieldName": "SODiscountRate",
-            "fieldWide": "150",
-            "fieldOrder": "17",
-            "editUser": "admin",
-            "fieldKey": null,
-            "hidden": false,
-            "system": false,
-            "editDate": "2023-04-17T17:31:11.967+00:00"
-          })
-
-          res.data.scolumnHides.push({
-            "id": 1001,
-            "loginId": 1,
-            "gridName": "SOPriceIncludeDiscount",
-            "fieldName": "SOPriceIncludeDiscount",
-            "fieldWide": "150",
-            "fieldOrder": "17",
-            "editUser": "admin",
-            "fieldKey": null,
-            "hidden": false,
-            "system": false,
-            "editDate": "2023-04-17T17:31:11.967+00:00"
-          })
 
         if (validResponse) {
           this.dataHeader = res.data?.scolumnHides
