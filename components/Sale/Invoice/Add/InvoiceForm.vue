@@ -389,9 +389,9 @@ export default {
         }
 
         date.setDate(item.payPeriod);
+        this.newInvoiceData.payDate = this.convertDate(date);
       } 
       
-      this.newInvoiceData.payDate = this.convertDate(date);
     }
   },
 }

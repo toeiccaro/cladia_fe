@@ -165,8 +165,8 @@
               v-model="form.taxRate"
               type="text"
               class="number"
-              oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
               :disabled="isDisabled"
+              oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
             />
           </td>
           <td class="info"></td>
@@ -200,7 +200,7 @@
               v-model="form.discountRate"
               type="text"
               class="number"
-              disabled
+              :disabled="isDisabled"
             />
           </td>
           
