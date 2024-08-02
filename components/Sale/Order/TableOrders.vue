@@ -182,6 +182,12 @@ export default {
           }
 
           switch (headerItem.fieldName) {
+            case 'SOPriceIncludeTax':
+            case 'SOAmountIncludeTax':
+            case 'SOPriceIncludeDiscount':
+            case 'SODiscountRate':
+              obj[mappingFieldName].value = obj[mappingFieldName].value == 0 ? 0 : obj[mappingFieldName].value
+              break
             case 'IsCheck':
               obj[mappingFieldName].type = 'slot'
               break

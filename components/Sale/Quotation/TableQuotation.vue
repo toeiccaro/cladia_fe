@@ -144,6 +144,16 @@ export default {
               align: 'right',
             }
           }
+
+          switch (headerItem.fieldName) {
+            case 'QPriceIncludeTax':
+            case 'QAmountIncludeTax':
+            case 'QPriceIncludeDiscount':
+            case 'QDiscountRate':
+              obj[mappingFieldName].value = obj[mappingFieldName].value == 0 ? 0 : obj[mappingFieldName].value
+              break
+          }
+
           if (headerItem.fieldName === 'IsCheck') {
             obj[mappingFieldName].type = 'slot'
           }
@@ -238,6 +248,7 @@ export default {
           fieldOrder: item.fieldOrder,
           maxLength,
         }
+        
         if (item.fieldName === 'IsCheck') {
           headerItem.options = this.checkAccountOptions
         }
