@@ -197,7 +197,8 @@ export default {
         text: item.companyName,
         value: item.id,
         appendText: `(${item.companyCode})`,
-        payPeriod: item.payPeriod
+        payPeriod: item.payPeriod,
+        settleDate: item.settleDate,
       }))
     },
     totalAmount() {
@@ -227,13 +228,13 @@ export default {
       const year = date.getFullYear();
       const month = date.getMonth() + 1;
 
-      if(select.payPeriod){
+      if(select.settleDate){
         const lastDayOfMonth = new Date(year, month, 0).getDate();
-        if (select.payPeriod > lastDayOfMonth) {
-          select.payPeriod = lastDayOfMonth;
+        if (select.settleDate > lastDayOfMonth) {
+          select.settleDate = lastDayOfMonth;
         }
 
-        date.setDate(select.payPeriod);
+        date.setDate(select.settleDate);
       } 
       this.form.endDate = this.convertDate(date);
 

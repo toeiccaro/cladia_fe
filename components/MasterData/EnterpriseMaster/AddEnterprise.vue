@@ -167,7 +167,7 @@ export default {
               if(params[prop] < 1 || params[prop] > 31) {
                 this.listErrorMessage.push({
                   fieldName: this.$t(`lbl_${enterDay[prop]}_0`),
-                  text: this.$t('msg_NoInput_0'),
+                  text: this.$t('msg_InvalidDayInMonth_0'),
                 })
               }
             }
