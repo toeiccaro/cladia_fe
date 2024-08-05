@@ -217,8 +217,8 @@ export default {
           hidden: false,
         },
         {
-          key: 'SODiscountRate',
-          name: this.$t('lbl_SODiscountRate_0'),
+          key: 'OOdiscountRate',
+          name: this.$t('lbl_OODiscountRate_0'),
           filter: 'input',
           width: 150,
           align: 'left',
@@ -227,8 +227,8 @@ export default {
           hidden: false,
         },
         {
-          key: 'SOPriceIncludeDiscount',
-          name: this.$t('lbl_SOPriceIncludeDiscount_0'),
+          key: 'OOpriceIncludeDiscount',
+          name: this.$t('lbl_OOPriceIncludeDiscount_0'),
           filter: 'input',
           width: 150,
           align: 'left',
@@ -237,8 +237,8 @@ export default {
           hidden: false,
         },
         {
-          key: 'SOPriceIncludeTax',
-          name: this.$t('lbl_SOPriceIncludeTax_0'),
+          key: 'OOpriceIncludeTax',
+          name: this.$t('lbl_OOPriceIncludeTax_0'),
           filter: 'input',
           width: 150,
           align: 'left',
@@ -257,8 +257,8 @@ export default {
           hidden: false,
         },
         {
-          key: 'SOAmountIncludeTax',
-          name: this.$t('lbl_SOAmountIncludeTax_0'),
+          key: 'OOamountIncludeTax',
+          name: this.$t('lbl_OOAmountIncludeTax_0'),
           filter: 'input',
           width: 150,
           align: 'left',
