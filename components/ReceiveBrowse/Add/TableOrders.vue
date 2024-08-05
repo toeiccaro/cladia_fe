@@ -361,7 +361,6 @@ export default {
     },
     mappingProperty(item, fieldName) {
       for (const property in item) {
-        console.log(property.toLowerCase(), fieldName.toLowerCase());
         if (property.toLowerCase() === fieldName.toLowerCase()) {
           return property
         }

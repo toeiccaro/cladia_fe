@@ -40,6 +40,11 @@ export default {
     return {
       listToolBars: [
         {
+          key: 'add',
+          label: this.$t('btn_btnAdd_0'),
+          icon: '/images/add.png',
+        },
+        {
           key: 'refresh',
           label: this.$t('btn_btnRefresh_0'),
           icon: '/images/refresh.png',
@@ -108,6 +113,9 @@ export default {
     listToolBarsCheckAuthority() {
       return this.listToolBars.map((item) => {
         switch (item.key) {
+          case 'add':
+            item.disabled = !this.activeButtonToolBar?.isEdit
+            break
           case 'check':
             item.disabled = !this.activeButtonToolBar?.isCheck
             break
@@ -200,6 +208,9 @@ export default {
       }
     },
     async changeActiveToolBar(key) {
+      if (key === 'add') {
+        this.$router.push(this.localePath({ path: '/finance/receive-browse/add' }))
+      }
       if (key === 'refresh') {
         return location.reload()
       }
