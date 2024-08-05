@@ -181,11 +181,11 @@ export default {
           }
 
           switch (headerItem.fieldName) {
-            case 'OPPriceIncludeTax':
-            case 'OPAmountIncludeTax':
-            case 'OPPriceIncludeDiscount':
-            case 'OPDiscountRate':
-              obj[mappingFieldName].value = obj[mappingFieldName].value == 0 ? 0 : obj[mappingFieldName].value
+            case 'OOPriceIncludeTax':
+            case 'OOAmountIncludeTax':
+            case 'OOPriceIncludeDiscount':
+            case 'OODiscountRate':
+              obj[fieldKey].value = obj[fieldKey].value == 0 ? 0 : obj[fieldKey].value
               break
             case 'IsCheck':
               obj[fieldKey].type = 'slot'

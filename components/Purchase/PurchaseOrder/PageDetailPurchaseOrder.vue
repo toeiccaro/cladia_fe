@@ -254,7 +254,7 @@ export default {
           hidden: false,
         },
         {
-          key: 'discountRate',
+          key: 'PODiscountRate',
           name: this.$t('lbl_PODiscountRate_0'),
           filter: 'input',
           width: 150,
@@ -264,7 +264,7 @@ export default {
           hidden: false,
         },
         {
-          key: 'priceIncludeDiscount',
+          key: 'POPriceIncludeDiscount',
           name: this.$t('lbl_POPriceIncludeDiscount_0'),
           filter: 'input',
           width: 150,
@@ -274,7 +274,7 @@ export default {
           hidden: false,
         },
         {
-          key: 'priceIncludeTax',
+          key: 'POPriceIncludeTax',
           name: this.$t('lbl_POPriceIncludeTax_0'),
           filter: 'input',
           width: 150,
@@ -294,7 +294,7 @@ export default {
           hidden: false,
         },
         {
-          key: 'amountIncludeTax',
+          key: 'POAmountIncludeTax',
           name: this.$t('lbl_POAmountIncludeTax_0'),
           filter: 'input',
           width: 150,

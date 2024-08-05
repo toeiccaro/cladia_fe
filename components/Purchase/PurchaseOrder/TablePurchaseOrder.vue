@@ -225,6 +225,7 @@ export default {
       ]
 
       this.listDataShow.forEach((item) => {
+        console.log('this.labelMapping', this.labelMapping);
         const maxLength = listNumberField.includes(item.fieldName) ? '30' : '256'
         const headerItem = {
           key: this.mappingProperty(
