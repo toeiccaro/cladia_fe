@@ -44,6 +44,36 @@ const api = (config) => ({
       'get',
       `parameter/key-code-name-search?language=${payload.language}&searchValue=${payload.searchValue}`
     ),
+
+  //Finance Settings
+
+  deleteFinanceSetting: (params) =>
+    config(
+      'get',
+      `finance-setting/delete?keyCode=${params.keyCode}&keyId=${params.keyId}`
+    ),
+  updateFinanceSetting: (payload) => config('post', 'finance-setting/update', payload),
+  addFinanceSetting: (payload) => config('post', 'finance-setting/save', payload),
+  getFinanceSetting: (payload) => {
+    const urlQuery = new URLSearchParams()
+
+    for (const key in payload) {
+      if (payload[key]) {
+        urlQuery.set(key, payload[key])
+      }
+    }
+
+    return config('get', `finance-setting/keyCode?${urlQuery}`)
+  },
+  getFinanceSettingLanguage: (payload) =>
+    config('post', `finance-setting/keyCodes?keyCode=${payload.keyCode}`, payload),
+  getFinanceSettingKeyCodeName: () => config('get', 'finance-setting/key-code-name'),
+  searchKeyCodeNameFinanceSetting: (payload) =>
+    config(
+      'get',
+      `finance-setting/key-code-name-search?language=${payload.language}&searchValue=${payload.searchValue}`
+    ),
+
   // Item master
 
   getItemMaster: (payload) => {
