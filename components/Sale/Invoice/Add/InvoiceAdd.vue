@@ -636,9 +636,10 @@ export default {
       if (validateInfo) {
         this.loading = true
         const { dataTableFilter, payload } = validateInfo
-
         const params = {
           ...payload,
+          discountRate: dataTableFilter[0]?.discountRate,
+          taxRate: dataTableFilter[0]?.taxRate,
           salesInDtl: dataTableFilter.map((item) => {
             return {
               customerPO: item.customerPO,

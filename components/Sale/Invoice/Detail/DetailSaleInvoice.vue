@@ -347,6 +347,16 @@ export default {
           hidden: false,
         },
         {
+          key: 'taxRate',
+          name: this.$t('lbl_SITaxRate_0'),
+          filter: 'input',
+          width: 200,
+          align: 'left',
+          disabled: true,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
           key: 'priceIncludeTax',
           name: this.$t('lbl_SIPriceIncludeTax_0'),
           filter: 'input',
@@ -863,6 +873,8 @@ export default {
 
         this.dataTable = res.data?.detailResponse.map((item, index) => ({
           ...item,
+          discountRate: res.data?.discountRate,
+          taxRate: res.data?.taxRate,
           lineID: index + 1,
         }))
 
