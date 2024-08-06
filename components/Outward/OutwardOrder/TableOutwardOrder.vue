@@ -179,7 +179,7 @@ export default {
               align: 'right',
             }
           }
-
+          
           switch (headerItem.fieldName) {
             case 'OOPriceIncludeTax':
             case 'OOAmountIncludeTax':
