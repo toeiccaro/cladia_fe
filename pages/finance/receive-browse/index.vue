@@ -9,7 +9,10 @@
       @handleDetailId="handleDetailId"
       @changeLayout="changeLayout"
     />
-
+    <BaseSetColumn
+      ref="modalSetColumn"
+      @reloadSet="functionReload"
+    ></BaseSetColumn>
     <BaseModalDetails ref="modalDetail" :order-no="currentOrderNo" />
     <BaseModalComposite
       ref="modalComposite"
@@ -27,6 +30,7 @@ import ToolBar from '@/components/UI/ToolBar'
 import TableReceiveBrowse from '@/components/ReceiveBrowse/TableReceiveBrowse'
 import BaseModalDetails from '@/components/ReceiveBrowse/BaseModalDetails'
 import BaseModalComposite from '@/components/ReceiveBrowse/BaseModalComposite'
+import BaseSetColumn from '~/components/UI/BaseSetColumn.vue'
 
 export default {
   components: {
@@ -34,11 +38,17 @@ export default {
     ToolBar,
     BaseModalDetails,
     BaseModalComposite,
+    BaseSetColumn
   },
   middleware: ['authenticated'],
   data() {
     return {
       listToolBars: [
+      {
+          key: 'add',
+          label: this.$t('btn_btnAdd_0'),
+          icon: '/images/add.png',
+        },
         {
           key: 'refresh',
           label: this.$t('btn_btnRefresh_0'),
@@ -72,14 +82,9 @@ export default {
           icon: '/images/uncheck.png',
         },
         {
-          key: 'details',
-          label: this.$t('btn_btnShowDetails_0'),
-          icon: '/images/mode.png',
-        },
-        {
-          key: 'batch',
-          label: this.$t('btn_btnSRBatch_0'),
-          icon: '/images/mode.png',
+          key: 'setOrder',
+          label: this.$t('btn_btnSet_0'),
+          icon: '/images/set.png',
         },
         {
           key: 'close',
@@ -152,6 +157,10 @@ export default {
   },
 
   methods: {
+    functionReload() {
+      this.$bus.$emit('refresh-filter-data')
+      return this.$refs.tableReceiveBrowse.refresh()
+    },
     async refreshTableData() {
       await this.$refs.tableReceiveBrowse?.getData()
     },
@@ -204,36 +213,8 @@ export default {
         return location.reload()
       }
 
-      if (key === 'details') {
-        if (!this.currentOrderNo) {
-          return window.alert(this.$t('msg_NoSelected_0'))
-        }
-
-        return (this.$refs.modalDetail.showModal = true)
-      }
-
       if (key === 'close') {
         return this.$router.push(this.localePath({ path: '/' }))
-      }
-
-      if (key === 'batch') {
-        const listCheckbox = this.$refs.tableReceiveBrowse?.listCheckbox || []
-        const hasNoSelected = listCheckbox.every((item) => !item.value)
-
-        if (hasNoSelected) {
-          return window.alert(this.$t('msg_NoSelected_0'))
-        }
-
-        this.selectedItems = listCheckbox.filter((item) => item.value)
-
-        const customerIds = this.selectedItems.map((item) => item.customerId)
-
-        const hasDiffCustomerId = new Set(customerIds).size !== 1
-        if (hasDiffCustomerId) {
-          return window.alert('異なる客先は選べません')
-        }
-
-        return (this.$refs.modalComposite.showModal = true)
       }
 
       if (key === 'check') {
@@ -284,6 +265,10 @@ export default {
         await this.$refs.tableReceiveBrowse?.getData()
 
         window.alert(this.$t('msg_IsUnChecked_0'))
+      }
+
+      if (key === 'setOrder') {
+        this.$refs.modalSetColumn.showModal = true
       }
     },
     handleDetailId(data) {
