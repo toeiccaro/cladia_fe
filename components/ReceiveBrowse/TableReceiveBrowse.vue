@@ -54,7 +54,7 @@
       :number-item="dataTable.length"
       class="table__receive-browse--footer"
       :class="{
-        'border--full': !total,
+        'border--full': `${!total}`,
       }"
       @changePage="(value) => setCurrentPage(value)"
       @changePerPage="(value) => changePerPage(value)"
@@ -88,6 +88,8 @@ export default {
       lang: this.$i18n.locale,
       isLoadingTable: false,
       isCheckAll: false,
+      listIgnoreFieldName: ['Blance'],
+      dataHeader: []
     }
   },
   async fetch() {
@@ -118,7 +120,8 @@ export default {
       ]
     },
     listDataShow() {
-      return this.headerMockData
+      return this.dataHeader
+        .filter((_el) => !this.listIgnoreFieldName.includes(_el.fieldName))
         .filter((item) => !item.hidden)
         .sort((a, b) => a.fieldOrder - b.fieldOrder)
     },
@@ -211,20 +214,22 @@ export default {
             obj[
               mappingFieldName
             ].link = `/${this.$i18n.locale}/finance/receive-browse/detail?receiveBrowse=${item.id}`
-            const isNotPaidEnough = item.blanceAmount > 0 && !item.isStop
-            if (isNotPaidEnough) {
+          }
+
+          if (headerItem.fieldName === 'Date') {
+            obj[mappingFieldName].value = this.convertDate(item.Date)
+            obj[mappingFieldName].align = 'center'
+          }
+
+          if (headerItem.fieldName === 'ReceiveDate') {
+            obj[mappingFieldName].value = this.convertDate(item.receiveDate)
+            obj[mappingFieldName].align = 'center'
+            const currentDate = new Date().getTime()
+            const receiveDate = new Date(item.receiveDate).getTime()
+            const isNotPaidEnough = item.RBBalanceAmount > 0 && !item.isStop
+            if (isNotPaidEnough && receiveDate < currentDate) {
               obj[mappingFieldName].color = 'red'
             }
-          }
-
-          if (headerItem.fieldName === 'ARDate') {
-            obj[mappingFieldName].value = this.convertDate(item.ardate)
-            obj[mappingFieldName].align = 'center'
-          }
-
-          if (headerItem.fieldName === 'DueDate') {
-            obj[mappingFieldName].value = this.convertDate(item.dueDate)
-            obj[mappingFieldName].align = 'center'
           }
 
           if (headerItem.fieldName === 'IsStop') {
@@ -254,21 +259,6 @@ export default {
       ]
 
       const listOptionsFields = ['IsStop']
-      const mapProps = {
-        Date: 'ARDate',
-        ReceiveDate: 'DueDate',
-      }
-
-      for (const prop in mapProps) {
-        const matchData = this.listDataShow.find(
-          (item) => item.fieldName === prop
-        )
-
-        if (matchData) {
-          matchData.fieldName = mapProps[prop]
-        }
-      }
-
       this.listDataShow.forEach((item) => {
         const maxLength = listNumberField.includes(item.fieldName) ? '30' : '256'
         const headerItem = {
@@ -276,7 +266,7 @@ export default {
             this.dataTable[0] || receiveBrowseSchema,
             item.fieldName
           ),
-          name: item.labelName,
+          name: item.fieldName,
           filter: listOptionsFields.includes(item.fieldName)
             ? 'select'
             : 'input',
@@ -358,6 +348,7 @@ export default {
     ...mapMutations({
       UPDATE_PAYLOAD_RECEIVE_BROWSE: 'filterSort/UPDATE_PAYLOAD_RECEIVE_BROWSE',
       SET_PAYLOAD_RECEIVE_BROWSE: 'filterSort/SET_PAYLOAD_RECEIVE_BROWSE',
+      SET_DATA_COLUMN_HIDE: 'SET_DATA_COLUMN_HIDE',
     }),
 
     onChangeCheckbox(event, index) {
@@ -418,6 +409,12 @@ export default {
         this.dataTable = res.data.tableContent?.content
         this.dataFooter = res.data?.tableFooter || {}
         this.total = res.data.tableContent?.totalElements
+        this.dataHeader = res.data?.scolumnHides
+        this.SET_DATA_COLUMN_HIDE(
+            this.dataHeader.filter(
+              (_el) => !this.listIgnoreFieldName.includes(_el.fieldName)
+            )
+          )
       } catch (err) {
         console.error(err)
       } finally {
