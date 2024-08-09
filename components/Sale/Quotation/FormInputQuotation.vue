@@ -314,6 +314,7 @@ export default {
     paramsQuotation: {
       handler(value) {
         this.form = value
+        this.$emit('update-table', value)
       },
       deep: true,
     },

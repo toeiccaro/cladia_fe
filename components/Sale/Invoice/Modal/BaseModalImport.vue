@@ -139,6 +139,7 @@ export default {
       immediate: true,
       deep: true,
       handler(val) {
+        console.log('this.dataLayout', this.dataLayout.headerData);
         this.listColumnChange = []
         this.dataLayout?.headerData?.forEach((item, index) => {
           this.listDataColumn.forEach((_el) => {
@@ -165,6 +166,7 @@ export default {
       this.lineId = lineId
     },
     changeLayout(data, listDataColumn) {
+      console.log('data, listDataColumn', data, listDataColumn);
       this.dataLayout = data
       this.listDataColumn = listDataColumn
     },

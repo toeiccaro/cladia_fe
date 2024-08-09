@@ -9,6 +9,7 @@
       ref="editOrderForm"
       :data="dataDetail"
       :is-disabled="isCheck"
+      @update-table="updateTable"
     ></OrderForm>
     <base-table-item-detail
       ref="saleOrderFormTableItems"
@@ -22,6 +23,8 @@
       :header-detail="tableHeaders"
       :show-quantity="true"
       :new-line="newLine"
+      :form="form"
+
       @changeTable="changeDataDetailTable"
     />
     <ModalImport ref="importOrder" @importData="handleImportData"></ModalImport>
@@ -448,6 +451,25 @@ export default {
   methods: {
     ...mapActions('base', ['getItemTypeOptionsFromAPI', 'getUnitOptions']),
 
+    updateTable(val) {
+      
+      this.dataTable = this.dataTable.map((item) =>{
+        const quantity = item.quantity
+        const price = item.price
+        const discountRate = val.discountRate
+        const taxRate = val.taxRate
+
+        const { priceIncludeDiscount, amount, priceIncludeTax, amountIncludeTax } = this.parseFloatCalculatePrice({quantity, price, discountRate, taxRate});
+
+        return Object.assign({}, item, {
+          amount,
+          priceIncludeDiscount,
+          priceIncludeTax,
+          amountIncludeTax
+        })
+      });
+    },
+
     async getScolumnHides() {
       const response = await api('getScolumnHides', {
         gridName: 'SaleOrderDetail',
@@ -478,7 +500,6 @@ export default {
     async getData() {
       try {
         const res = await api('getOrderById', this.$route.query?.sono)
-        console.log('res', this.form);
         if (res.status === 200) {
           this.form = res.data._1
           this.form.orderDate = this.convertDate(this.form.orderDate)
@@ -489,7 +510,6 @@ export default {
           this.dataDetail = JSON.parse(JSON.stringify(this.form))
           this.joinAttachmentString(compact(this.dataDetail.attachments))
 
-          console.log('this.dataTable', this.dataTable);
           this.dataTable = res?.data._2.map((item, index) => {
             item.promiseDate = this.convertDate(item.promiseDate)
             item.lineID = index + 1
