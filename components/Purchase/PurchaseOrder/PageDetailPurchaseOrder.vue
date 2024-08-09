@@ -10,20 +10,23 @@
       :data="dataDetail"
       :is-disabled="isCheck"
       :arrival-addresses="arrivalAddresses"
+      @update-table="updateTable"
     ></FormPurchaseOrder>
     <BaseTableItemDetail
       ref="tableDetails"
       class="edit-purchase-order-table-details"
+      :table-type="'PurchaseOrderDetail'"
       :table-content="dataTable"
       :list-item-master="listItemCode"
-      :table-type="'PurchaseOrderDetail'"
       :customer-id="dataDetail.supplierID"
       :column-hides="columnHides"
-      :disable-input="isCheck"
       :header-detail="tableHeaders"
+      :disable-input="isCheck"
       :new-line="newLine"
       is-purchase
       :show-quantity="true"
+      :form="form"
+
       @changeTable="changeDataDetailTable"
     ></BaseTableItemDetail>
     <ModalImportPurchaseOrder
@@ -142,7 +145,10 @@ export default {
         unitID: null,
         quantity: 0,
         price: 0,
+        POPriceIncludeDiscount: 0,
+        POPriceIncludeTax: 0,
         amount: 0,
+        POAmountIncludeTax: 0,
         sono: '',
         solineNumber: 0,
         itemCode: '',
@@ -250,16 +256,6 @@ export default {
           width: 150,
           align: 'right',
           disabled: this.isCheck,
-          fieldRequired: false,
-          hidden: false,
-        },
-        {
-          key: 'PODiscountRate',
-          name: this.$t('lbl_PODiscountRate_0'),
-          filter: 'input',
-          width: 150,
-          align: 'left',
-          disabled: true,
           fieldRequired: false,
           hidden: false,
         },
@@ -464,6 +460,24 @@ export default {
       UPDATE_PAYLOAD_PURCHASE_ORDER_IMPORT:
         'filterSort/UPDATE_PAYLOAD_PURCHASE_ORDER_IMPORT',
     }),
+
+    updateTable(val) {
+      this.dataTable = this.dataTable.map((item) =>{
+        const quantity = item.quantity
+        const price = item.price
+        const discountRate = val.discountRate
+        const taxRate = val.taxRate
+
+        const { priceIncludeDiscount, amount, priceIncludeTax, amountIncludeTax } = this.parseFloatCalculatePrice({quantity, price, discountRate, taxRate});
+
+        return Object.assign({}, item, {
+          amount,
+          POPriceIncludeDiscount: priceIncludeDiscount,
+          POPriceIncludeTax: priceIncludeTax,
+          POAmountIncludeTax: amountIncludeTax
+        })
+      });
+    },
 
     async getListItemCode() {
       const res = await api('getItemCode')

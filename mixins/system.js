@@ -795,6 +795,25 @@ export default {
 
       return 0
     },
+    parseFloatCalculatePrice({quantity, price, discountRate, taxRate}) {
+      quantity = quantity ?? 0;
+      price = price ?? 0;
+      discountRate = discountRate/100 ?? 0;
+      taxRate = taxRate/100 ?? 0;
+
+      //discount
+      const priceIncludeDiscount = this.parseFloatPrice(price * (1 - discountRate));
+      const amount = this.parseFloatPrice(quantity * priceIncludeDiscount);
+      //tax
+      const priceIncludeTax = this.parseFloatPrice(priceIncludeDiscount * (1 + taxRate));
+      const amountIncludeTax =  this.parseFloatPrice(quantity * priceIncludeTax);
+
+      return {priceIncludeDiscount, amount, priceIncludeTax, amountIncludeTax}
+    },
+
+    parseFloatPrice(number) {
+      return parseFloat(number.toFixed(2))
+    },
 
     makeToast(variant = null, message = 'Success') {
       this.$bvToast.toast(message, {

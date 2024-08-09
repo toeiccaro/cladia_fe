@@ -415,6 +415,7 @@ export default {
       deep: true,
       handler(data) {
         this.currentInvoiceData = data
+        this.$emit('update-table', data)
       },
     },
     listDetails: {

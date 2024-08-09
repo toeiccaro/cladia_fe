@@ -12,6 +12,7 @@
       ref="addOrderForm"
       :key="refreshAddOrderFormKey"
       :data="form"
+      @update-table="updateTable"
     />
     <BaseTableItemDetail
       ref="outwardOrderTableItem"
@@ -25,6 +26,8 @@
       :type-action="'ADD'"
       :new-line="newLine"
       :is-purchase="true"
+      :form="form"
+      is-outward
       @changeTable="changeDataDetailTable"
     ></BaseTableItemDetail>
     <BaseModalAttach
@@ -148,7 +151,10 @@ export default {
           quantity: 0,
           endQuantity: 0,
           price: 0,
+          OOPriceIncludeDiscount: 0,
+          OOPriceIncludeTax: 0,
           amount: 0,
+          OOAmountIncludeTax: 0,
           promiseDate: this.convertDate(new Date()),
           memoDtl: '',
           isUpdate: true,
@@ -279,11 +285,41 @@ export default {
           hidden: false,
         },
         {
+          key: 'OOPriceIncludeDiscount',
+          name: this.$t('lbl_OOPriceIncludeDiscount_0'),
+          filter: 'input',
+          width: 150,
+          align: 'left',
+          disabled: true,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
+          key: 'OOPriceIncludeTax',
+          name: this.$t('lbl_OOPriceIncludeTax_0'),
+          filter: 'input',
+          width: 150,
+          align: 'left',
+          disabled: true,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
           key: 'amount',
           name: this.$t('lbl_Amount_0'),
           filter: 'number',
           width: 150,
           align: 'right',
+          disabled: true,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
+          key: 'OOAmountIncludeTax',
+          name: this.$t('lbl_OOAmountIncludeTax_0'),
+          filter: 'input',
+          width: 150,
+          align: 'left',
           disabled: true,
           fieldRequired: false,
           hidden: false,
@@ -334,7 +370,10 @@ export default {
         quantity: 0,
         endQuantity: 0,
         price: 0,
+        OOPriceIncludeDiscount: 0,
+        OOPriceIncludeTax: 0,
         amount: 0,
+        OOAmountIncludeTax: 0,
         promiseDate: this.convertDate(new Date()),
         memoDtl: '',
         isUpdate: true,
@@ -449,6 +488,25 @@ export default {
     ...mapMutations({
       SET_GENERATED_OUTWARD_ORDER: 'mrp/SET_GENERATED_OUTWARD_ORDER',
     }),
+
+    updateTable(val) {
+      this.dataTable = this.dataTable.map((item) =>{
+        const quantity = item.quantity
+        const price = item.price
+        const discountRate = val.discountRate
+        const taxRate = val.taxRate
+
+        const { priceIncludeDiscount, amount, priceIncludeTax, amountIncludeTax } = this.parseFloatCalculatePrice({quantity, price, discountRate, taxRate});
+
+        return Object.assign({}, item, {
+          amount,
+          OOPriceIncludeDiscount: priceIncludeDiscount,
+          OOPriceIncludeTax: priceIncludeTax,
+          OOAmountIncludeTax: amountIncludeTax
+        })
+      });
+    },
+    
     async getScolumnHides() {
       try {
         this.loading = true

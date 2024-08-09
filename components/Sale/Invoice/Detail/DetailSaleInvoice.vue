@@ -23,6 +23,7 @@
       :column-hides="columnHides"
       :disable-input="isCheck"
       :header-detail="tableHeaders"
+      is-invoice
       @changeTable="changeDataDetailTable"
     ></BaseTableItemDetail>
     <BaseModalAttach
@@ -327,7 +328,7 @@ export default {
           hidden: false,
         },
         {
-          key: 'discountRate',
+          key: 'SIDiscountRate',
           name: this.$t('lbl_SIDiscountRate_0'),
           filter: 'input',
           width: 150,
@@ -337,7 +338,7 @@ export default {
           hidden: false,
         },
         {
-          key: 'priceIncludeDiscount',
+          key: 'SIPriceIncludeDiscount',
           name: this.$t('lbl_SIPriceIncludeDiscount_0'),
           filter: 'input',
           width: 200,
@@ -347,7 +348,7 @@ export default {
           hidden: false,
         },
         {
-          key: 'taxRate',
+          key: 'SITaxRate',
           name: this.$t('lbl_SITaxRate_0'),
           filter: 'input',
           width: 200,
@@ -357,7 +358,7 @@ export default {
           hidden: false,
         },
         {
-          key: 'priceIncludeTax',
+          key: 'SIPriceIncludeTax',
           name: this.$t('lbl_SIPriceIncludeTax_0'),
           filter: 'input',
           width: 200,
@@ -377,7 +378,7 @@ export default {
           hidden: false,
         },
         {
-          key: 'amountIncludeTax',
+          key: 'SIAmountIncludeTax',
           name: this.$t('lbl_SIAmountIncludeTax_0'),
           filter: 'input',
           width: 150,
@@ -877,6 +878,34 @@ export default {
           taxRate: res.data?.taxRate,
           lineID: index + 1,
         }))
+
+        this.dataTable = this.dataTable.map(obj => {
+          let newObj = {};
+          
+          for (let key in obj) {
+            switch (key) {
+              case 'priceIncludeTax':
+                newObj['SIPriceIncludeTax'] = obj[key];
+                break;
+              case 'amountIncludeTax':
+                newObj['SIAmountIncludeTax'] = obj[key];
+                break;
+              case 'priceIncludeDiscount':
+                newObj['SIPriceIncludeDiscount'] = obj[key];
+                break;
+              case 'discountRate':
+                newObj['SIDiscountRate'] = obj[key];
+                break;
+              case 'taxRate':
+                newObj['SITaxRate'] = obj[key];
+                break;
+              default:
+                newObj[key] = obj[key];
+                break;
+            }
+          }
+          return newObj;
+        });
 
         const convertDateFields = [
           'invoiceDate',
