@@ -207,8 +207,7 @@ export default {
         const headerItem = {
           key: item.fieldName,
           filter: "input",
-          // name: this.$t(`lan_${item.fieldName}_0`),
-          name: this.$t(`lbl_${item.fieldName}_0`),
+          name: this.shouldShowCodeField ? this.$t(`lbl_${item.fieldName}_0`) : this.$t(`lan_${item.fieldName}_0`),
           width: 150,
           fieldName: item.fieldName,
           fieldOrder: index,
