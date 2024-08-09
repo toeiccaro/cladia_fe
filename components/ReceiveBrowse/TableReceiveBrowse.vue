@@ -74,6 +74,8 @@ import api from '@/api/api'
 import BasePagination from '~/components/UI/BasePagination.vue'
 import BaseTableDraggable from '~/components/UI/BaseTableDraggable.vue'
 import BaseTableLoader from '~/components/loaders/BaseTableLoader'
+import { formatNumberWithCommas } from '~/utils/utils'
+
 export default {
   components: { BaseTableDraggable, BasePagination, BaseTableLoader },
   mixins: [dateTimeMixins, commonOptionsMixins, receiveBrowseMixins],
@@ -133,41 +135,37 @@ export default {
           value: '',
           type: 'text',
         }
-        if (item.key === 'ardate') {
+        if (item.key === 'receiveDate') {
           temp.value = 'Total: '
           temp.align = 'center'
         }
-        if (item.key === 'blanceAmount') {
-          temp.value = this.dataFooter.BlanceAmount
-          temp.align = 'right'
-          temp.type = 'amount'
-        }
-        if (item.key === 'amount') {
+        if (item.key === 'TotalAmount') {
           temp.value = this.dataFooter.Amount
           temp.align = 'right'
           temp.type = 'amount'
         }
-        if (item.key === 'aramount') {
+        if (item.key === 'Amount') {
           temp.value = this.dataFooter.ARAmount
           temp.align = 'right'
           temp.type = 'amount'
         }
-        if (item.key === 'isStop') {
-          temp.type = 'checkbox'
+        if (item.key === 'RBBalanceAmount') {
+          temp.value = this.dataFooter.BlanceAmount
+          temp.align = 'right'
+          temp.type = 'amount'
         }
         return temp
       })
     },
     dataTableMapping() {
       const listAlignCenterFields = [
-        'OrderNo',
+        'OrderNO',
         'InvoiceNo',
         'Currency',
-        'ARDate',
-        'DueDate',
-        'OrderNO',
+        'CustomerName',
+        'RBStatement',
       ]
-      const listAlignRightFields = ['Amount', 'ARAmount', 'BlanceAmount']
+      const listAlignRightFields = ['TotalAmount', 'Amount', 'RBBalanceAmount']
 
       const data = this.dataTable.map((item, index) => {
         const obj = {
@@ -202,8 +200,9 @@ export default {
 
           if (listAlignRightFields.includes(headerItem.fieldName)) {
             obj[mappingFieldName] = {
-              value: item[mappingFieldName] || 0,
+              value: formatNumberWithCommas(item[mappingFieldName]) || 0,
               align: 'right',
+              type: 'amount'
             }
           }
 
@@ -241,7 +240,7 @@ export default {
       return data
     },
     headerMapping() {
-      const listNumberField = ['Amount', 'ARAmount', 'BlanceAmount']
+      const listNumberField = ['TotalAmount', 'Amount', 'RBBalanceAmount', 'IsStop', 'Currency', 'Date', 'ReceiveDate' ]
       const header = [
         {
           key: 'index',
@@ -260,20 +259,19 @@ export default {
 
       const listOptionsFields = ['IsStop']
       this.listDataShow.forEach((item) => {
-        const maxLength = listNumberField.includes(item.fieldName) ? '30' : '256'
+        const maxLength = listNumberField.includes(item.fieldName) ? '125' : '200'
         const headerItem = {
           key: this.mappingProperty(
             this.dataTable[0] || receiveBrowseSchema,
             item.fieldName
           ),
-          name: item.fieldName,
+          name: this.$t(`lbl_${item.fieldName}_0`),
           filter: listOptionsFields.includes(item.fieldName)
             ? 'select'
             : 'input',
-          width: item.fieldWide * 1,
           fieldName: item.fieldName,
           fieldOrder: item.fieldOrder,
-          maxLength,
+          width: maxLength,
         }
         if (item.fieldName === 'IsStop') {
           headerItem.options = this.checkAccountOptions
