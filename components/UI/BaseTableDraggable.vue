@@ -94,6 +94,7 @@
                   :disabled="item.disabled || false"
                   class="w-100 border border-dark"
                   @keyup.enter="filterData"
+                  @input="handleInput(item.key)"
                 />
                 <b-form-select
                   v-else-if="item.filter === 'select'"
@@ -261,19 +262,19 @@
 </template>
 
 <script>
-import draggable from 'vuedraggable'
+import draggable from "vuedraggable";
 import {
   BIconCaretDown,
   BIconCaretUp,
   BIconCaretUpFill,
   BIconCaretDownFill,
-} from 'bootstrap-vue'
-import systemMixins from '@/mixins/system'
-import { DRAGGABLE_TABLE } from '@/constants'
-import { isEmptyValue, formatNumberWithCommas } from '~/utils/utils'
+} from "bootstrap-vue";
+import systemMixins from "@/mixins/system";
+import { DRAGGABLE_TABLE } from "@/constants";
+import { isEmptyValue, formatNumberWithCommas } from "~/utils/utils";
 
 export default {
-  name: 'BaseTableDraggable',
+  name: "BaseTableDraggable",
   components: {
     // eslint-disable-next-line vue/no-unused-components
     BIconCaretDown,
@@ -296,11 +297,11 @@ export default {
       type: Array,
       default: () => [
         {
-          key: 'address',
-          name: 'address',
+          key: "address",
+          name: "address",
           width: 300,
-          filter: 'select',
-          options: ['test', 'address', 'abc'],
+          filter: "select",
+          options: ["test", "address", "abc"],
         },
       ],
     },
@@ -354,103 +355,103 @@ export default {
       isResize: false,
       activeRow: null,
       separateWithCommaFields: [
-        'amount',
-        'aramount',
-        'noTaxAmount',
-        'blanceAmount',
-        'otherAmount',
-        'totalAmount',
-        'totalRtAmount',
-        'price',
-        'taxRate',
-        'quantity',
-        'stopQty',
-        'soqty',
-        'invoiceQTY',
-        'returnQTY',
-        'blance',
-        'inQuantity',
-        'rtQuantity',
-        'minQuantity',
-        'maxQuantity',
-        'endQuantity',
-        'solineNumber',
-        'receiptQty',
-        'lineID',
-        'rtQty',
-        'polineID',
-        'balance',
-        'receiptLineID',
-        'totalTariff',
-        'totalElement',
-        'totalOtherCost1',
-        'totalOtherCost2',
-        'totalOtherCost3',
-        'totalOtherCost4',
-        'totalOtherCost5',
-        'tariff',
-        'otherCost',
-        'weight',
-        'moq',
-        'outPeriod',
-        'spq',
-        'outRate',
-        'packPeriod',
-        'soprice',
-        'purchasePeriod',
-        'safeQty',
-        'salePeriod',
-        'settleDate',
-        'payPeriod',
-        'rate',
-        'boxLong',
-        'width',
-        'high',
-        'height',
-        'cbm',
-        'packQty',
-        'sorate',
-        'soprice_Convert',
-        'porate',
-        'gp',
-        'fileSize',
-        'age',
-        'subProcessDays',
-        'subQuantity',
-        'completionQuantity',
-        'calculateDays',
-        'demandQty',
-        'supplyQty',
-        'needDays',
-        'leadTime',
-        'plannedQty',
-        'stockQty',
-        'needQty',
-        'balanceQty',
+        "amount",
+        "aramount",
+        "noTaxAmount",
+        "blanceAmount",
+        "otherAmount",
+        "totalAmount",
+        "totalRtAmount",
+        "price",
+        "taxRate",
+        "quantity",
+        "stopQty",
+        "soqty",
+        "invoiceQTY",
+        "returnQTY",
+        "blance",
+        "inQuantity",
+        "rtQuantity",
+        "minQuantity",
+        "maxQuantity",
+        "endQuantity",
+        "solineNumber",
+        "receiptQty",
+        "lineID",
+        "rtQty",
+        "polineID",
+        "balance",
+        "receiptLineID",
+        "totalTariff",
+        "totalElement",
+        "totalOtherCost1",
+        "totalOtherCost2",
+        "totalOtherCost3",
+        "totalOtherCost4",
+        "totalOtherCost5",
+        "tariff",
+        "otherCost",
+        "weight",
+        "moq",
+        "outPeriod",
+        "spq",
+        "outRate",
+        "packPeriod",
+        "soprice",
+        "purchasePeriod",
+        "safeQty",
+        "salePeriod",
+        "settleDate",
+        "payPeriod",
+        "rate",
+        "boxLong",
+        "width",
+        "high",
+        "height",
+        "cbm",
+        "packQty",
+        "sorate",
+        "soprice_Convert",
+        "porate",
+        "gp",
+        "fileSize",
+        "age",
+        "subProcessDays",
+        "subQuantity",
+        "completionQuantity",
+        "calculateDays",
+        "demandQty",
+        "supplyQty",
+        "needDays",
+        "leadTime",
+        "plannedQty",
+        "stockQty",
+        "needQty",
+        "balanceQty",
       ],
       isMounted: false,
-    }
+    };
   },
   computed: {
     canSetMinWidthForBody() {
-      return document && this.isMounted && !this.hasData
+      return document && this.isMounted && !this.hasData;
     },
 
     hasData() {
-      return this.dataComponent.length
+      return this.dataComponent.length;
     },
   },
   watch: {
     header: {
       handler(value) {
-        this.headersComponent = value
+        this.headersComponent = value;
       },
       deep: true,
     },
     data: {
       handler(value) {
-        this.dataComponent = JSON.parse(JSON.stringify(value))
-        this.makeSetMinWidthForBody()
+        this.dataComponent = JSON.parse(JSON.stringify(value));
+        this.makeSetMinWidthForBody();
       },
       deep: true,
     },
@@ -458,7 +459,7 @@ export default {
       immediate: true,
       handler(value) {
         if (value > -1) {
-          this.activeRow = value
+          this.activeRow = value;
         }
       },
     },
@@ -466,139 +467,139 @@ export default {
       immediate: true,
       deep: true,
       handler(data) {
-        this.filters = Object.assign({}, data)
-        this.makeSetMinWidthForBody()
+        this.filters = Object.assign({}, data);
+        this.makeSetMinWidthForBody();
       },
     },
   },
   created() {
     if (this.currentIndex >= 0) {
-      const currentItem = this.dataComponent[this.currentIndex]
-      this.eventActiveRow(currentItem, this.currentIndex, currentItem.keyRow)
+      const currentItem = this.dataComponent[this.currentIndex];
+      this.eventActiveRow(currentItem, this.currentIndex, currentItem.keyRow);
     }
 
-    this.$bus.$on('refresh-filter-data', () => {
-      this.filters = {}
-    })
+    this.$bus.$on("refresh-filter-data", () => {
+      this.filters = {};
+    });
   },
   mounted() {
-    const tableHeader = document.getElementById('table-header')
-    const tableTotal = document.getElementById('table-total')
+    const tableHeader = document.getElementById("table-header");
+    const tableTotal = document.getElementById("table-total");
 
-    this.preventScrollListener(tableHeader)
-    this.preventScrollListener(tableTotal)
+    this.preventScrollListener(tableHeader);
+    this.preventScrollListener(tableTotal);
 
-    this.isMounted = true
-    this.makeSetMinWidthForBody()
+    this.isMounted = true;
+    this.makeSetMinWidthForBody();
   },
   methods: {
     onScrollBody() {
-      const scrollLeft = document.getElementById('table-body').scrollLeft
+      const scrollLeft = document.getElementById("table-body").scrollLeft;
 
-      const tableHeader = document.getElementById('table-header')
-      const tableTotal = document.getElementById('table-total')
+      const tableHeader = document.getElementById("table-header");
+      const tableTotal = document.getElementById("table-total");
 
-      this.scrollElement(tableHeader, scrollLeft)
-      this.scrollElement(tableTotal, scrollLeft)
+      this.scrollElement(tableHeader, scrollLeft);
+      this.scrollElement(tableTotal, scrollLeft);
     },
     scrollElement(element, offsetX) {
-      element && element.scrollTo(offsetX, 0)
+      element && element.scrollTo(offsetX, 0);
     },
     preventScrollListener(element) {
       element &&
-        element.addEventListener('wheel', this.preventScroll, {
+        element.addEventListener("wheel", this.preventScroll, {
           passive: false,
-        })
+        });
     },
     preventScroll(event) {
-      event.preventDefault()
-      event.stopPropagation()
+      event.preventDefault();
+      event.stopPropagation();
 
-      return false
+      return false;
     },
     setMinWidthForBody() {
-      const bodyCollapsed = document.querySelectorAll('#table-body tbody')[0]
-      const headerCollapsed = document.getElementsByClassName('header-name')[0]
-      bodyCollapsed.style.minWidth = `${headerCollapsed.offsetWidth}px`
+      const bodyCollapsed = document.querySelectorAll("#table-body tbody")[0];
+      const headerCollapsed = document.getElementsByClassName("header-name")[0];
+      bodyCollapsed.style.minWidth = `${headerCollapsed.offsetWidth}px`;
     },
 
     makeSetMinWidthForBody() {
-      this.canSetMinWidthForBody && this.setMinWidthForBody()
+      this.canSetMinWidthForBody && this.setMinWidthForBody();
     },
 
     makeFormatNumberWithCommas(number) {
-      return formatNumberWithCommas(number) || '0'
+      return formatNumberWithCommas(number) || "0";
     },
     formatNumber(value) {
-      const invalidNumber = isNaN(Number(value)) || !value
+      const invalidNumber = isNaN(Number(value)) || !value;
       if (invalidNumber) {
-        return value
+        return value;
       }
 
-      return this.parseStringToFloat(value)
+      return this.parseStringToFloat(value);
     },
 
     keepTextSpaces(value) {
       return value === 0
         ? value
-        : value && value.toString().replace(/ /g, '&nbsp;')
+        : value && value.toString().replace(/ /g, "&nbsp;");
     },
 
     sort(key) {
       if (this.isResize) {
-        return
+        return;
       }
 
       this.sortParams = {
         sortByColumn: key,
-        sortAscOrDesc: this.filters.isAscending ? 'ASC' : 'DESC',
+        sortAscOrDesc: this.filters.isAscending ? "ASC" : "DESC",
         isAscending: !this.filters.isAscending,
-      }
+      };
 
-      this.filterData()
+      this.filterData();
     },
     filterData() {
-      this.makeValidFilterPayload()
-      this.updateFiltersFunction(this.filterPayload)
-      this.$emit('search')
-      this.$forceUpdate()
+      this.makeValidFilterPayload();
+      this.updateFiltersFunction(this.filterPayload);
+      this.$emit("search");
+      this.$forceUpdate();
     },
     makeValidFilterPayload() {
       const finalPayloadData = {
         ...this.filters,
         ...this.sortParams,
         pageNo: 1,
-      }
+      };
       // itemType = 'Other' in Item Master
       if (
-        this.initialFilters.itemType === 'Other' &&
+        this.initialFilters.itemType === "Other" &&
         this.filters.isClickCallAPIQuery
       ) {
-        finalPayloadData.itemType = 'Other'
+        finalPayloadData.itemType = "Other";
       }
       for (const prop in finalPayloadData) {
-        isEmptyValue(prop) && delete finalPayloadData[prop]
+        isEmptyValue(prop) && delete finalPayloadData[prop];
       }
 
-      this.filterPayload = finalPayloadData
+      this.filterPayload = finalPayloadData;
     },
     eventActiveRow(item, indexRow, keyRow) {
-      this.activeRow = indexRow
-      const emitPayload = {}
+      this.activeRow = indexRow;
+      const emitPayload = {};
       if (item) {
-        emitPayload.item = item
+        emitPayload.item = item;
       }
       if (indexRow || indexRow === 0) {
-        emitPayload.index = indexRow
+        emitPayload.index = indexRow;
       }
       if (keyRow) {
-        emitPayload.keyRow = keyRow
+        emitPayload.keyRow = keyRow;
       }
-      this.$emit('row', emitPayload)
+      this.$emit("row", emitPayload);
     },
     handleScroll(e) {
       if (this.$refs.total) {
-        this.$refs.total.scrollLeft = e.target.scrollLeft
+        this.$refs.total.scrollLeft = e.target.scrollLeft;
       }
       // document.getElementById('table-total').scrollLeft = e.target.scrollLeft
       // this.$emit('scroll', e.target.scrollLeft)
@@ -606,42 +607,47 @@ export default {
     mousedown(index, e) {
       const headerBeforeChange = JSON.parse(
         JSON.stringify(this.headersComponent)
-      )
-      this.resizeState = index
-      this.isResize = true
-      const clienX = e.clientX
-      const itemWidth = headerBeforeChange[index].width * 1
+      );
+      this.resizeState = index;
+      this.isResize = true;
+      const clienX = e.clientX;
+      const itemWidth = headerBeforeChange[index].width * 1;
       const mouseMoveHandler = (event) => {
-        headerBeforeChange[index].width = itemWidth * 1 + event.clientX - clienX
+        headerBeforeChange[index].width =
+          itemWidth * 1 + event.clientX - clienX;
 
         const cantResize =
-          headerBeforeChange[index].width <= DRAGGABLE_TABLE.MIN_COLUMN_WIDTH
+          headerBeforeChange[index].width <= DRAGGABLE_TABLE.MIN_COLUMN_WIDTH;
         if (cantResize) {
-          headerBeforeChange[index].width = DRAGGABLE_TABLE.MIN_COLUMN_WIDTH
+          headerBeforeChange[index].width = DRAGGABLE_TABLE.MIN_COLUMN_WIDTH;
         }
-      }
+      };
       const mouseUpHandler = () => {
-        document.removeEventListener('mousemove', mouseMoveHandler)
-        document.removeEventListener('mouseup', mouseUpHandler)
-        this.resizeState = null
-        setTimeout(() => (this.isResize = false), 0)
-      }
-      document.addEventListener('mousemove', mouseMoveHandler)
-      document.addEventListener('mouseup', mouseUpHandler)
-      this.headersComponent = headerBeforeChange
-      this.$emit('changeLayout', {
+        document.removeEventListener("mousemove", mouseMoveHandler);
+        document.removeEventListener("mouseup", mouseUpHandler);
+        this.resizeState = null;
+        setTimeout(() => (this.isResize = false), 0);
+      };
+      document.addEventListener("mousemove", mouseMoveHandler);
+      document.addEventListener("mouseup", mouseUpHandler);
+      this.headersComponent = headerBeforeChange;
+      this.$emit("changeLayout", {
         indexColumn: index,
         headerData: this.headersComponent,
-      })
+      });
     },
     change(value) {
-      this.$emit('changeLayout', {
-        indexColumn: '',
+      this.$emit("changeLayout", {
+        indexColumn: "",
         headerData: this.headersComponent,
-      })
+      });
+    },
+
+    handleInput(key) {
+      this.filters[key] = this.filters[key].trim(); // Xử lý thêm nếu cần
     },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>

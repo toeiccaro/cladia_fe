@@ -53,11 +53,16 @@ import { SERVER_RESPONSE_CODE } from "@/constants";
 import api from "@/api/api";
 import BasePagination from "~/components/UI/BasePagination";
 import BaseTableDraggable from "~/components/MasterData/Parameter/BaseTableDraggable";
+
 import BaseTableLoader from "~/components/loaders/BaseTableLoader";
 
 export default {
   name: "TableParameter",
-  components: { BaseTableDraggable, BasePagination, BaseTableLoader },
+  components: {
+    BaseTableDraggable,
+    BasePagination,
+    BaseTableLoader,
+  },
   mixins: [systemMixins, dateTimeMixins],
   data() {
     return {
@@ -207,7 +212,9 @@ export default {
         const headerItem = {
           key: item.fieldName,
           filter: "input",
-          name: this.shouldShowCodeField ? this.$t(`lbl_${item.fieldName}_0`) : this.$t(`lan_${item.fieldName}_0`),
+          name: this.shouldShowCodeField
+            ? this.$t(`lbl_${item.fieldName}_0`)
+            : this.$t(`lan_${item.fieldName}_0`),
           width: 150,
           fieldName: item.fieldName,
           fieldOrder: index,
@@ -265,10 +272,15 @@ export default {
           keyCode: this.parameterType,
         };
 
-        const res = await api(this.shouldShowCodeField() ? "getFinanceSettingLanguage" :"getParameterLanguage" , payload)
+        const res = await api(
+          this.shouldShowCodeField()
+            ? "getFinanceSettingLanguage"
+            : "getParameterLanguage",
+          payload
+        );
         const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK;
         if (validResponse) {
-          this.dataTable = res.data?.tableContent?.content
+          this.dataTable = res.data?.tableContent?.content;
           this.scolumnHides = res.data?.scolumnHides;
           this.total = res.data.tableContent?.totalElements;
         }
@@ -305,9 +317,9 @@ export default {
         this.isLoadingTable = true;
         const [languageResponse, paramTypeResponse] = await Promise.all([
           api("getLanguage"),
-          this.shouldShowCodeField() 
-          ? api("getFinanceSettingKeyCodeName") 
-          : api("getParameterKeyCodeName"),
+          this.shouldShowCodeField()
+            ? api("getFinanceSettingKeyCodeName")
+            : api("getParameterKeyCodeName"),
         ]);
 
         if (languageResponse.length) {
@@ -367,9 +379,9 @@ export default {
         );
 
         this.SET_PAYLOAD_PARAMETER(finalApiPayload);
-        const res =  this.shouldShowCodeField() 
-        ? await api("getFinanceSettingLanguage", this.payloadParameter) 
-        : await api("getParameterLanguage", this.payloadParameter);
+        const res = this.shouldShowCodeField()
+          ? await api("getFinanceSettingLanguage", this.payloadParameter)
+          : await api("getParameterLanguage", this.payloadParameter);
 
         this.loading = false;
         const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK;
@@ -398,10 +410,15 @@ export default {
     async searchKeyCodeName({ sortParams, filterParams }) {
       const { name } = filterParams;
       const language = this.$i18n.locale;
-      const res = await api(this.shouldShowCodeField() ? "searchKeyCodeNameFinanceSetting" : "searchKeyCodeName", {
-        searchValue: name,
-        language,
-      });
+      const res = await api(
+        this.shouldShowCodeField()
+          ? "searchKeyCodeNameFinanceSetting"
+          : "searchKeyCodeName",
+        {
+          searchValue: name,
+          language,
+        }
+      );
       const { status, data } = res;
       if (status === SERVER_RESPONSE_CODE.OK) {
         this.parameterTypeDataTable = data.map((item) => ({
@@ -422,6 +439,20 @@ export default {
     shouldShowCodeField() {
       return this.$route.name.includes("finance");
     },
+    // getParameterTypeIndex(index) {
+    //   return (
+    //     (this.parameterTypeCurrentPage - 1) * this.parameterTypePerPage +
+    //     index +
+    //     1
+    //   );
+    // },
+    // getParameterDetailIndex(index) {
+    //   return (
+    //     (this.parameterDetailCurrentPage - 1) * this.parameterDetailPerPage +
+    //     index +
+    //     1
+    //   );
+    // },
   },
 };
 </script>
