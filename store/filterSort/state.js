@@ -1,7 +1,7 @@
 export default {
   payloadBom: {},
   isDifferentRoute: true,
-  keyRouter: "",
+  keyRouter: '',
   payloadPurchasePrice: {
     pageNo: 1,
     pageSize: 30,
@@ -33,12 +33,12 @@ export default {
   payloadReceiveBrowse: {
     pageNo: 1,
     pageSize: 100,
-    sortByColumn: "orderNo",
+    sortByColumn: 'orderNo',
   },
   payloadPayBrowse: {
     pageNo: 1,
     pageSize: 100,
-    sortByColumn: "orderNo",
+    sortByColumn: 'orderNo',
   },
 
   payloadSaleDNBrowse: {

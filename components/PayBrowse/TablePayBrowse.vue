@@ -66,17 +66,17 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapMutations } from "vuex";
-import { SERVER_RESPONSE_CODE } from "@/constants";
-import { receiveBrowseSchema } from "@/schemas/finance/receive-browse";
-import commonOptionsMixins from "@/mixins/commonOptions";
-import receiveBrowseMixins from "@/mixins/receiveBrowse";
-import dateTimeMixins from "@/mixins/dateTime";
-import api from "@/api/api";
-import BasePagination from "~/components/UI/BasePagination.vue";
-import BaseTableDraggable from "~/components/UI/BaseTableDraggable.vue";
-import BaseTableLoader from "~/components/loaders/BaseTableLoader";
-import { formatNumberWithCommas } from "~/utils/utils";
+import { mapGetters, mapMutations } from 'vuex';
+import { SERVER_RESPONSE_CODE } from '@/constants';
+import { receiveBrowseSchema } from '@/schemas/finance/receive-browse';
+import commonOptionsMixins from '@/mixins/commonOptions';
+import receiveBrowseMixins from '@/mixins/receiveBrowse';
+import dateTimeMixins from '@/mixins/dateTime';
+import api from '@/api/api';
+import BasePagination from '~/components/UI/BasePagination.vue';
+import BaseTableDraggable from '~/components/UI/BaseTableDraggable.vue';
+import BaseTableLoader from '~/components/loaders/BaseTableLoader';
+import { formatNumberWithCommas } from '~/utils/utils';
 
 export default {
   components: { BaseTableDraggable, BasePagination, BaseTableLoader },
@@ -92,7 +92,7 @@ export default {
       lang: this.$i18n.locale,
       isLoadingTable: false,
       isCheckAll: false,
-      listIgnoreFieldName: ["Blance"],
+      listIgnoreFieldName: ['Blance'],
       dataHeader: [],
     };
   },
@@ -112,15 +112,15 @@ export default {
 
   computed: {
     ...mapGetters({
-      payloadPayBrowse: "filterSort/getPayloadPayBrowse",
+      payloadPayBrowse: 'filterSort/getPayloadPayBrowse',
     }),
-    ...mapGetters("base", ["getActiveButtonToolBar"]),
+    ...mapGetters('base', ['getActiveButtonToolBar']),
 
     checkAccountOptions() {
       return [
-        { text: "", value: "" },
-        { text: "Yes", value: 1 },
-        { text: "No", value: 0 },
+        { text: '', value: '' },
+        { text: 'Yes', value: 1 },
+        { text: 'No', value: 0 },
       ];
     },
     listDataShow() {
@@ -134,40 +134,40 @@ export default {
       return this.headerMapping.map((item) => {
         const temp = {
           key: item.key,
-          value: "",
-          type: "text",
+          value: '',
+          type: 'text',
         };
-        if (item.key === "receiveDate") {
-          temp.value = "Total: ";
-          temp.align = "center";
+        if (item.key === 'receiveDate') {
+          temp.value = 'Total: ';
+          temp.align = 'center';
         }
-        if (item.key === "TotalAmount") {
+        if (item.key === 'TotalAmount') {
           temp.value = this.dataFooter.Amount;
-          temp.align = "right";
-          temp.type = "amount";
+          temp.align = 'right';
+          temp.type = 'amount';
         }
-        if (item.key === "Amount") {
+        if (item.key === 'Amount') {
           temp.value = this.dataFooter.ARAmount;
-          temp.align = "right";
-          temp.type = "amount";
+          temp.align = 'right';
+          temp.type = 'amount';
         }
-        if (item.key === "RBBalanceAmount") {
+        if (item.key === 'RBBalanceAmount') {
           temp.value = this.dataFooter.BlanceAmount;
-          temp.align = "right";
-          temp.type = "amount";
+          temp.align = 'right';
+          temp.type = 'amount';
         }
         return temp;
       });
     },
     dataTableMapping() {
       const listAlignCenterFields = [
-        "OrderNO",
-        "InvoiceNo",
-        "Currency",
-        "CustomerName",
-        "RBStatement",
+        'OrderNO',
+        'InvoiceNo',
+        'Currency',
+        'CustomerName',
+        'RBStatement',
       ];
-      const listAlignRightFields = ["TotalAmount", "Amount", "RBBalanceAmount"];
+      const listAlignRightFields = ['TotalAmount', 'Amount', 'RBBalanceAmount'];
 
       const data = this.dataTable.map((item, index) => {
         const obj = {
@@ -177,11 +177,11 @@ export default {
                 (this.payloadPayBrowse.pageNo - 1) +
               index +
               1,
-            align: "center",
+            align: 'center',
           },
           checkbox: {
             orderByList: 1,
-            type: "slot",
+            type: 'slot',
             value: false,
           },
           keyRow: item.receiveBrowseNo,
@@ -193,57 +193,57 @@ export default {
           );
 
           obj[mappingFieldName] = {
-            value: item[mappingFieldName] || "",
+            value: item[mappingFieldName] || '',
           };
 
           if (listAlignCenterFields.includes(headerItem.fieldName)) {
-            obj[mappingFieldName].align = "center";
+            obj[mappingFieldName].align = 'center';
           }
 
           if (listAlignRightFields.includes(headerItem.fieldName)) {
             obj[mappingFieldName] = {
               value: formatNumberWithCommas(item[mappingFieldName]) || 0,
-              align: "right",
-              type: "amount",
+              align: 'right',
+              type: 'amount',
             };
           }
 
-          if (headerItem.fieldName === "OrderNO") {
+          if (headerItem.fieldName === 'OrderNO') {
             obj[mappingFieldName].type = this.getActiveButtonToolBar?.isEdit
-              ? "link"
-              : "";
+              ? 'link'
+              : '';
             obj[
               mappingFieldName
             ].link = `/${this.$i18n.locale}/finance/pay-browse/detail?payBrowse=${item.id}`;
           }
 
-          if (headerItem.fieldName === "Date") {
+          if (headerItem.fieldName === 'Date') {
             obj[mappingFieldName].value = this.convertDate(item.Date);
-            obj[mappingFieldName].align = "center";
+            obj[mappingFieldName].align = 'center';
           }
 
-          if (headerItem.fieldName === "ReceiveDate") {
+          if (headerItem.fieldName === 'ReceiveDate') {
             obj[mappingFieldName].value = this.convertDate(item.receiveDate);
-            obj[mappingFieldName].align = "center";
+            obj[mappingFieldName].align = 'center';
             const currentDate = new Date().getTime();
             const receiveDate = new Date(item.receiveDate).getTime();
             const isNotPaidEnough = item.RBBalanceAmount > 0 && !item.isStop;
             if (isNotPaidEnough && receiveDate < currentDate) {
-              obj[mappingFieldName].color = "red";
+              obj[mappingFieldName].color = 'red';
             }
           }
 
-          if (headerItem.fieldName === "RBStatement") {
+          if (headerItem.fieldName === 'RBStatement') {
             obj[mappingFieldName].type = this.getActiveButtonToolBar?.isEdit
-              ? "link"
-              : "";
+              ? 'link'
+              : '';
             obj[
               mappingFieldName
             ].link = `/${this.$i18n.locale}/finance/pay-browse/detail?payBrowse=${item.id}`;
           }
 
-          if (headerItem.fieldName === "IsStop") {
-            obj[mappingFieldName].type = "slot";
+          if (headerItem.fieldName === 'IsStop') {
+            obj[mappingFieldName].type = 'slot';
           }
         });
         return obj;
@@ -252,35 +252,35 @@ export default {
     },
     headerMapping() {
       const listNumberField = [
-        "TotalAmount",
-        "Amount",
-        "RBBalanceAmount",
-        "IsStop",
-        "Currency",
-        "Date",
-        "ReceiveDate",
+        'TotalAmount',
+        'Amount',
+        'RBBalanceAmount',
+        'IsStop',
+        'Currency',
+        'Date',
+        'ReceiveDate',
       ];
       const header = [
         {
-          key: "index",
-          name: "",
+          key: 'index',
+          name: '',
           width: 40,
           canNotSort: true,
         },
         {
-          key: "checkbox",
-          name: "",
+          key: 'checkbox',
+          name: '',
           width: 40,
-          type: "slot",
+          type: 'slot',
           canNotSort: true,
         },
       ];
 
-      const listOptionsFields = ["IsStop"];
+      const listOptionsFields = ['IsStop'];
       this.listDataShow.forEach((item) => {
         const maxLength = listNumberField.includes(item.fieldName)
-          ? "125"
-          : "200";
+          ? '125'
+          : '200';
         const headerItem = {
           key: this.mappingProperty(
             this.dataTable[0] || receiveBrowseSchema,
@@ -288,13 +288,13 @@ export default {
           ),
           name: this.$t(`lbl_${item.fieldName}_0`),
           filter: listOptionsFields.includes(item.fieldName)
-            ? "select"
-            : "input",
+            ? 'select'
+            : 'input',
           fieldName: item.fieldName,
           fieldOrder: item.fieldOrder,
           width: maxLength,
         };
-        if (item.fieldName === "IsStop") {
+        if (item.fieldName === 'IsStop') {
           headerItem.options = this.checkAccountOptions;
         }
         header.push(headerItem);
@@ -365,9 +365,9 @@ export default {
   },
   methods: {
     ...mapMutations({
-      UPDATE_PAYLOAD_PAY_BROWSE: "filterSort/UPDATE_PAYLOAD_PAY_BROWSE",
-      SET_PAYLOAD_PAY_BROWSE: "filterSort/SET_PAYLOAD_PAY_BROWSE",
-      SET_DATA_COLUMN_HIDE: "SET_DATA_COLUMN_HIDE",
+      UPDATE_PAYLOAD_PAY_BROWSE: 'filterSort/UPDATE_PAYLOAD_PAY_BROWSE',
+      SET_PAYLOAD_PAY_BROWSE: 'filterSort/SET_PAYLOAD_PAY_BROWSE',
+      SET_DATA_COLUMN_HIDE: 'SET_DATA_COLUMN_HIDE',
     }),
 
     onChangeCheckbox(event, index) {
@@ -396,12 +396,12 @@ export default {
       const { index } = payload;
       this.listCheckbox[index].value = !this.listCheckbox[index].value;
 
-      this.$emit("handleDetailId", { ...payload?.item });
+      this.$emit('handleDetailId', { ...payload?.item });
     },
     async filterAndSort() {
       try {
         this.loading = true;
-        const res = await api("getPayBrowses", this.payloadPayBrowse);
+        const res = await api('getPayBrowses', this.payloadPayBrowse);
 
         this.isCheckAll = false;
 
@@ -419,7 +419,7 @@ export default {
     async getData() {
       try {
         this.isLoadingTable = true;
-        const res = await api("getPayBrowses", this.payloadPayBrowse);
+        const res = await api('getPayBrowses', this.payloadPayBrowse);
         const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK;
         if (!validResponse) {
           return;
@@ -444,7 +444,7 @@ export default {
       await this.getData();
     },
     handleDetailId(data) {
-      this.$emit("handleDetailId", data);
+      this.$emit('handleDetailId', data);
     },
     mappingProperty(item, fieldName) {
       for (const property in item) {
@@ -452,11 +452,11 @@ export default {
           return property;
         }
       }
-      return "";
+      return '';
     },
 
     changeLayout(data) {
-      this.$emit("changeLayout", data, this.listDataShow);
+      this.$emit('changeLayout', data, this.listDataShow);
     },
   },
 };

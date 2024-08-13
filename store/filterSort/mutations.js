@@ -1,4 +1,4 @@
-import { isEmptyValue } from "~/utils/utils";
+import { isEmptyValue } from '~/utils/utils';
 
 export default {
   IS_DIFFERENT_ROUTE(state, data) {

@@ -6,11 +6,11 @@
   </div>
 </template>
 <script>
-import TabBar from "@/components/UI/TabBar.vue";
-import AddEnterprise from "@/components/MasterData/EnterpriseMaster/AddEnterprise.vue";
-import BaseValidateMessage from "@/components/UI/BaseValidateMessage";
-import BusinessCard from "~/components/MasterData/EnterpriseMaster/BusinessCard.vue";
-import EnterpriseRecord from "~/components/MasterData/EnterpriseMaster/EnterpriseRecord.vue";
+import TabBar from '@/components/UI/TabBar.vue';
+import AddEnterprise from '@/components/MasterData/EnterpriseMaster/AddEnterprise.vue';
+import BaseValidateMessage from '@/components/UI/BaseValidateMessage';
+import BusinessCard from '~/components/MasterData/EnterpriseMaster/BusinessCard.vue';
+import EnterpriseRecord from '~/components/MasterData/EnterpriseMaster/EnterpriseRecord.vue';
 export default {
   components: {
     TabBar,
@@ -19,22 +19,22 @@ export default {
     EnterpriseRecord,
     BaseValidateMessage,
   },
-  middleware: ["authenticated"],
+  middleware: ['authenticated'],
   data() {
     return {
-      activeTabMenu: "enterpriseMaster",
+      activeTabMenu: 'enterpriseMaster',
       listMenus: [
         {
-          key: "enterpriseMaster",
-          label: this.$t("lbl_BaseData_Enterprise_0"),
+          key: 'enterpriseMaster',
+          label: this.$t('lbl_BaseData_Enterprise_0'),
         },
         {
-          key: "businessCards",
-          label: this.$t("lbl_EnterpriseCards_0"),
+          key: 'businessCards',
+          label: this.$t('lbl_EnterpriseCards_0'),
         },
         {
-          key: "record",
-          label: this.$t("lbl_Record_0"),
+          key: 'record',
+          label: this.$t('lbl_Record_0'),
         },
       ],
       listErrorMessage: [],

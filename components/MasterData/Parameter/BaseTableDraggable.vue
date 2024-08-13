@@ -265,18 +265,18 @@
 </template>
 
 <script>
-import draggable from "vuedraggable";
+import draggable from 'vuedraggable';
 import {
   BIconCaretDown,
   BIconCaretUp,
   BIconCaretUpFill,
   BIconCaretDownFill,
-} from "bootstrap-vue";
-import systemMixins from "@/mixins/system";
-import { DRAGGABLE_TABLE } from "@/constants";
-import { isEmptyValue } from "~/utils/utils";
+} from 'bootstrap-vue';
+import systemMixins from '@/mixins/system';
+import { DRAGGABLE_TABLE } from '@/constants';
+import { isEmptyValue } from '~/utils/utils';
 export default {
-  name: "BaseTableDraggable",
+  name: 'BaseTableDraggable',
   components: {
     // eslint-disable-next-line vue/no-unused-components
     BIconCaretDown,
@@ -295,11 +295,11 @@ export default {
       type: Array,
       default: () => [
         {
-          key: "address",
-          name: "address",
+          key: 'address',
+          name: 'address',
           width: 300,
-          filter: "select",
-          options: ["test", "address", "abc"],
+          filter: 'select',
+          options: ['test', 'address', 'abc'],
         },
       ],
     },
@@ -317,7 +317,7 @@ export default {
     },
     sortKey: {
       type: String,
-      default: "id",
+      default: 'id',
     },
     isAscending: {
       type: Boolean,
@@ -367,13 +367,13 @@ export default {
     },
     dataComponent: {
       handler(value) {
-        this.$bus.$emit("table-parameter-data-changed", value);
+        this.$bus.$emit('table-parameter-data-changed', value);
       },
       deep: true,
     },
     headersComponent: {
       handler(value) {
-        this.filters[value.key] = this.filters[value.key] || "";
+        this.filters[value.key] = this.filters[value.key] || '';
       },
       deep: true,
     },
@@ -388,7 +388,7 @@ export default {
   },
   created() {
     this.headersComponent.forEach((item) => {
-      this.filters[item.key] = "";
+      this.filters[item.key] = '';
     });
   },
   methods: {
@@ -404,7 +404,7 @@ export default {
     keepTextSpaces(value) {
       return value === 0
         ? value
-        : value && value.toString().replace(/ /g, "&nbsp;");
+        : value && value.toString().replace(/ /g, '&nbsp;');
     },
 
     sort(key) {
@@ -414,23 +414,23 @@ export default {
       };
       if (!this.isResize) {
         this.$emit(
-          "sort",
+          'sort',
           {
             sortParams: this.sortParams,
             filterParams: this.filters,
           },
-          "sort"
+          'sort'
         );
       }
     },
     filterData() {
       this.$emit(
-        "filter",
+        'filter',
         {
           sortParams: this.sortParams,
           filterParams: this.filters,
         },
-        "filter"
+        'filter'
       );
     },
     eventActiveRow(item, indexRow, keyRow) {
@@ -445,7 +445,7 @@ export default {
       if (keyRow) {
         emitPayload.keyRow = keyRow;
       }
-      this.$emit("row", emitPayload);
+      this.$emit('row', emitPayload);
     },
     mousedown(index, e) {
       const headerBeforeChange = JSON.parse(
@@ -466,28 +466,28 @@ export default {
         }
       };
       const mouseUpHandler = () => {
-        document.removeEventListener("mousemove", mouseMoveHandler);
-        document.removeEventListener("mouseup", mouseUpHandler);
+        document.removeEventListener('mousemove', mouseMoveHandler);
+        document.removeEventListener('mouseup', mouseUpHandler);
         this.resizeState = null;
         setTimeout(() => (this.isResize = false), 0);
       };
-      document.addEventListener("mousemove", mouseMoveHandler);
-      document.addEventListener("mouseup", mouseUpHandler);
+      document.addEventListener('mousemove', mouseMoveHandler);
+      document.addEventListener('mouseup', mouseUpHandler);
       this.headersComponent = headerBeforeChange;
-      this.$emit("changeLayout", {
+      this.$emit('changeLayout', {
         indexColumn: index,
         headerData: this.headersComponent,
       });
     },
     change(value) {
-      this.$emit("changeLayout", {
-        indexColumn: "",
+      this.$emit('changeLayout', {
+        indexColumn: '',
         headerData: this.headersComponent,
       });
     },
 
     saveData() {
-      this.$emit("saveData");
+      this.$emit('saveData');
     },
   },
 };
