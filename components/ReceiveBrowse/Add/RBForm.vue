@@ -4,11 +4,11 @@
       <tbody>
         <tr class="tr-1">
           <td class="label">
-            <span id="OrderNumber">{{ $t("lbl_RBOrderNO_0") }}</span>
+            <span id="orderNumber">{{ $t("lbl_RBOrderNO_0") }}</span>
           </td>
           <td class="input">
             <input
-              v-model="form.OrderNumber"
+              v-model="form.orderNumber"
               v-auto-focus
               name="txtOrderNumber"
               type="text"
@@ -18,7 +18,7 @@
           <td class=""></td>
 
           <td class="label">
-            <span id="EntryDate">{{ $t("lbl_RBEntryDate_0") }}</span>
+            <span id="entryDate">{{ $t("lbl_RBEntryDate_0") }}</span>
           </td>
           <td class="input">
             <datepicker
@@ -26,7 +26,7 @@
                 isAppendToChild: true,
                 childClass: 'input__orderDate',
               }"
-              :value="form.EntryDate"
+              :value="form.entryDate"
               typeable
               format="yyyy-MM-dd"
               :disabled="isDisabled"
@@ -37,13 +37,13 @@
           </td>
           <td class="info">*</td>
           <td class="label">
-            <span id="TotalDebitAmount">{{
+            <span id="totalDebitAmount">{{
               $t("lbl_RBTotalDebitAmount_0")
             }}</span>
           </td>
           <td class="input">
             <input
-              v-model="form.TotalDebitAmount"
+              v-model="form.totalDebitAmount"
               :disabled="isDisabled"
               type="text"
               class="number"
@@ -53,11 +53,13 @@
         </tr>
         <tr class="tr-2">
           <td class="label">
-            <span>{{ $t("lbl_RBDepartment_0")}}</span>
+            <span id="departmentID">
+              {{ $t("lbl_RBDepartment_0")}}
+            </span>
           </td>
           <td class="input">
             <b-form-select
-              v-model="form.departmentId"
+              v-model="form.departmentID"
               :options="departmentOptions"
               class="select"
               :disabled="isDisabled"
@@ -65,11 +67,13 @@
           </td>
           <td class="info"></td>
           <td class="label">
-            <span>{{ $t("lbl_RBResponsiblePerson_0") }}</span>
+            <span id="responsiblePerson">
+              {{ $t("lbl_RBResponsiblePerson_0") }}
+            </span>
           </td>
           <td class="input">
             <b-form-select
-              v-model="form.ResponsiblePerson"
+              v-model="form.responsiblePerson"
               :options="departmentOptions"
               class="select"
               :disabled="isDisabled"
@@ -77,13 +81,13 @@
           </td>
           <td class="info"></td>
           <td class="label">
-            <span id="TotalCreditAmount">{{
+            <span id="totalCreditAmount">{{
               $t("lbl_RBTotalCreditAmount_0")
             }}</span>
           </td>
           <td class="input">
             <input
-              v-model="form.TotalCreditAmount"
+              v-model="form.totalCreditAmount"
               :disabled="isDisabled"
               type="text"
               class="number"
@@ -92,34 +96,34 @@
         </tr>
         <tr>
           <td class="label">
-            <span>{{ $t("lbl_RBEditor_0") }}</span>
+            <span id="editor">{{ $t("lbl_RBEditor_0") }}</span>
           </td>
           <td class="input">
-            <input v-model="form.Editor" type="text" :disabled="isDisabled" />
+            <input v-model="form.editor" type="text" :disabled="isDisabled" />
           </td>
           <td class="info"></td>
           <td class="label">
-            <span>{{ $t("lbl_RBEditingDate_0") }}</span>
+            <span id="editDate">{{ $t("lbl_RBEditingDate_0") }}</span>
           </td>
           <td class="input">
             <input
-              v-model="form.EditingDate"
+              v-model="form.editDate"
               type="text"
               :disabled="isDisabled"
             />
           </td>
           <td class="info"></td>
           <td class="label">
-            <span>{{ $t("lbl_RBMargin_0") }}</span>
+            <span id="margin">{{ $t("lbl_RBMargin_0") }}</span>
           </td>
           <td class="input">
-            <input v-model="form.Margin" type="text" :disabled="isDisabled" />
+            <input v-model="form.margin" type="text" :disabled="isDisabled" />
           </td>
           <td class="info">&nbsp;</td>
         </tr>
         <tr>
           <td class="label">
-            <span id="Memo">{{ $t("lbl_RBMemo_0") }}</span>
+            <span id="memo">{{ $t("lbl_RBMemo_0") }}</span>
           </td>
           <td rows="1" colspan="4" class="input">
             <input
@@ -131,10 +135,10 @@
           </td>
           <td class="info"></td>
           <td class="label">
-            <span>{{ $t("lbl_RBChecker_0") }}</span>
+            <span id="checker">{{ $t("lbl_RBChecker_0") }}</span>
           </td>
           <td class="input">
-            <input v-model="form.Checker" type="text" :disabled="isDisabled" />
+            <input v-model="form.checker" type="text" :disabled="isDisabled" />
           </td>
           <td class="info">&nbsp;</td>
         </tr>

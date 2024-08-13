@@ -209,6 +209,16 @@ export default {
             value: item[mappingFieldName] || '',
           }
 
+          switch (headerItem.fieldName) {
+            case 'SIPriceIncludeTax':
+            case 'SIAmountIncludeTax':
+            case 'SIPriceIncludeDiscount':
+            case 'SIDiscountRate':
+            case 'SITaxRate':
+              obj[mappingFieldName].value = obj[mappingFieldName].value == 0 ? 0 : obj[mappingFieldName].value
+              break
+          }
+
           if (headerItem.fieldName === 'WarehouseID') {
             obj[mappingFieldName].value = item.warehouse
           }

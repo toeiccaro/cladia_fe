@@ -5,7 +5,10 @@
       :is-error="true"
       :list-error-message="listErrorMessage"
     ></BaseValidateMessage>
-    <FormInputQuotation :params-quotation="form"></FormInputQuotation>
+    <FormInputQuotation 
+      :params-quotation="form"
+      @update-table="updateTable"
+    ></FormInputQuotation>
     <BaseTableItemDetail
       ref="tableItem"
       class="add-quotation-table-details"
@@ -18,6 +21,8 @@
       :header-detail="tableHeaders"
       :type-action="'ADD'"
       :new-line="newLine"
+      :form="form"
+
       @changeTable="changeDataDetailTable"
     ></BaseTableItemDetail>
     <BaseModalAttach
@@ -192,12 +197,42 @@ export default {
           hidden: false,
         },
         {
+          key: 'priceIncludeDiscount',
+          name: this.$t('lbl_QPriceIncludeDiscount_0'),
+          filter: 'input',
+          width: 150,
+          align: 'left',
+          disabled: true,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
+          key: 'priceIncludeTax',
+          name: this.$t('lbl_QPriceIncludeTax_0'),
+          filter: 'input',
+          width: 150,
+          align: 'left',
+          disabled: true,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
           key: 'amount',
           name: this.$t('lbl_Amount_0'),
           filter: 'number',
           width: 150,
           align: 'right',
           typeInput: 'number',
+          disabled: true,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
+          key: 'amountIncludeTax',
+          name: this.$t('lbl_QAmountIncludeTax_0'),
+          filter: 'input',
+          width: 150,
+          align: 'left',
           disabled: true,
           fieldRequired: false,
           hidden: false,
@@ -223,7 +258,10 @@ export default {
         unitID: '',
         quantity: 0,
         price: 0,
+        priceIncludeDiscount: 0,
+        priceIncludeTax: 0,
         amount: 0,
+        amountIncludeTax: 0,
         memoDTL: '',
         isUpdate: true,
         isNewLine: true,
@@ -327,6 +365,25 @@ export default {
 
   methods: {
     ...mapActions('base', ['getUnitOptions', 'getItemTypeOptionsFromAPI']),
+    
+    updateTable(val) {
+      this.dataTable = this.dataTable.map((item) =>{
+        const quantity = item.quantity
+        const price = item.price
+        const discountRate = val.discountRate
+        const taxRate = val.taxRate
+
+        const { priceIncludeDiscount, amount, priceIncludeTax, amountIncludeTax } = this.parseFloatCalculatePrice({quantity, price, discountRate, taxRate});
+
+        return Object.assign({}, item, {
+          amount,
+          priceIncludeDiscount,
+          priceIncludeTax,
+          amountIncludeTax
+        })
+      });
+    },
+    
     async getQuotationDetailColumn() {
       try {
         this.loading = true

@@ -9,6 +9,7 @@
       ref="editOrderForm"
       :data="dataDetail"
       :is-disabled="isCheck"
+      @update-table="updateTable"
     ></FormInputOpOrder>
     <base-table-item-detail
       ref="outwardOrderTableItem"
@@ -21,6 +22,8 @@
       :header-detail="tableHeaders"
       :new-line="newLine"
       :is-purchase="true"
+      :form="form"
+      is-outward
       @changeTable="changeDataDetailTable"
     />
     <BaseModalAttach
@@ -217,32 +220,32 @@ export default {
           hidden: false,
         },
         {
-          key: 'SODiscountRate',
-          name: this.$t('lbl_SODiscountRate_0'),
+          key: 'OODiscountRate',
+          name: this.$t('lbl_OODiscountRate_0'),
           filter: 'input',
           width: 150,
           align: 'left',
-          disabled: this.isCheck,
+          disabled: true,
           fieldRequired: false,
           hidden: false,
         },
         {
-          key: 'SOPriceIncludeDiscount',
-          name: this.$t('lbl_SOPriceIncludeDiscount_0'),
+          key: 'OOPriceIncludeDiscount',
+          name: this.$t('lbl_OOPriceIncludeDiscount_0'),
           filter: 'input',
           width: 150,
           align: 'left',
-          disabled: this.isCheck,
+          disabled: true,
           fieldRequired: false,
           hidden: false,
         },
         {
-          key: 'SOPriceIncludeTax',
-          name: this.$t('lbl_SOPriceIncludeTax_0'),
+          key: 'OOpriceIncludeTax',
+          name: this.$t('lbl_OOPriceIncludeTax_0'),
           filter: 'input',
           width: 150,
           align: 'left',
-          disabled: this.isCheck,
+          disabled: true,
           fieldRequired: false,
           hidden: false,
         },
@@ -257,12 +260,12 @@ export default {
           hidden: false,
         },
         {
-          key: 'SOAmountIncludeTax',
-          name: this.$t('lbl_SOAmountIncludeTax_0'),
+          key: 'OOAmountIncludeTax',
+          name: this.$t('lbl_OOAmountIncludeTax_0'),
           filter: 'input',
           width: 150,
           align: 'left',
-          disabled: this.isCheck,
+          disabled: true,
           fieldRequired: false,
           hidden: false,
         },
@@ -375,7 +378,10 @@ export default {
         unitID: '',
         quantity: 0,
         price: 0,
+        OOPriceIncludeDiscount: 0,
+        OOPriceIncludeTax: 0,
         amount: 0,
+        OOAmountIncludeTax: 0,
         endQuantity: 0,
         promiseDate: this.convertDate(new Date()),
         memoDtl: '',
@@ -400,6 +406,25 @@ export default {
   methods: {
     ...mapActions('base', ['getItemTypeOptionsFromAPI', 'getUnitOptions']),
     ...mapMutations('base', ['SET_LOADING']),
+
+    updateTable(val) {
+      this.dataTable = this.dataTable.map((item) =>{
+        const quantity = item.quantity
+        const price = item.price
+        const discountRate = val.discountRate
+        const taxRate = val.taxRate
+
+        const { priceIncludeDiscount, amount, priceIncludeTax, amountIncludeTax } = this.parseFloatCalculatePrice({quantity, price, discountRate, taxRate});
+
+        return Object.assign({}, item, {
+          amount,
+          OOPriceIncludeDiscount: priceIncludeDiscount,
+          OOPriceIncludeTax: priceIncludeTax,
+          OOAmountIncludeTax: amountIncludeTax
+        })
+      });
+    },
+
     async getScolumnHides() {
       const response = await api('getScolumnHides', {
         gridName: 'OutwardOrderDetail',

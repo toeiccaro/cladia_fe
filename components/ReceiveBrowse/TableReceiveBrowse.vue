@@ -54,7 +54,7 @@
       :number-item="dataTable.length"
       class="table__receive-browse--footer"
       :class="{
-        'border--full': !total,
+        'border--full': `${!total}`,
       }"
       @changePage="(value) => setCurrentPage(value)"
       @changePerPage="(value) => changePerPage(value)"
@@ -74,6 +74,8 @@ import api from '@/api/api'
 import BasePagination from '~/components/UI/BasePagination.vue'
 import BaseTableDraggable from '~/components/UI/BaseTableDraggable.vue'
 import BaseTableLoader from '~/components/loaders/BaseTableLoader'
+import { formatNumberWithCommas } from '~/utils/utils'
+
 export default {
   components: { BaseTableDraggable, BasePagination, BaseTableLoader },
   mixins: [dateTimeMixins, commonOptionsMixins, receiveBrowseMixins],
@@ -88,6 +90,8 @@ export default {
       lang: this.$i18n.locale,
       isLoadingTable: false,
       isCheckAll: false,
+      listIgnoreFieldName: ['Blance'],
+      dataHeader: []
     }
   },
   async fetch() {
@@ -118,7 +122,8 @@ export default {
       ]
     },
     listDataShow() {
-      return this.headerMockData
+      return this.dataHeader
+        .filter((_el) => !this.listIgnoreFieldName.includes(_el.fieldName))
         .filter((item) => !item.hidden)
         .sort((a, b) => a.fieldOrder - b.fieldOrder)
     },
@@ -130,41 +135,37 @@ export default {
           value: '',
           type: 'text',
         }
-        if (item.key === 'ardate') {
+        if (item.key === 'receiveDate') {
           temp.value = 'Total: '
           temp.align = 'center'
         }
-        if (item.key === 'blanceAmount') {
-          temp.value = this.dataFooter.BlanceAmount
-          temp.align = 'right'
-          temp.type = 'amount'
-        }
-        if (item.key === 'amount') {
+        if (item.key === 'TotalAmount') {
           temp.value = this.dataFooter.Amount
           temp.align = 'right'
           temp.type = 'amount'
         }
-        if (item.key === 'aramount') {
+        if (item.key === 'Amount') {
           temp.value = this.dataFooter.ARAmount
           temp.align = 'right'
           temp.type = 'amount'
         }
-        if (item.key === 'isStop') {
-          temp.type = 'checkbox'
+        if (item.key === 'RBBalanceAmount') {
+          temp.value = this.dataFooter.BlanceAmount
+          temp.align = 'right'
+          temp.type = 'amount'
         }
         return temp
       })
     },
     dataTableMapping() {
       const listAlignCenterFields = [
-        'OrderNo',
+        'OrderNO',
         'InvoiceNo',
         'Currency',
-        'ARDate',
-        'DueDate',
-        'OrderNO',
+        'CustomerName',
+        'RBStatement',
       ]
-      const listAlignRightFields = ['Amount', 'ARAmount', 'BlanceAmount']
+      const listAlignRightFields = ['TotalAmount', 'Amount', 'RBBalanceAmount']
 
       const data = this.dataTable.map((item, index) => {
         const obj = {
@@ -199,8 +200,9 @@ export default {
 
           if (listAlignRightFields.includes(headerItem.fieldName)) {
             obj[mappingFieldName] = {
-              value: item[mappingFieldName] || 0,
+              value: formatNumberWithCommas(item[mappingFieldName]) || 0,
               align: 'right',
+              type: 'amount'
             }
           }
 
@@ -211,20 +213,22 @@ export default {
             obj[
               mappingFieldName
             ].link = `/${this.$i18n.locale}/finance/receive-browse/detail?receiveBrowse=${item.id}`
-            const isNotPaidEnough = item.blanceAmount > 0 && !item.isStop
-            if (isNotPaidEnough) {
+          }
+
+          if (headerItem.fieldName === 'Date') {
+            obj[mappingFieldName].value = this.convertDate(item.Date)
+            obj[mappingFieldName].align = 'center'
+          }
+
+          if (headerItem.fieldName === 'ReceiveDate') {
+            obj[mappingFieldName].value = this.convertDate(item.receiveDate)
+            obj[mappingFieldName].align = 'center'
+            const currentDate = new Date().getTime()
+            const receiveDate = new Date(item.receiveDate).getTime()
+            const isNotPaidEnough = item.RBBalanceAmount > 0 && !item.isStop
+            if (isNotPaidEnough && receiveDate < currentDate) {
               obj[mappingFieldName].color = 'red'
             }
-          }
-
-          if (headerItem.fieldName === 'ARDate') {
-            obj[mappingFieldName].value = this.convertDate(item.ardate)
-            obj[mappingFieldName].align = 'center'
-          }
-
-          if (headerItem.fieldName === 'DueDate') {
-            obj[mappingFieldName].value = this.convertDate(item.dueDate)
-            obj[mappingFieldName].align = 'center'
           }
 
           if (headerItem.fieldName === 'IsStop') {
@@ -236,7 +240,7 @@ export default {
       return data
     },
     headerMapping() {
-      const listNumberField = ['Amount', 'ARAmount', 'BlanceAmount']
+      const listNumberField = ['TotalAmount', 'Amount', 'RBBalanceAmount', 'IsStop', 'Currency', 'Date', 'ReceiveDate' ]
       const header = [
         {
           key: 'index',
@@ -254,36 +258,20 @@ export default {
       ]
 
       const listOptionsFields = ['IsStop']
-      const mapProps = {
-        Date: 'ARDate',
-        ReceiveDate: 'DueDate',
-      }
-
-      for (const prop in mapProps) {
-        const matchData = this.listDataShow.find(
-          (item) => item.fieldName === prop
-        )
-
-        if (matchData) {
-          matchData.fieldName = mapProps[prop]
-        }
-      }
-
       this.listDataShow.forEach((item) => {
-        const maxLength = listNumberField.includes(item.fieldName) ? '30' : '256'
+        const maxLength = listNumberField.includes(item.fieldName) ? '125' : '200'
         const headerItem = {
           key: this.mappingProperty(
             this.dataTable[0] || receiveBrowseSchema,
             item.fieldName
           ),
-          name: item.labelName,
+          name: this.$t(`lbl_${item.fieldName}_0`),
           filter: listOptionsFields.includes(item.fieldName)
             ? 'select'
             : 'input',
-          width: item.fieldWide * 1,
           fieldName: item.fieldName,
           fieldOrder: item.fieldOrder,
-          maxLength,
+          width: maxLength,
         }
         if (item.fieldName === 'IsStop') {
           headerItem.options = this.checkAccountOptions
@@ -358,6 +346,7 @@ export default {
     ...mapMutations({
       UPDATE_PAYLOAD_RECEIVE_BROWSE: 'filterSort/UPDATE_PAYLOAD_RECEIVE_BROWSE',
       SET_PAYLOAD_RECEIVE_BROWSE: 'filterSort/SET_PAYLOAD_RECEIVE_BROWSE',
+      SET_DATA_COLUMN_HIDE: 'SET_DATA_COLUMN_HIDE',
     }),
 
     onChangeCheckbox(event, index) {
@@ -418,6 +407,12 @@ export default {
         this.dataTable = res.data.tableContent?.content
         this.dataFooter = res.data?.tableFooter || {}
         this.total = res.data.tableContent?.totalElements
+        this.dataHeader = res.data?.scolumnHides
+        this.SET_DATA_COLUMN_HIDE(
+            this.dataHeader.filter(
+              (_el) => !this.listIgnoreFieldName.includes(_el.fieldName)
+            )
+          )
       } catch (err) {
         console.error(err)
       } finally {

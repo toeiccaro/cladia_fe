@@ -147,7 +147,6 @@ export default {
     },
 
     dataTableMapping() {
-      const hasCodeField = this.shouldShowCodeField();
       const data = this.dataTable.map((item, index) => {
         const obj = {
           index: {
@@ -166,11 +165,6 @@ export default {
           obj[fieldKey] = {
             value: item[fieldKey],
           };
-          if (hasCodeField) {
-            obj["code"] = {
-              value: item.code,
-            };
-          }
         });
         return obj;
       });
@@ -178,7 +172,6 @@ export default {
     },
 
     getMappingHeader() {
-      const hasCodeField = this.shouldShowCodeField();
       const result = [
         {
           key: "index",
@@ -186,16 +179,6 @@ export default {
           width: 40,
         },
       ];
-      if (hasCodeField) {
-        result.push({
-          key: "code",
-          name: "Code",
-          width: 100,
-          filter: "input",
-          fieldOrder: 0,
-          fieldName: "Code",
-        });
-      }
 
       this.dataHeader.forEach((item, index) => {
         const headerItem = {
@@ -213,7 +196,6 @@ export default {
     },
 
     getMappingHeaderScolumnHides() {
-      const hasCodeField = this.shouldShowCodeField();
       const result = [
         {
           key: "index",
@@ -221,21 +203,11 @@ export default {
           width: 40,
         },
       ];
-      if (hasCodeField) {
-        result.push({
-          key: "code",
-          name: "Code",
-          width: 100,
-          filter: "input",
-          fieldOrder: 0,
-          fieldName: "Code",
-        });
-      }
       this.scolumnHides.forEach((item, index) => {
         const headerItem = {
           key: item.fieldName,
           filter: "input",
-          name: this.$t(`lan_${item.fieldName}_0`),
+          name: this.shouldShowCodeField ? this.$t(`lbl_${item.fieldName}_0`) : this.$t(`lan_${item.fieldName}_0`),
           width: 150,
           fieldName: item.fieldName,
           fieldOrder: index,
@@ -293,18 +265,10 @@ export default {
           keyCode: this.parameterType,
         };
 
-        const res = await api("getParameterLanguage", payload);
+        const res = await api(this.shouldShowCodeField() ? "getFinanceSettingLanguage" :"getParameterLanguage" , payload)
         const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK;
         if (validResponse) {
-          // this.dataTable = res.data?.tableContent?.content
-          this.dataTable = res.data?.tableContent?.content.map(
-            (item, index) => ({
-              ...item,
-              ...(this.shouldShowCodeField()
-                ? { code: `B00${index + 1}` }
-                : {}),
-            })
-          );
+          this.dataTable = res.data?.tableContent?.content
           this.scolumnHides = res.data?.scolumnHides;
           this.total = res.data.tableContent?.totalElements;
         }
@@ -341,7 +305,9 @@ export default {
         this.isLoadingTable = true;
         const [languageResponse, paramTypeResponse] = await Promise.all([
           api("getLanguage"),
-          api("getParameterKeyCodeName"),
+          this.shouldShowCodeField() 
+          ? api("getFinanceSettingKeyCodeName") 
+          : api("getParameterKeyCodeName"),
         ]);
 
         if (languageResponse.length) {
@@ -401,7 +367,9 @@ export default {
         );
 
         this.SET_PAYLOAD_PARAMETER(finalApiPayload);
-        const res = await api("getParameterLanguage", this.payloadParameter);
+        const res =  this.shouldShowCodeField() 
+        ? await api("getFinanceSettingLanguage", this.payloadParameter) 
+        : await api("getParameterLanguage", this.payloadParameter);
 
         this.loading = false;
         const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK;
@@ -430,7 +398,7 @@ export default {
     async searchKeyCodeName({ sortParams, filterParams }) {
       const { name } = filterParams;
       const language = this.$i18n.locale;
-      const res = await api("searchKeyCodeName", {
+      const res = await api(this.shouldShowCodeField() ? "searchKeyCodeNameFinanceSetting" : "searchKeyCodeName", {
         searchValue: name,
         language,
       });

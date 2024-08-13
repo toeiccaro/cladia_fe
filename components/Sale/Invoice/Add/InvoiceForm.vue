@@ -358,6 +358,7 @@ export default {
       immediate: true,
       handler(data) {
         this.$emit('update-data', data)
+        this.$emit('update-table', data)
       },
     },
   },

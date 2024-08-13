@@ -230,5 +230,9 @@ const api = (config) => ({
     config('put', `sales-price/edit`, payload),
   batchAddSalePrice: (payload) =>
     config('post', 'sales-price/batch-add', payload),
+
+  // receive-browse-controller
+  addARReceiveBrowse: (payload) => config('post', '/receive-browse/addAR', payload),
+
 })
 export default api

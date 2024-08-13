@@ -5,7 +5,10 @@
       :is-error="true"
       :list-error-message="listErrorMessage"
     ></BaseValidateMessage>
-    <FormInputQuotation :params-quotation="dataAttach"></FormInputQuotation>
+    <FormInputQuotation 
+      :params-quotation="dataAttach"
+      @update-table="updateTable"
+      ></FormInputQuotation>
     <base-table-item-detail
       class="edit-quotation-table-details"
       :table-content="dataTable"
@@ -16,6 +19,8 @@
       :disable-input="isCheck"
       :header-detail="tableHeaders"
       :new-line="newLine"
+      :form="form"
+
       @changeTable="changeDataDetailTable"
     ></base-table-item-detail>
     <BaseModalAttach
@@ -221,22 +226,12 @@ export default {
           hidden: false,
         },
         {
-          key: 'discountRate',
-          name: this.$t('lbl_QDiscountRate_0'),
-          filter: 'input',
-          width: 150,
-          align: 'left',
-          disabled: this.isCheck,
-          fieldRequired: false,
-          hidden: false,
-        },
-        {
           key: 'priceIncludeDiscount',
           name: this.$t('lbl_QPriceIncludeDiscount_0'),
           filter: 'input',
           width: 150,
           align: 'left',
-          disabled: this.isCheck,
+          disabled: true,
           fieldRequired: false,
           hidden: false,
         },
@@ -246,7 +241,7 @@ export default {
           filter: 'input',
           width: 150,
           align: 'left',
-          disabled: this.isCheck,
+          disabled: true,
           fieldRequired: false,
           hidden: false,
         },
@@ -267,7 +262,7 @@ export default {
           filter: 'input',
           width: 150,
           align: 'left',
-          disabled: this.isCheck,
+          disabled: true,
           fieldRequired: false,
           hidden: false,
         },
@@ -390,6 +385,26 @@ export default {
 
   methods: {
     ...mapActions('base', ['getUnitOptions', 'getItemTypeOptionsFromAPI']),
+
+    updateTable(val) {
+      console.log('val', val);
+      this.dataTable = this.dataTable.map((item) =>{
+        console.log('item', item);
+        const quantity = item.quantity
+        const price = item.price
+        const discountRate = val.discountRate
+        const taxRate = val.taxRate
+
+        const { priceIncludeDiscount, amount, priceIncludeTax, amountIncludeTax } = this.parseFloatCalculatePrice({quantity, price, discountRate, taxRate});
+
+        return Object.assign({}, item, {
+          amount,
+          priceIncludeDiscount,
+          priceIncludeTax,
+          amountIncludeTax
+        })
+      });
+    },
 
     async getScolumnHides() {
       try {

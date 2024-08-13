@@ -15,6 +15,7 @@
       :key="refreshAddOrderFormKey"
       :data="form"
       :arrival-addresses="arrivalAddresses"
+      @update-table="updateTable"
     />
     <BaseTableItemDetail
       ref="tableDetails"
@@ -22,13 +23,15 @@
       :table-type="'PurchaseOrderDetail'"
       :table-content="dataTable"
       :list-item-master="listItemCode"
-      :column-hides="columnHides"
       :customer-id="form.supplierID"
+      :column-hides="columnHides"
       :header-detail="tableHeaders"
       :type-action="'ADD'"
       :new-line="newLine"
       is-purchase
       :show-quantity="true"
+      :form="form"
+
       @changeTable="changeDataTable"
     ></BaseTableItemDetail>
     <ModalImportPurchaseOrder
@@ -186,7 +189,10 @@ export default {
         unitID: null,
         quantity: 0,
         price: 0,
+        POPriceIncludeDiscount: 0,
+        POPriceIncludeTax: 0,
         amount: 0,
+        POAmountIncludeTax: 0,
         sono: '',
         solineNumber: null,
         itemCode: '',
@@ -288,11 +294,41 @@ export default {
           hidden: false,
         },
         {
+          key: 'POPriceIncludeDiscount',
+          name: this.$t('lbl_POPriceIncludeDiscount_0'),
+          filter: 'input',
+          width: 150,
+          align: 'left',
+          disabled: true,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
+          key: 'POPriceIncludeTax',
+          name: this.$t('lbl_POPriceIncludeTax_0'),
+          filter: 'input',
+          width: 150,
+          align: 'left',
+          disabled: true,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
           key: 'amount',
           name: this.$t('lbl_Amount_0'),
           filter: 'number',
           width: 150,
           align: 'right',
+          disabled: true,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
+          key: 'POAmountIncludeTax',
+          name: this.$t('lbl_POAmountIncludeTax_0'),
+          filter: 'input',
+          width: 150,
+          align: 'left',
           disabled: true,
           fieldRequired: false,
           hidden: false,
@@ -473,6 +509,24 @@ export default {
         'filterSort/UPDATE_PAYLOAD_PURCHASE_ORDER_IMPORT',
       SET_GENERATED_PURCHASE_ORDER: 'mrp/SET_GENERATED_PURCHASE_ORDER',
     }),
+
+    updateTable(val) {
+      this.dataTable = this.dataTable.map((item) =>{
+        const quantity = item.quantity
+        const price = item.price
+        const discountRate = val.discountRate
+        const taxRate = val.taxRate
+
+        const { priceIncludeDiscount, amount, priceIncludeTax, amountIncludeTax } = this.parseFloatCalculatePrice({quantity, price, discountRate, taxRate});
+
+        return Object.assign({}, item, {
+          amount,
+          POPriceIncludeDiscount: priceIncludeDiscount,
+          POPriceIncludeTax: priceIncludeTax,
+          POAmountIncludeTax: amountIncludeTax
+        })
+      });
+    },
 
     async getListItemCode() {
       const res = await api('getItemCode')

@@ -14,6 +14,7 @@
       :selected-details="availableListDetails"
       @update-data="(data) => (newInvoiceData = data)"
       @update-warehouse="updateWarehouse"
+
     />
     <base-table-item-detail
       ref="invoiceFormTableItems"
@@ -26,6 +27,8 @@
       :disable-input="isCheck"
       :header-detail="tableHeaders"
       :type-action="'ADD'"
+      :form="newInvoiceData"
+      is-invoice
       @changeTable="changeDataDetailTable"
     />
     <BaseModalAttach ref="attachments" add></BaseModalAttach>
@@ -298,11 +301,61 @@ export default {
           hidden: false,
         },
         {
+          key: 'SIDiscountRate',
+          name: this.$t('lbl_SIDiscountRate_0'),
+          filter: 'input',
+          width: 150,
+          align: 'left',
+          disabled: true,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
+          key: 'SIPriceIncludeDiscount',
+          name: this.$t('lbl_SIPriceIncludeDiscount_0'),
+          filter: 'input',
+          width: 150,
+          align: 'left',
+          disabled: true,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
+          key: 'SITaxRate',
+          name: this.$t('lbl_SITaxRate_0'),
+          filter: 'input',
+          width: 150,
+          align: 'left',
+          disabled: true,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
+          key: 'SIPriceIncludeTax',
+          name: this.$t('lbl_SIPriceIncludeTax_0'),
+          filter: 'input',
+          width: 150,
+          align: 'left',
+          disabled: true,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
           key: 'amount',
           name: this.$t('lbl_Amount_0'),
           filter: 'number',
           width: 150,
           align: 'right',
+          disabled: true,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
+          key: 'SIAmountIncludeTax',
+          name: this.$t('lbl_SIAmountIncludeTax_0'),
+          filter: 'input',
+          width: 150,
+          align: 'left',
           disabled: true,
           fieldRequired: false,
           hidden: false,
@@ -426,6 +479,7 @@ export default {
     },
 
     updateInvoiceDetails(data) {
+      console.log('data', data);
       this.importErrorMessage = []
 
       const clonedListCustomers = Array.from(
@@ -636,9 +690,10 @@ export default {
       if (validateInfo) {
         this.loading = true
         const { dataTableFilter, payload } = validateInfo
-
         const params = {
           ...payload,
+          discountRate: dataTableFilter[0]?.discountRate,
+          taxRate: dataTableFilter[0]?.taxRate,
           salesInDtl: dataTableFilter.map((item) => {
             return {
               customerPO: item.customerPO,

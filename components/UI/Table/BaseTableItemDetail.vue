@@ -417,6 +417,14 @@ export default {
       type: Boolean,
       default: () => false,
     },
+    isInvoice: {
+      type: Boolean,
+      default: () => false,
+    },
+    isOutward: {
+      type: Boolean,
+      default: () => false,
+    },
     lineLimit: {
       type: Number,
       default: () => 0,
@@ -424,6 +432,10 @@ export default {
     typeQuantity: {
       type: String,
       default: () => 'quantity',
+    },
+    form: {
+      type: Object,
+      default: () => {},
     },
   },
 
@@ -975,13 +987,62 @@ export default {
       itemRow.subUnitID = ''
       itemRow.subItemTypeID = ''
       itemRow.warehouseFromID = ''
+      itemRow.priceIncludeDiscount = ''
+      itemRow.priceIncludeTax = ''
+      itemRow.amountIncludeTax = ''
     },
 
     calculateAmount(itemRow, keyChange, keyGet) {
-      const quantity = this.parseStringToFloat(itemRow[keyChange])
-      const price = this.parseStringToFloat(keyGet)
-      const amount = quantity * price
+      console.log('itemRow, keyChange, keyGet', itemRow, keyChange, keyGet);
+      
+      let quantity = 0
+      let price = 0
+      let discountRate = this.form?.discountRate
+      let taxRate = this.form?.taxRate
+      if(this.isInvoice) {
+        discountRate = itemRow['SIDiscountRate'];
+        taxRate = itemRow['SITaxRate'];
+      }
+      
+      
+      switch (keyChange) {
+        case 'quantity':
+          quantity = this.parseStringToFloat(itemRow[keyChange]);
+          price = this.parseStringToFloat(keyGet);
+          break;
+        case 'price':
+          price = this.parseStringToFloat(itemRow[keyChange]);
+          quantity = this.parseStringToFloat(keyGet);
+          break;
+      
+        default:
+          break;
+      }
+      
+      const { priceIncludeDiscount, amount, priceIncludeTax, amountIncludeTax } = this.parseFloatCalculatePrice({quantity, price, discountRate, taxRate});
+
       itemRow.amount = amount
+      itemRow.priceIncludeDiscount = priceIncludeDiscount
+      itemRow.priceIncludeTax = priceIncludeTax
+      itemRow.amountIncludeTax = amountIncludeTax
+      
+      if(this.isPurchase) {
+        itemRow.POPriceIncludeDiscount = priceIncludeDiscount
+        itemRow.POPriceIncludeTax = priceIncludeTax
+        itemRow.POAmountIncludeTax = amountIncludeTax
+      }
+
+      if(this.isOutward) {
+        itemRow.OOPriceIncludeDiscount = priceIncludeDiscount
+        itemRow.OOPriceIncludeTax = priceIncludeTax
+        itemRow.OOAmountIncludeTax = amountIncludeTax
+      }
+
+      if(this.isInvoice) {
+        itemRow.SIPriceIncludeDiscount = priceIncludeDiscount
+        itemRow.SIPriceIncludeTax = priceIncludeTax
+        itemRow.SIAmountIncludeTax = amountIncludeTax
+      }
     },
 
     calculateBadQuantity(itemRow) {
@@ -1036,7 +1097,6 @@ export default {
         const response = await api(apiToCall, params)
         const validResponse =
           response && response.status === SERVER_RESPONSE_CODE.OK
-
         if (validResponse) {
           itemRow.price = response.data
           // eslint-disable-next-line no-prototype-builtins
@@ -1052,7 +1112,6 @@ export default {
         const item =
           this.getItemCode(this.currentRow.itemCode) ||
           this.getItemCode(this.currentRow.subItemCode)
-
         switch (keyColumn) {
           case 'itemCode':
             itemRow.itemName = item?.itemName || ''

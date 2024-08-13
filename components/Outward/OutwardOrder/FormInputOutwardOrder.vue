@@ -296,6 +296,7 @@ export default {
     data: {
       handler(value) {
         this.form = value
+        this.$emit('update-table', value)
       },
       deep: true,
       immediate: true,

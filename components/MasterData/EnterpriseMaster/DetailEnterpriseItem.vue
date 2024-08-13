@@ -202,7 +202,7 @@ export default {
             if(this.dataItem[item.key] < 1 || this.dataItem[item.key] > 31) {
               this.listErrorMessage.push({
                 fieldName: item.fieldName,
-                text: this.$t('msg_NoInput_0'),
+                text: this.$t('msg_InvalidDayInMonth_0'),
               })
             }
           }

@@ -121,32 +121,37 @@ export default {
         },
       ],
       defaultFormData: {
-        operationTypeId: 1,
-        orderDate: this.convertDate(new Date()),
-        taxRate: 0,
-        totalAmount: 0,
-        salesOrderDtlRequestList: [],
-        orderNumber: '',
-        attachments: [],
-        customerId: null,
-        discountRate: 0,
+        checker: '',
+        departmentID: '',
+        editDate: this.convertDate(new Date()),
+        editor: '',
+        entryDate: this.convertDate(new Date()),
+        margin: '',
+        memo: '',
+        responsiblePerson: '',
+        totalCreditAmount: 0,
+        totalDebitAmount: 0,
       },
       form: {},
       dataTable: [
         {
           lineID: 1,
-          customerPO: '',
-          itemCode: '',
-          itemID: '',
-          itemTypeID: '',
-          itemName: '',
-          description: '',
-          unitID: '',
-          quantity: 0,
-          price: 0,
-          amount: 0,
-          promiseDate: this.convertDate(new Date()),
-          memoDTL: '',
+          companyName: "",
+          creditAmount: 0,
+          currency: 0,
+          date: this.convertDate(new Date()),
+          debitAmount: 0,
+          employee: "",
+          invoiceDate: this.convertDate(new Date()),
+          invoiceNotes: "",
+          invoiceNumber: "",
+          isInvoice: true,
+          itemID: 0,
+          lineID: 0,
+          opponentSubject: "",
+          reason: "",
+          subject: "",
+
           isUpdate: true,
           isNewLine: true,
         },
@@ -187,8 +192,8 @@ export default {
         value: item.value,
       }))
     },
-    dataTableFilter() {
-      return this.dataTable?.filter((item) => item.itemID)
+    xFilter() {
+      return this.x?.filter((item) => item.itemID)
     },
 
     isCheck() {
@@ -219,7 +224,7 @@ export default {
         {
           key: 'date',
           name: this.$t('lbl_RBDate_0'),
-          filter: 'input',
+          filter: 'datetime',
           width: 200,
           align: 'left',
           disabled: this.isCheck,
@@ -227,9 +232,9 @@ export default {
           hidden: false,
         },
         {
-          key: 'Subject',
+          key: 'subject',
           name: this.$t('lbl_RBSubject_0'),
-          filter: 'autocomplete',
+          filter: 'input',
           width: 150,
           align: 'left',
           disabled: this.isCheck,
@@ -237,16 +242,13 @@ export default {
           hidden: false,
         },
         {
-          key: 'amount',
+          key: 'creditAmount',
           name: this.$t('lbl_RBAmount_0'),
-          filter: 'select',
+          filter: 'input',
           width: 150,
           align: 'left',
-          typeInput: 'select',
-          disabled: true,
           fieldRequired: true,
           hidden: false,
-          options: this.itemTypeOptions,
         },
         {
           key: 'opponentSubject',
@@ -254,35 +256,34 @@ export default {
           filter: 'input',
           width: 250,
           align: 'left',
-          disabled: true,
           fieldRequired: true,
           hidden: false,
+          disabled: this.isCheck,
         },
         {
-          key: 'amount',
+          key: 'debitAmount',
           name: this.$t('lbl_RBAmount_0'),
           filter: 'input',
           width: 200,
           align: 'left',
-          disabled: true,
           fieldRequired: true,
           hidden: false,
+          disabled: this.isCheck,
         },
         {
           key: 'currency',
           name: this.$t('lbl_RBCurrency_0'),
-          filter: 'select',
+          filter: 'input',
           width: 150,
           align: 'left',
-          disabled: true,
-          fieldRequired: false,
+          fieldRequired: true,
           hidden: false,
-          options: this.unitOptions,
+          disabled: this.isCheck,
         },
         {
           key: 'companyName',
           name: this.$t('lbl_RBCompanyName_0'),
-          filter: 'number',
+          filter: 'input',
           width: 150,
           align: 'right',
           disabled: this.isCheck,
@@ -290,9 +291,9 @@ export default {
           hidden: false,
         },
         {
-          key: 'invoice',
+          key: 'isInvoice',
           name: this.$t('lbl_RBInvoice_0'),
-          filter: 'number',
+          filter: 'input',
           width: 150,
           align: 'right',
           disabled: this.isCheck,
@@ -305,9 +306,9 @@ export default {
           filter: 'number',
           width: 150,
           align: 'right',
-          disabled: true,
           fieldRequired: false,
           hidden: false,
+          disabled: this.isCheck,
         },
         {
           key: 'invoiceDate',
@@ -320,7 +321,7 @@ export default {
           hidden: false,
         },
         {
-          key: 'invoiceNote',
+          key: 'invoiceNotes',
           name: this.$t('lbl_RBInvoiceNotes_0'),
           filter: 'input',
           width: 300,
@@ -366,9 +367,11 @@ export default {
         description: '',
         unitID: '',
         quantity: 0,
-        discountRate: 0,
         price: 0,
+        priceIncludeDiscount: 0,
+        priceIncludeTax: 0,
         amount: 0,
+        amountIncludeTax: 0,
         promiseDate: this.convertDate(new Date()),
         memoDTL: '',
         isUpdate: true,
@@ -377,6 +380,7 @@ export default {
     },
 
     availableListDetails() {
+      console.log(' this.dataTable',  this.dataTable);
       return this.dataTable.filter((item) => !item.isNewLine)
     },
     listToolBarsCheckAuthority() {
@@ -410,7 +414,7 @@ export default {
         this.loading = true
 
         const response = await api('getScolumnHides', {
-          gridName: 'SaleOrderDetail',
+          gridName: 'ReceiveBrowseDetail',
         })
         if (response.status === 200) {
           this.columnHides = response?.data || []
@@ -501,19 +505,17 @@ export default {
     validateForm() {
       const errors = []
       const dataTable = this.availableListDetails
-
+      
       const requiredFields = {
-        orderDate: 'OrderDate',
-        currencyId: 'Currency',
-        paymentId: 'PaymentID',
-        customerId: 'CustomerName',
-      }
+        entryDate: 'EntryDate'
+      };
+      
       const requiredTableDetails = {
-        itemCode: 'ItemCode',
-        quantity: 'Quantity',
-        price: 'Price',
-        promiseDate: 'PromiseDate',
-      }
+        date: 'Date',
+        subject: 'Subject',
+        // creditAmount: 'CreditAmount',
+        // opponentSubject: 'OpponentSubject',
+      };
 
       Object.keys(requiredFields).forEach((field) => {
         if (!this.form[field]) {
@@ -523,7 +525,7 @@ export default {
           })
         }
       })
-
+      console.log('dataTable', dataTable);
       if (dataTable.length === 0) {
         errors.push({
           fieldName: this.$t('msg_Details_0'),
@@ -532,11 +534,7 @@ export default {
       } else {
         dataTable.forEach((item) => {
           Object.keys(requiredTableDetails).forEach((field) => {
-            if (
-              (['quantity', 'price'].includes(field) &&
-                !this.parseStringToFloat(item[field])) ||
-              !item[field]
-            ) {
+            if (!item[field]) {
               errors.push({
                 fieldName: `${this.$t('lbl_LineID_0')} ${
                   item.lineID
@@ -566,39 +564,49 @@ export default {
       }
 
       const validateInfo = this.validateForm()
+      console.log('validateInfo', validateInfo);
 
       if (validateInfo) {
         const { dataTableFilter, payload } = validateInfo
-
+        console.log('dataTableFilter, payload', dataTableFilter, payload);
         const params = {
-          currencyID: payload.currencyId,
-          customerID: payload.customerId,
-          customerName: payload.customerName,
-          departID: payload.departmentId,
+          checker: payload.checker,
+          departmentID: payload.departmentID,
+          editDate: payload.editDate,
+          editor: payload.editor,
+          entryDate: payload.entryDate,
+          margin: payload.margin,
           memo: payload.memo,
-          operationType: payload.operationTypeId,
-          orderDate: payload.orderDate,
-          paymentID: payload.paymentId,
-          respondsibleMan: payload.responsibleMan,
-          saler: payload.saler,
-          taxRate: payload.taxRate,
-          discountRate: payload.discountRate,
-          salesOrderDtlRequestList: dataTableFilter.map((item) => {
+          orderNumber: payload.orderNumber,
+          responsiblePerson: payload.responsiblePerson,
+          totalCreditAmount: payload.totalCreditAmount,
+          totalDebitAmount: payload.totalDebitAmount,
+          listDetail: dataTableFilter.map((item) => {
             return {
-              customerPO: item.customerPO,
+              companyName: item.companyName,
+              creditAmount: item.creditAmount,
+              currency: item.currency,
+              date: item.date,
+              debitAmount: item.debitAmount,
+              employee: item.employee,
+              invoiceDate: item.invoiceDate,
+              invoiceNotes: item.invoiceNotes,
+              invoiceNumber: item.invoiceNumber,
+              isInvoice: item.isInvoice,
               itemID: item.itemID,
               lineID: item.lineID,
-              memoDtl: item.memoDTL,
-              price: this.parseStringToFloat(item.price),
-              promiseDate: item.promiseDate,
-              quantity: this.parseStringToFloat(item.quantity),
+              opponentSubject: item.opponentSubject,
+              reason: item.reason,
+              subject: item.subject
             }
           }),
         }
 
+        console.log('params', params);
+
         try {
           this.loading = true
-          const response = await api('addOrder', params)
+          const response = await api('addARReceiveBrowse', params)
           const errorCode = response?.data?.response?.status
 
           if (errorCode === SERVER_RESPONSE_CODE.FORBIDDEN) {

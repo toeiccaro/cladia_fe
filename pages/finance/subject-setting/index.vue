@@ -184,11 +184,11 @@ export default {
           keyId: selectedItem?.keyID,
           keyCode: selectedItem?.keyCode,
         }
-        // const res = await api('deleteParameter', payload)
-        // const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK
-        // if (validResponse) {
-        //   await this.refetchLanguageTable()
-        // }
+        const res = await api(this.shouldShowCodeField() ? 'deleteFinanceSetting' : 'deleteParameter', payload)
+        const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK
+        if (validResponse) {
+          await this.refetchLanguageTable()
+        }
       } catch (err) {
         console.error(err)
       }
@@ -257,11 +257,11 @@ export default {
 
         this.$refs.tableParameter.loading = true
 
-        // if (this.isAdding) {
-        //   await this.saveNewData()
-        // } else {
-        //   await this.saveEditedData()
-        // }
+        if (this.isAdding) {
+          await this.saveNewData()
+        } else {
+          await this.saveEditedData()
+        }
 
         this.disableEditingStatus()
         this.removeAddingItem()
@@ -303,7 +303,7 @@ export default {
         keyCode: this.parameterType,
       }
 
-      const res = await api('updateParameter', finalPayload)
+      const res = await api(this.shouldShowCodeField() ? 'updateFinanceSetting' : 'updateParameter', finalPayload)
       const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK
       if (validResponse) {
         await this.refetchLanguageTable()
@@ -343,7 +343,7 @@ export default {
         forms: addingDataPayload,
       }
 
-      const res = await api('addParameter', finalPayload)
+      const res = await api(this.shouldShowCodeField() ? 'addFinanceSetting' : 'addParameter', finalPayload)
       const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK
       if (validResponse) {
         await this.refetchLanguageTable()
@@ -376,6 +376,10 @@ export default {
 
     async refetchLanguageTable() {
       await this.$refs.tableParameter.fetchLanguageData()
+    },
+
+    shouldShowCodeField() {
+      return this.$route.name.includes("finance");
     },
   },
 }

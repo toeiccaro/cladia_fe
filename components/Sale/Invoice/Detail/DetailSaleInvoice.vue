@@ -23,6 +23,7 @@
       :column-hides="columnHides"
       :disable-input="isCheck"
       :header-detail="tableHeaders"
+      is-invoice
       @changeTable="changeDataDetailTable"
     ></BaseTableItemDetail>
     <BaseModalAttach
@@ -327,11 +328,61 @@ export default {
           hidden: false,
         },
         {
+          key: 'SIDiscountRate',
+          name: this.$t('lbl_SIDiscountRate_0'),
+          filter: 'input',
+          width: 150,
+          align: 'left',
+          disabled: true,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
+          key: 'SIPriceIncludeDiscount',
+          name: this.$t('lbl_SIPriceIncludeDiscount_0'),
+          filter: 'input',
+          width: 200,
+          align: 'left',
+          disabled: true,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
+          key: 'SITaxRate',
+          name: this.$t('lbl_SITaxRate_0'),
+          filter: 'input',
+          width: 200,
+          align: 'left',
+          disabled: true,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
+          key: 'SIPriceIncludeTax',
+          name: this.$t('lbl_SIPriceIncludeTax_0'),
+          filter: 'input',
+          width: 200,
+          align: 'left',
+          disabled: true,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
           key: 'amount',
           name: this.$t('lbl_Amount_0'),
           filter: 'number',
-          width: 150,
+          width: 100,
           align: 'right',
+          disabled: true,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
+          key: 'SIAmountIncludeTax',
+          name: this.$t('lbl_SIAmountIncludeTax_0'),
+          filter: 'input',
+          width: 150,
+          align: 'left',
           disabled: true,
           fieldRequired: false,
           hidden: false,
@@ -362,46 +413,6 @@ export default {
           name: this.$t('lbl_MemoDTL_0'),
           filter: 'input',
           width: 300,
-          align: 'left',
-          disabled: this.isCheck,
-          fieldRequired: false,
-          hidden: false,
-        },
-        {
-          key: 'SOPriceIncludeTax',
-          name: this.$t('lbl_SOPriceIncludeTax_0'),
-          filter: 'input',
-          width: 150,
-          align: 'left',
-          disabled: this.isCheck,
-          fieldRequired: false,
-          hidden: false,
-        },
-        {
-          key: 'SOAmountIncludeTax',
-          name: this.$t('lbl_SOAmountIncludeTax_0'),
-          filter: 'input',
-          width: 150,
-          align: 'left',
-          disabled: this.isCheck,
-          fieldRequired: false,
-          hidden: false,
-        },
-        {
-          key: 'SODiscountRate',
-          name: this.$t('lbl_SODiscountRate_0'),
-          filter: 'input',
-          width: 150,
-          align: 'left',
-          disabled: this.isCheck,
-          fieldRequired: false,
-          hidden: false,
-        },
-        {
-          key: 'SOPriceIncludeDiscount',
-          name: this.$t('lbl_SOPriceIncludeDiscount_0'),
-          filter: 'input',
-          width: 150,
           align: 'left',
           disabled: this.isCheck,
           fieldRequired: false,
@@ -863,8 +874,38 @@ export default {
 
         this.dataTable = res.data?.detailResponse.map((item, index) => ({
           ...item,
+          discountRate: res.data?.discountRate,
+          taxRate: res.data?.taxRate,
           lineID: index + 1,
         }))
+
+        this.dataTable = this.dataTable.map(obj => {
+          let newObj = {};
+          
+          for (let key in obj) {
+            switch (key) {
+              case 'priceIncludeTax':
+                newObj['SIPriceIncludeTax'] = obj[key];
+                break;
+              case 'amountIncludeTax':
+                newObj['SIAmountIncludeTax'] = obj[key];
+                break;
+              case 'priceIncludeDiscount':
+                newObj['SIPriceIncludeDiscount'] = obj[key];
+                break;
+              case 'discountRate':
+                newObj['SIDiscountRate'] = obj[key];
+                break;
+              case 'taxRate':
+                newObj['SITaxRate'] = obj[key];
+                break;
+              default:
+                newObj[key] = obj[key];
+                break;
+            }
+          }
+          return newObj;
+        });
 
         const convertDateFields = [
           'invoiceDate',
