@@ -7,8 +7,8 @@
       :data-total="dataTotalMapping"
       :active-rows="activeRows"
       class="table__receive-browse--body"
-      :initial-filters="payloadReceiveBrowse"
-      :update-filters-function="UPDATE_PAYLOAD_RECEIVE_BROWSE"
+      :initial-filters="payloadPayBrowse"
+      :update-filters-function="UPDATE_PAYLOAD_PAY_BROWSE"
       @search="filterAndSort"
       @row="handleRow"
       @changeLayout="changeLayout"
@@ -25,6 +25,7 @@
         </div>
       </slot>
 
+      <!-- <slot v-for="(item, index) in dataTable" :slot="'checkbox-' + index"> -->
       <slot v-for="(item, index) in dataTable" :slot="'checkbox-' + index">
         <div
           :key="`checkbox-attract${index}`"
@@ -37,6 +38,7 @@
         </div>
       </slot>
 
+      <!-- <slot v-for="(item, index) in dataTable" :slot="`isStop-${index}`"> -->
       <slot v-for="(item, index) in dataTable" :slot="`isStop-${index}`">
         <div
           :key="`icon-attract${index}`"
@@ -49,8 +51,8 @@
     <BasePagination
       v-if="!isLoadingTable"
       :total="total"
-      :per-page="payloadReceiveBrowse.pageSize"
-      :current-page="payloadReceiveBrowse.pageNo"
+      :per-page="payloadPayBrowse.pageSize"
+      :current-page="payloadPayBrowse.pageNo"
       :number-item="dataTable.length"
       class="table__receive-browse--footer"
       :class="{
@@ -97,7 +99,7 @@ export default {
   async fetch() {
     try {
       this.loading = true;
-      this.UPDATE_PAYLOAD_RECEIVE_BROWSE({
+      this.UPDATE_PAYLOAD_PAY_BROWSE({
         language: this.lang,
       });
       await this.getData();
@@ -110,7 +112,7 @@ export default {
 
   computed: {
     ...mapGetters({
-      payloadReceiveBrowse: 'filterSort/getPayloadReceiveBrowse',
+      payloadPayBrowse: 'filterSort/getPayloadPayBrowse',
     }),
     ...mapGetters('base', ['getActiveButtonToolBar']),
 
@@ -171,8 +173,8 @@ export default {
         const obj = {
           index: {
             value:
-              this.payloadReceiveBrowse.pageSize *
-                (this.payloadReceiveBrowse.pageNo - 1) +
+              this.payloadPayBrowse.pageSize *
+                (this.payloadPayBrowse.pageNo - 1) +
               index +
               1,
             align: 'center',
@@ -212,7 +214,7 @@ export default {
               : '';
             obj[
               mappingFieldName
-            ].link = `/${this.$i18n.locale}/finance/receive-browse/detail?receiveBrowse=${item.id}`;
+            ].link = `/${this.$i18n.locale}/finance/pay-browse/detail?payBrowse=${item.id}`;
           }
 
           if (headerItem.fieldName === 'Date') {
@@ -237,7 +239,7 @@ export default {
               : '';
             obj[
               mappingFieldName
-            ].link = `/${this.$i18n.locale}/finance/receive-browse/detail?receiveBrowse=${item.id}`;
+            ].link = `/${this.$i18n.locale}/finance/pay-browse/detail?payBrowse=${item.id}`;
           }
 
           if (headerItem.fieldName === 'IsStop') {
@@ -359,12 +361,12 @@ export default {
       payload.isStop = 0;
     }
     this.$router.replace({ query: null });
-    this.SET_PAYLOAD_RECEIVE_BROWSE(payload);
+    this.SET_PAYLOAD_PAY_BROWSE(payload);
   },
   methods: {
     ...mapMutations({
-      UPDATE_PAYLOAD_RECEIVE_BROWSE: 'filterSort/UPDATE_PAYLOAD_RECEIVE_BROWSE',
-      SET_PAYLOAD_RECEIVE_BROWSE: 'filterSort/SET_PAYLOAD_RECEIVE_BROWSE',
+      UPDATE_PAYLOAD_PAY_BROWSE: 'filterSort/UPDATE_PAYLOAD_PAY_BROWSE',
+      SET_PAYLOAD_PAY_BROWSE: 'filterSort/SET_PAYLOAD_PAY_BROWSE',
       SET_DATA_COLUMN_HIDE: 'SET_DATA_COLUMN_HIDE',
     }),
 
@@ -381,11 +383,11 @@ export default {
         pageSize: Number(value),
         pageNo: 1,
       };
-      this.UPDATE_PAYLOAD_RECEIVE_BROWSE(filterPayload);
+      this.UPDATE_PAYLOAD_PAY_BROWSE(filterPayload);
       this.getData();
     },
     setCurrentPage(value) {
-      this.UPDATE_PAYLOAD_RECEIVE_BROWSE({
+      this.UPDATE_PAYLOAD_PAY_BROWSE({
         pageNo: Number(value),
       });
       this.getData();
@@ -399,7 +401,7 @@ export default {
     async filterAndSort() {
       try {
         this.loading = true;
-        const res = await api('getReceiveBrowses', this.payloadReceiveBrowse);
+        const res = await api('getPayBrowses', this.payloadPayBrowse);
 
         this.isCheckAll = false;
 
@@ -417,7 +419,7 @@ export default {
     async getData() {
       try {
         this.isLoadingTable = true;
-        const res = await api('getReceiveBrowses', this.payloadReceiveBrowse);
+        const res = await api('getPayBrowses', this.payloadPayBrowse);
         const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK;
         if (!validResponse) {
           return;
