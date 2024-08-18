@@ -133,7 +133,7 @@ export default {
       const data = this.parameterTypeDataTable.map((item, index) => {
         const obj = {
           index: {
-            value: this.perPage * (this.currentPage - 1) + index + 1,
+            value: index + 1,
             align: 'center',
             type: 'index',
           },

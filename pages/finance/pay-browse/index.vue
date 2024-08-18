@@ -4,7 +4,7 @@
       :list-tools="listToolBarsCheckAuthority"
       @changeActiveToolBar="changeActiveToolBar"
     ></ToolBar>
-    <TableReceiveBrowse
+    <TablePayBrowse
       ref="tablePayBrowse"
       @handleDetailId="handleDetailId"
       @changeLayout="changeLayout"
