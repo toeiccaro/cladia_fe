@@ -25,7 +25,6 @@
         </div>
       </slot>
 
-      <!-- <slot v-for="(item, index) in dataTable" :slot="'checkbox-' + index"> -->
       <slot v-for="(item, index) in dataTable" :slot="'checkbox-' + index">
         <div
           :key="`checkbox-attract${index}`"
@@ -38,13 +37,12 @@
         </div>
       </slot>
 
-      <!-- <slot v-for="(item, index) in dataTable" :slot="`isStop-${index}`"> -->
-      <slot v-for="(item, index) in dataTable" :slot="`isStop-${index}`">
+      <slot v-for="(item, index) in dataTable" :slot="`PBIsStop-${index}`">
         <div
           :key="`icon-attract${index}`"
           class="d-flex align-items-center justify-content-center h-100 w-100"
         >
-          <b-form-checkbox disabled :checked="item.isStop" />
+          <b-form-checkbox disabled :checked="item.PBIsStop" />
         </div>
       </slot>
     </BaseTableDraggable>
@@ -68,9 +66,9 @@
 <script>
 import { mapGetters, mapMutations } from 'vuex';
 import { SERVER_RESPONSE_CODE } from '@/constants';
-import { receiveBrowseSchema } from '@/schemas/finance/receive-browse';
+import { payBrowseSchema } from '@/schemas/finance/pay-browse';
 import commonOptionsMixins from '@/mixins/commonOptions';
-import receiveBrowseMixins from '@/mixins/receiveBrowse';
+import payBrowseMixins from '@/mixins/payBrowse';
 import dateTimeMixins from '@/mixins/dateTime';
 import api from '@/api/api';
 import BasePagination from '~/components/UI/BasePagination.vue';
@@ -80,7 +78,8 @@ import { formatNumberWithCommas } from '~/utils/utils';
 
 export default {
   components: { BaseTableDraggable, BasePagination, BaseTableLoader },
-  mixins: [dateTimeMixins, commonOptionsMixins, receiveBrowseMixins],
+  mixins: [dateTimeMixins, commonOptionsMixins, payBrowseMixins],
+
   data() {
     return {
       loading: false,
@@ -137,21 +136,21 @@ export default {
           value: '',
           type: 'text',
         };
-        if (item.key === 'receiveDate') {
+        if (item.key === 'PBReceiveDate') {
           temp.value = 'Total: ';
           temp.align = 'center';
         }
-        if (item.key === 'TotalAmount') {
+        if (item.key === 'PBTotalAmount') {
           temp.value = this.dataFooter.Amount;
           temp.align = 'right';
           temp.type = 'amount';
         }
-        if (item.key === 'Amount') {
-          temp.value = this.dataFooter.ARAmount;
+        if (item.key === 'PBAmount') {
+          temp.value = this.dataFooter.APAmount;
           temp.align = 'right';
           temp.type = 'amount';
         }
-        if (item.key === 'RBBalanceAmount') {
+        if (item.key === 'PBBalanceAmount') {
           temp.value = this.dataFooter.BlanceAmount;
           temp.align = 'right';
           temp.type = 'amount';
@@ -161,13 +160,17 @@ export default {
     },
     dataTableMapping() {
       const listAlignCenterFields = [
-        'OrderNO',
-        'InvoiceNo',
+        'PBOrderNO',
+        'PBInvoiceNO',
         'Currency',
         'CustomerName',
         'RBStatement',
       ];
-      const listAlignRightFields = ['TotalAmount', 'Amount', 'RBBalanceAmount'];
+      const listAlignRightFields = [
+        'PBTotalAmount',
+        'PBAmount',
+        'PBBalanceAmount',
+      ];
 
       const data = this.dataTable.map((item, index) => {
         const obj = {
@@ -184,7 +187,7 @@ export default {
             type: 'slot',
             value: false,
           },
-          keyRow: item.receiveBrowseNo,
+          keyRow: item.payBrowseNo,
         };
         this.listDataShow.forEach((headerItem, headerIndex) => {
           const mappingFieldName = this.mappingProperty(
@@ -204,11 +207,11 @@ export default {
             obj[mappingFieldName] = {
               value: formatNumberWithCommas(item[mappingFieldName]) || 0,
               align: 'right',
-              type: 'amount',
+              type: 'pbamount',
             };
           }
 
-          if (headerItem.fieldName === 'OrderNO') {
+          if (headerItem.fieldName === 'PBOrderNO') {
             obj[mappingFieldName].type = this.getActiveButtonToolBar?.isEdit
               ? 'link'
               : '';
@@ -217,18 +220,18 @@ export default {
             ].link = `/${this.$i18n.locale}/finance/pay-browse/detail?payBrowse=${item.id}`;
           }
 
-          if (headerItem.fieldName === 'Date') {
-            obj[mappingFieldName].value = this.convertDate(item.Date);
+          if (headerItem.fieldName === 'PBDate') {
+            obj[mappingFieldName].value = this.convertDate(item.PBDate);
             obj[mappingFieldName].align = 'center';
           }
 
-          if (headerItem.fieldName === 'ReceiveDate') {
-            obj[mappingFieldName].value = this.convertDate(item.receiveDate);
+          if (headerItem.fieldName === 'PBReceiveDate') {
+            obj[mappingFieldName].value = this.convertDate(item.PBReceiveDate);
             obj[mappingFieldName].align = 'center';
             const currentDate = new Date().getTime();
-            const receiveDate = new Date(item.receiveDate).getTime();
-            const isNotPaidEnough = item.RBBalanceAmount > 0 && !item.isStop;
-            if (isNotPaidEnough && receiveDate < currentDate) {
+            const PBReceiveDate = new Date(item.PBReceiveDate).getTime();
+            const isNotPaidEnough = item.PBBalanceAmount > 0 && !item.PBIsStop;
+            if (isNotPaidEnough && PBReceiveDate < currentDate) {
               obj[mappingFieldName].color = 'red';
             }
           }
@@ -242,7 +245,7 @@ export default {
             ].link = `/${this.$i18n.locale}/finance/pay-browse/detail?payBrowse=${item.id}`;
           }
 
-          if (headerItem.fieldName === 'IsStop') {
+          if (headerItem.fieldName === 'PBIsStop') {
             obj[mappingFieldName].type = 'slot';
           }
         });
@@ -252,13 +255,13 @@ export default {
     },
     headerMapping() {
       const listNumberField = [
-        'TotalAmount',
-        'Amount',
-        'RBBalanceAmount',
-        'IsStop',
+        'PBTotalAmount',
+        'PBAmount',
+        'PBBalanceAmount',
+        'PBIsStop',
         'Currency',
-        'Date',
-        'ReceiveDate',
+        'PBDate',
+        'PBReceiveDate',
       ];
       const header = [
         {
@@ -276,14 +279,14 @@ export default {
         },
       ];
 
-      const listOptionsFields = ['IsStop'];
+      const listOptionsFields = ['PBIsStop'];
       this.listDataShow.forEach((item) => {
         const maxLength = listNumberField.includes(item.fieldName)
           ? '125'
           : '200';
         const headerItem = {
           key: this.mappingProperty(
-            this.dataTable[0] || receiveBrowseSchema,
+            this.dataTable[0] || payBrowseSchema,
             item.fieldName
           ),
           name: this.$t(`lbl_${item.fieldName}_0`),
@@ -294,7 +297,7 @@ export default {
           fieldOrder: item.fieldOrder,
           width: maxLength,
         };
-        if (item.fieldName === 'IsStop') {
+        if (item.fieldName === 'PBIsStop') {
           headerItem.options = this.checkAccountOptions;
         }
         header.push(headerItem);
@@ -325,9 +328,9 @@ export default {
           value: false,
           customerId: item.customerID,
           amount: item.amount,
-          aramount: item.aramount,
-          blanceAmount: item.blanceAmount,
-          isStop: item.isStop,
+          apamount: item.apamount,
+          pbBlanceAmount: item.pbBlanceAmount,
+          PBIsStop: item.PBIsStop,
         }));
       },
     },
@@ -349,7 +352,7 @@ export default {
     },
   },
   created() {
-    const isCheck = this.$route.query?.isStop;
+    const isCheck = this.$route.query?.PBIsStop;
 
     const payload = {
       language: this.lang,
@@ -358,7 +361,7 @@ export default {
     };
 
     if (isCheck) {
-      payload.isStop = 0;
+      payload.PBIsStop = 0;
     }
     this.$router.replace({ query: null });
     this.SET_PAYLOAD_PAY_BROWSE(payload);
