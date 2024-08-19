@@ -5,6 +5,7 @@
 </template>
 <script>
 import RBDetail from '~/components/Finance/ReceiveBrowse/DetailAROrAP/RBDetail.vue'
+
 export default {
   components: { RBDetail },
   middleware: ['authenticated'],
