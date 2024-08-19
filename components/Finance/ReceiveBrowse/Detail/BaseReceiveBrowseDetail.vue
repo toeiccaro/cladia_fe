@@ -31,8 +31,8 @@ import ToolBar from '@/components/UI/ToolBar.vue'
 import api from '@/api/api'
 import dateTime from '@/mixins/dateTime'
 import BaseValidateMessage from '@/components/UI/BaseValidateMessage'
-import ReceiveBrowseDetailTable from '@/components/ReceiveBrowse/ReceiveBrowseDetailTable'
-import ReceiveBrowseDetailForm from '@/components/ReceiveBrowse/Detail/ReceiveBrowseDetailForm.vue'
+import ReceiveBrowseDetailTable from '@/components/Finance/ReceiveBrowse/ReceiveBrowseDetailTable'
+import ReceiveBrowseDetailForm from '@/components/Finance/ReceiveBrowse/Detail/ReceiveBrowseDetailForm.vue'
 import BaseTableLoader from '~/components/loaders/BaseTableLoader'
 
 export default {

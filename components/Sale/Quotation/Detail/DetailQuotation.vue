@@ -387,9 +387,7 @@ export default {
     ...mapActions('base', ['getUnitOptions', 'getItemTypeOptionsFromAPI']),
 
     updateTable(val) {
-      console.log('val', val);
       this.dataTable = this.dataTable.map((item) =>{
-        console.log('item', item);
         const quantity = item.quantity
         const price = item.price
         const discountRate = val.discountRate

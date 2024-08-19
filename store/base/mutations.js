@@ -149,4 +149,10 @@ export default {
   SET_SMAPRI_API_URL(state, payload) {
     state.smaPriApiUrl = payload
   },
+  SET_ACCOUNTING_ITEMS(state, payload) {
+    state.listAccountingItems = payload
+  },
+  SET_CURRENT_ASSETS(state, payload) {
+    state.listCurrentAssets = payload
+  },
 }

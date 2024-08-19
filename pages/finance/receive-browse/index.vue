@@ -27,9 +27,9 @@ import { SERVER_RESPONSE_CODE } from '@/constants'
 import api from '@/api/api'
 import { downloadFileExcel } from '@/utils/utils'
 import ToolBar from '@/components/UI/ToolBar'
-import TableReceiveBrowse from '@/components/ReceiveBrowse/TableReceiveBrowse'
-import BaseModalDetails from '@/components/ReceiveBrowse/BaseModalDetails'
-import BaseModalComposite from '@/components/ReceiveBrowse/BaseModalComposite'
+import TableReceiveBrowse from '@/components/Finance/ReceiveBrowse/TableReceiveBrowse'
+import BaseModalDetails from '@/components/Finance/ReceiveBrowse/BaseModalDetails'
+import BaseModalComposite from '@/components/Finance/ReceiveBrowse/BaseModalComposite'
 import BaseSetColumn from '~/components/UI/BaseSetColumn.vue'
 
 export default {
@@ -44,7 +44,7 @@ export default {
   data() {
     return {
       listToolBars: [
-      {
+        {
           key: 'add',
           label: this.$t('btn_btnAdd_0'),
           icon: '/images/add.png',
@@ -113,6 +113,9 @@ export default {
     listToolBarsCheckAuthority() {
       return this.listToolBars.map((item) => {
         switch (item.key) {
+          case 'add':
+            item.disabled = !this.activeButtonToolBar?.isEdit
+            break
           case 'check':
             item.disabled = !this.activeButtonToolBar?.isCheck
             break
@@ -209,6 +212,9 @@ export default {
       }
     },
     async changeActiveToolBar(key) {
+      if (key === 'add') {
+        this.$router.push(this.localePath({ path: '/finance/receive-browse/add' }))
+      }
       if (key === 'refresh') {
         return location.reload()
       }

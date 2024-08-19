@@ -64,17 +64,17 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapMutations } from 'vuex';
-import { SERVER_RESPONSE_CODE } from '@/constants';
-import { receiveBrowseSchema } from '@/schemas/finance/receive-browse';
-import commonOptionsMixins from '@/mixins/commonOptions';
-import receiveBrowseMixins from '@/mixins/receiveBrowse';
-import dateTimeMixins from '@/mixins/dateTime';
-import api from '@/api/api';
-import BasePagination from '~/components/UI/BasePagination.vue';
-import BaseTableDraggable from '~/components/UI/BaseTableDraggable.vue';
-import BaseTableLoader from '~/components/loaders/BaseTableLoader';
-import { formatNumberWithCommas } from '~/utils/utils';
+import { mapGetters, mapMutations } from 'vuex'
+import { SERVER_RESPONSE_CODE } from '@/constants'
+import { receiveBrowseSchema } from '@/schemas/finance/receive-browse'
+import commonOptionsMixins from '@/mixins/commonOptions'
+import receiveBrowseMixins from '@/mixins/receiveBrowse'
+import dateTimeMixins from '@/mixins/dateTime'
+import api from '@/api/api'
+import BasePagination from '~/components/UI/BasePagination.vue'
+import BaseTableDraggable from '~/components/UI/BaseTableDraggable.vue'
+import BaseTableLoader from '~/components/loaders/BaseTableLoader'
+import { formatNumberWithCommas } from '~/utils/utils'
 
 export default {
   components: { BaseTableDraggable, BasePagination, BaseTableLoader },
@@ -91,20 +91,20 @@ export default {
       isLoadingTable: false,
       isCheckAll: false,
       listIgnoreFieldName: ['Blance'],
-      dataHeader: [],
-    };
+      dataHeader: []
+    }
   },
   async fetch() {
     try {
-      this.loading = true;
+      this.loading = true
       this.UPDATE_PAYLOAD_RECEIVE_BROWSE({
         language: this.lang,
-      });
-      await this.getData();
+      })
+      await this.getData()
     } catch (err) {
-      console.error(err);
+      console.error(err)
     } finally {
-      this.loading = false;
+      this.loading = false
     }
   },
 
@@ -119,13 +119,13 @@ export default {
         { text: '', value: '' },
         { text: 'Yes', value: 1 },
         { text: 'No', value: 0 },
-      ];
+      ]
     },
     listDataShow() {
       return this.dataHeader
         .filter((_el) => !this.listIgnoreFieldName.includes(_el.fieldName))
         .filter((item) => !item.hidden)
-        .sort((a, b) => a.fieldOrder - b.fieldOrder);
+        .sort((a, b) => a.fieldOrder - b.fieldOrder)
     },
 
     dataTotalMapping() {
@@ -134,28 +134,28 @@ export default {
           key: item.key,
           value: '',
           type: 'text',
-        };
+        }
         if (item.key === 'receiveDate') {
-          temp.value = 'Total: ';
-          temp.align = 'center';
+          temp.value = 'Total: '
+          temp.align = 'center'
         }
         if (item.key === 'TotalAmount') {
-          temp.value = this.dataFooter.Amount;
-          temp.align = 'right';
-          temp.type = 'amount';
+          temp.value = this.dataFooter.Amount
+          temp.align = 'right'
+          temp.type = 'amount'
         }
         if (item.key === 'Amount') {
-          temp.value = this.dataFooter.ARAmount;
-          temp.align = 'right';
-          temp.type = 'amount';
+          temp.value = this.dataFooter.ARAmount
+          temp.align = 'right'
+          temp.type = 'amount'
         }
         if (item.key === 'RBBalanceAmount') {
-          temp.value = this.dataFooter.BlanceAmount;
-          temp.align = 'right';
-          temp.type = 'amount';
+          temp.value = this.dataFooter.BlanceAmount
+          temp.align = 'right'
+          temp.type = 'amount'
         }
-        return temp;
-      });
+        return temp
+      })
     },
     dataTableMapping() {
       const listAlignCenterFields = [
@@ -164,8 +164,8 @@ export default {
         'Currency',
         'CustomerName',
         'RBStatement',
-      ];
-      const listAlignRightFields = ['TotalAmount', 'Amount', 'RBBalanceAmount'];
+      ]
+      const listAlignRightFields = ['TotalAmount', 'Amount', 'RBBalanceAmount']
 
       const data = this.dataTable.map((item, index) => {
         const obj = {
@@ -183,81 +183,64 @@ export default {
             value: false,
           },
           keyRow: item.receiveBrowseNo,
-        };
+        }
         this.listDataShow.forEach((headerItem, headerIndex) => {
           const mappingFieldName = this.mappingProperty(
             item,
             headerItem.fieldName
-          );
+          )
 
           obj[mappingFieldName] = {
             value: item[mappingFieldName] || '',
-          };
+          }
 
           if (listAlignCenterFields.includes(headerItem.fieldName)) {
-            obj[mappingFieldName].align = 'center';
+            obj[mappingFieldName].align = 'center'
           }
 
           if (listAlignRightFields.includes(headerItem.fieldName)) {
             obj[mappingFieldName] = {
               value: formatNumberWithCommas(item[mappingFieldName]) || 0,
               align: 'right',
-              type: 'amount',
-            };
+              type: 'amount'
+            }
           }
 
           if (headerItem.fieldName === 'OrderNO') {
             obj[mappingFieldName].type = this.getActiveButtonToolBar?.isEdit
               ? 'link'
-              : '';
+              : ''
             obj[
               mappingFieldName
-            ].link = `/${this.$i18n.locale}/finance/receive-browse/detail?receiveBrowse=${item.id}`;
+            ].link = `/${this.$i18n.locale}/finance/receive-browse/detail?receiveBrowse=${item.id}`
           }
 
           if (headerItem.fieldName === 'Date') {
-            obj[mappingFieldName].value = this.convertDate(item.Date);
-            obj[mappingFieldName].align = 'center';
+            obj[mappingFieldName].value = this.convertDate(item.Date)
+            obj[mappingFieldName].align = 'center'
           }
 
           if (headerItem.fieldName === 'ReceiveDate') {
-            obj[mappingFieldName].value = this.convertDate(item.receiveDate);
-            obj[mappingFieldName].align = 'center';
-            const currentDate = new Date().getTime();
-            const receiveDate = new Date(item.receiveDate).getTime();
-            const isNotPaidEnough = item.RBBalanceAmount > 0 && !item.isStop;
+            obj[mappingFieldName].value = this.convertDate(item.receiveDate)
+            obj[mappingFieldName].align = 'center'
+            const currentDate = new Date().getTime()
+            const receiveDate = new Date(item.receiveDate).getTime()
+            const isNotPaidEnough = item.RBBalanceAmount > 0 && !item.isStop
             if (isNotPaidEnough && receiveDate < currentDate) {
-              obj[mappingFieldName].color = 'red';
+              obj[mappingFieldName].color = 'red'
             }
           }
 
-          if (headerItem.fieldName === 'RBStatement') {
-            obj[mappingFieldName].type = this.getActiveButtonToolBar?.isEdit
-              ? 'link'
-              : '';
-            obj[
-              mappingFieldName
-            ].link = `/${this.$i18n.locale}/finance/receive-browse/detail?receiveBrowse=${item.id}`;
-          }
-
           if (headerItem.fieldName === 'IsStop') {
-            obj[mappingFieldName].type = 'slot';
+            obj[mappingFieldName].type = 'slot'
           }
-        });
-        return obj;
-      });
-      return data;
+        })
+        return obj
+      })
+      return data
     },
     headerMapping() {
-      const listNumberField = [
-        'TotalAmount',
-        'Amount',
-        'RBBalanceAmount',
-        'IsStop',
-        'Currency',
-        'Date',
-        'ReceiveDate',
-      ];
+      const listNumberField = ['TotalAmount', 'Amount', 'RBBalanceAmount', 'IsStop', 'Currency', 'Date', 'ReceiveDate' ]
       const header = [
         {
           key: 'index',
@@ -272,13 +255,11 @@ export default {
           type: 'slot',
           canNotSort: true,
         },
-      ];
+      ]
 
-      const listOptionsFields = ['IsStop'];
+      const listOptionsFields = ['IsStop']
       this.listDataShow.forEach((item) => {
-        const maxLength = listNumberField.includes(item.fieldName)
-          ? '125'
-          : '200';
+        const maxLength = listNumberField.includes(item.fieldName) ? '125' : '200'
         const headerItem = {
           key: this.mappingProperty(
             this.dataTable[0] || receiveBrowseSchema,
@@ -291,25 +272,25 @@ export default {
           fieldName: item.fieldName,
           fieldOrder: item.fieldOrder,
           width: maxLength,
-        };
-        if (item.fieldName === 'IsStop') {
-          headerItem.options = this.checkAccountOptions;
         }
-        header.push(headerItem);
-      });
+        if (item.fieldName === 'IsStop') {
+          headerItem.options = this.checkAccountOptions
+        }
+        header.push(headerItem)
+      })
 
-      return header;
+      return header
     },
     activeRows() {
       const currentActiveRows = this.listCheckbox.map((item, index) => {
         if (item.value) {
-          return index;
+          return index
         }
 
-        return null;
-      });
+        return null
+      })
 
-      return currentActiveRows.filter((item) => item || item === 0);
+      return currentActiveRows.filter((item) => item || item === 0)
     },
   },
 
@@ -326,7 +307,7 @@ export default {
           aramount: item.aramount,
           blanceAmount: item.blanceAmount,
           isStop: item.isStop,
-        }));
+        }))
       },
     },
 
@@ -334,32 +315,32 @@ export default {
       deep: true,
       handler(data) {
         if (!data.length) {
-          return;
+          return
         }
 
-        const allChecked = data.every((item) => item.value);
+        const allChecked = data.every((item) => item.value)
         if (allChecked) {
-          return (this.isCheckAll = true);
+          return (this.isCheckAll = true)
         }
 
-        this.isCheckAll = false;
+        this.isCheckAll = false
       },
     },
   },
   created() {
-    const isCheck = this.$route.query?.isStop;
+    const isCheck = this.$route.query?.isStop
 
     const payload = {
       language: this.lang,
       pageNo: 1,
       pageSize: 30,
-    };
+    }
 
     if (isCheck) {
-      payload.isStop = 0;
+      payload.isStop = 0
     }
-    this.$router.replace({ query: null });
-    this.SET_PAYLOAD_RECEIVE_BROWSE(payload);
+    this.$router.replace({ query: null })
+    this.SET_PAYLOAD_RECEIVE_BROWSE(payload)
   },
   methods: {
     ...mapMutations({
@@ -369,95 +350,95 @@ export default {
     }),
 
     onChangeCheckbox(event, index) {
-      this.listCheckbox[index].value = !this.listCheckbox[index].value;
+      this.listCheckbox[index].value = !this.listCheckbox[index].value
     },
     checkAll(value) {
       this.listCheckbox = this.listCheckbox.map((item) =>
         Object.assign({}, item, { value })
-      );
+      )
     },
     changePerPage(value) {
       const filterPayload = {
         pageSize: Number(value),
         pageNo: 1,
-      };
-      this.UPDATE_PAYLOAD_RECEIVE_BROWSE(filterPayload);
-      this.getData();
+      }
+      this.UPDATE_PAYLOAD_RECEIVE_BROWSE(filterPayload)
+      this.getData()
     },
     setCurrentPage(value) {
       this.UPDATE_PAYLOAD_RECEIVE_BROWSE({
         pageNo: Number(value),
-      });
-      this.getData();
+      })
+      this.getData()
     },
     handleRow(payload) {
-      const { index } = payload;
-      this.listCheckbox[index].value = !this.listCheckbox[index].value;
+      const { index } = payload
+      this.listCheckbox[index].value = !this.listCheckbox[index].value
 
-      this.$emit('handleDetailId', { ...payload?.item });
+      this.$emit('handleDetailId', { ...payload?.item })
     },
     async filterAndSort() {
       try {
-        this.loading = true;
-        const res = await api('getReceiveBrowses', this.payloadReceiveBrowse);
+        this.loading = true
+        const res = await api('getReceiveBrowses', this.payloadReceiveBrowse)
 
-        this.isCheckAll = false;
+        this.isCheckAll = false
 
-        const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK;
+        const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK
         if (validResponse) {
-          this.dataTable = res.data.tableContent?.content;
-          this.total = res.data.tableContent?.totalElements;
+          this.dataTable = res.data.tableContent?.content
+          this.total = res.data.tableContent?.totalElements
         }
       } catch (err) {
-        console.error(err);
+        console.error(err)
       } finally {
-        this.loading = false;
+        this.loading = false
       }
     },
     async getData() {
       try {
-        this.isLoadingTable = true;
-        const res = await api('getReceiveBrowses', this.payloadReceiveBrowse);
-        const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK;
+        this.isLoadingTable = true
+        const res = await api('getReceiveBrowses', this.payloadReceiveBrowse)
+        const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK
         if (!validResponse) {
-          return;
+          return
         }
 
-        this.dataTable = res.data.tableContent?.content;
-        this.dataFooter = res.data?.tableFooter || {};
-        this.total = res.data.tableContent?.totalElements;
-        this.dataHeader = res.data?.scolumnHides;
+        this.dataTable = res.data.tableContent?.content
+        this.dataFooter = res.data?.tableFooter || {}
+        this.total = res.data.tableContent?.totalElements
+        this.dataHeader = res.data?.scolumnHides
         this.SET_DATA_COLUMN_HIDE(
-          this.dataHeader.filter(
-            (_el) => !this.listIgnoreFieldName.includes(_el.fieldName)
+            this.dataHeader.filter(
+              (_el) => !this.listIgnoreFieldName.includes(_el.fieldName)
+            )
           )
-        );
       } catch (err) {
-        console.error(err);
+        console.error(err)
       } finally {
-        this.isLoadingTable = false;
+        this.isLoadingTable = false
       }
     },
     async refresh() {
-      await this.getData();
+      await this.getData()
     },
     handleDetailId(data) {
-      this.$emit('handleDetailId', data);
+      this.$emit('handleDetailId', data)
     },
     mappingProperty(item, fieldName) {
       for (const property in item) {
         if (property.toLowerCase() === fieldName.toLowerCase()) {
-          return property;
+          return property
         }
       }
-      return '';
+      return ''
     },
 
     changeLayout(data) {
-      this.$emit('changeLayout', data, this.listDataShow);
+      this.$emit('changeLayout', data, this.listDataShow)
     },
   },
-};
+}
 </script>
 <style lang="scss" scoped>
 .table__receive-browse {

@@ -7,7 +7,7 @@
           class="bg-cladia d-flex align-items-center justify-content-between"
         >
           <div class="text-white pl-2 font-weight-bold">
-            {{ $t('btn_btnImport_0') }}
+            {{ $t('btn_btnShowDetails_0') }}
           </div>
           <div
             class="text-white pr-2 cursor-pointer"
@@ -22,67 +22,37 @@
           @changeActiveToolBar="handleAction"
         />
 
-        <BaseValidateMessage
-          :is-error="true"
-          :list-error-message="listErrorMessage"
-        />
-
-        <TableImport
-          ref="importBoard"
+        <TableReceiveBrowseDetail
+          ref="detailBoard"
           :use-checkbox="true"
-          :new-invoice-data="invoiceData"
+          :order-no="orderNo"
           @handleDetailId="handleDetailId"
           @changeLayout="changeLayout"
         />
       </div>
     </div>
-    <BaseSetColumn
-      ref="modalSetColumn"
-      :label-mapping="setColumnLabelMapping"
-      :api-name="'getInvoicesImportList'"
-      :body="payloadApi"
-      full-width
-      @on-close="$refs.importBoard.refresh()"
-    ></BaseSetColumn>
-  </div>
-  <div
-    v-else-if="loading"
-    class="spinner content d-flex justify-content-center align-items-center"
-  >
-    <b-spinner
-      b-spinner
-      style="width: 3rem; height: 3rem"
-      label="Loading..."
-    ></b-spinner>
+    <BaseTableLoader v-if="loading" />
   </div>
 </template>
 
 <script>
-import api from '@/api/api'
-import TableImport from '@/components/Sale/Invoice/Modal/TableImport'
+import TableReceiveBrowseDetail from '@/components/Finance/ReceiveBrowse/TableReceiveBrowseDetail'
 import ToolBar from '@/components/UI/ToolBar.vue'
-import BaseValidateMessage from '@/components/UI/BaseValidateMessage'
-import BaseSetColumn from '~/components/UI/BaseSetColumn.vue'
 export default {
-  name: 'BaseModalImport',
+  name: 'BaseModalDetails',
   components: {
     ToolBar,
-    BaseSetColumn,
-    TableImport,
-    BaseValidateMessage,
+    TableReceiveBrowseDetail,
   },
   props: {
-    invoiceData: {
-      type: Object,
-      default: () => {},
-    },
-    listErrorMessage: {
-      type: Array,
-      default: () => [],
+    orderNo: {
+      type: String,
+      default: () => '',
     },
   },
   data() {
     return {
+      saleViewsChecked: [],
       currentId: '',
       lineId: null,
       loading: false,
@@ -112,22 +82,7 @@ export default {
           icon: '/images/refresh.png',
         },
         {
-          key: 'setTableColumn',
-          label: this.$t('btn_btnSet_0'),
-          icon: '/images/set.png',
-        },
-        {
-          key: 'okSaveDetail',
-          label: this.$t('btn_btnOK_0'),
-          icon: '/images/ok.png',
-        },
-        {
-          key: 'saveLayout',
-          label: this.$t('btn_btnSave_0'),
-          icon: '/images/save.png',
-        },
-        {
-          key: 'closeImport',
+          key: 'close',
           label: this.$t('btn_btnClose_0'),
           icon: '/images/close.png',
         },
@@ -168,50 +123,12 @@ export default {
       this.dataLayout = data
       this.listDataColumn = listDataColumn
     },
-    async handleSaveLayout() {
-      const confirm = window.confirm(this.$t('msg_ConfirmSave_0'))
-      if (confirm) {
-        await api('updateColumn', this.listColumnChange)
-        this.$refs.importBoard?.refresh()
-      }
-    },
     async handleAction(key) {
       if (key === 'refresh') {
-        this.$refs.importBoard?.checkAll(false)
-        this.$refs.importBoard.queryPayload = {
-          pageNo: 1,
-          pageSize: 30,
-          localLanguage: this.$i18n.locale,
-        }
-        return await this.$refs.importBoard?.refresh()
+        return await this.$refs.detailBoard?.refresh()
       }
-      if (key === 'saveLayout') {
-        this.handleSaveLayout()
-      }
-      if (key === 'setTableColumn') {
-        return (this.$refs.modalSetColumn.showModal = true)
-      }
-      if (key === 'okSaveDetail') {
-        const availableItems = this.$refs.importBoard?.listCheckbox || []
-        const selectedItems = availableItems.filter((item) => item.value)
 
-        const hasSelectedDetails = selectedItems.length > 0
-        if (!hasSelectedDetails) {
-          return window.alert(this.$t('msg_NoSelected_0'))
-        }
-
-        const finalSelectedCustomers = selectedItems.map((item) =>
-          Object.assign(item, {
-            quantity: item.blance,
-            unitId: item.unitID,
-            sonoLineId: item.lineID,
-            amount: item.blance * item.price,
-          })
-        )
-
-        return this.$emit('update-invoice-details', finalSelectedCustomers)
-      }
-      if (key === 'closeImport') {
+      if (key === 'close') {
         return (this.showModal = false)
       }
     },
@@ -241,8 +158,8 @@ export default {
 .modal-content {
   background-color: white;
   z-index: 11;
-  width: 80%;
-  height: 80%;
+  width: 806px;
+  height: 506px;
   position: absolute;
   top: 50%;
   left: 50%;

@@ -822,7 +822,6 @@ export default {
       return formatNumberWithCommas(number)
     },
     makeHideColumns() {
-      console.log('this.columnHides', this.columnHides);
       const invalidData = !this.columnHides.length || !this.tableHeaders.length
       if (invalidData) {
         return
@@ -994,8 +993,6 @@ export default {
     },
 
     calculateAmount(itemRow, keyChange, keyGet) {
-      console.log('itemRow, keyChange, keyGet', itemRow, keyChange, keyGet);
-      
       let quantity = 0
       let price = 0
       let discountRate = this.form?.discountRate
@@ -1193,6 +1190,8 @@ export default {
       const checkBeginDate = this.isDateExpired(value?.subBeginDate)
       const checkSubEndDate = this.isDateExpired(value?.subEndDate)
       const checkDeliveryDate = this.isDateExpired(value?.deliveryDate)
+      //Receive browse
+      const checkDate = this.isDateExpired(value?.date)
       const propertiesToCheck =
         value?.productionQuantity ||
         value?.quantity ||
@@ -1213,12 +1212,27 @@ export default {
         value?.rtQuantity ||
         value?.reason ||
         value?.sono ||
+        //Receive browse
+        value?.companyName||
+        value?.creditAmount||
+        value?.currency||
+        value?.debitAmount||
+        value?.employee||
+        value?.invoiceDate||
+        value?.invoiceNotes||
+        value?.invoiceNumber||
+        value?.isInvoice||
+        value?.itemID||
+        value?.opponentSubject||
+        value?.subject||
+
         checkPromiseDate ||
         checkStartDate ||
         checkEndDate ||
         checkBeginDate ||
         checkSubEndDate ||
-        checkDeliveryDate
+        checkDeliveryDate ||
+        checkDate
       return propertiesToCheck
     },
 

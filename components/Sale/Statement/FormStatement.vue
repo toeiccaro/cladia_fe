@@ -214,7 +214,6 @@ export default {
     },
   },
   created() {
-    console.log('this.dataForm', this.dataForm);
     this.form = this.dataForm
     this.getCustomerName()
   },

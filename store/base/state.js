@@ -49,4 +49,6 @@ export default () => ({
   listProcessStatus: [],
   processStatus: {},
   smaPriApiUrl: '',
+  listAccountingItems: [],
+  listCurrentAssets: [],
 })

@@ -201,6 +201,15 @@ export default {
     const listOptions = await getParameterOptionsCommon('COCustom2', language)
     commit('SET_LIST_CO_CUSTOM2', listOptions)
   },
+  async getListAccountingItems({ commit }, language) {
+    const listOptions = await getParameterOptionsCommon('AccountingItems', language)
+    commit('SET_ACCOUNTING_ITEMS', listOptions)
+  },
+  async getListCurrentAssets({ commit }, language) {
+    const listOptions = await getParameterOptionsCommon('CurrentAssets', language)
+    commit('SET_CURRENT_ASSETS', listOptions)
+  },
+  
   async getProcessStatus({ commit }, language) {
     const list = await getParameterOptionsCommon('ProcessStatus', language)
     const status = {}

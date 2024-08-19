@@ -1,12 +1,12 @@
 <template>
   <div class="add-order-page">
-    <PBAdd />
+    <RBDetail />
   </div>
 </template>
 <script>
-import PBAdd from '~/components/Finance/PayBrowse/Add/PBAdd.vue'
+import RBDetail from '~/components/Finance/ReceiveBrowse/DetailAROrAP/RBDetail.vue'
 export default {
-  components: { PBAdd },
+  components: { RBDetail },
   middleware: ['authenticated'],
 }
 </script>

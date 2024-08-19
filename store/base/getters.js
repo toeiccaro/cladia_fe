@@ -51,4 +51,6 @@ export default {
   getListProcessStatus: (state) => state.listProcessStatus,
   getProcessStatus: (state) => state.processStatus,
   getSmaPriApiUrl: (state) => state.smaPriApiUrl,
+  getListAccountingItems: (state) => state.listAccountingItems,
+  getListCurrentAssets: (state) => state.listCurrentAssets,
 }
