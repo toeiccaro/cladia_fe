@@ -677,7 +677,7 @@ export default {
 
         try {
           this.loading = true
-          const response = await api('addAPPayBrowse', params)
+          const response = await api('addAPPB', params)
           const errorCode = response?.data?.response?.status
 
           if (errorCode === SERVER_RESPONSE_CODE.FORBIDDEN) {
