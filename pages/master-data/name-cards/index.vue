@@ -1,5 +1,5 @@
 <template>
-  <div>{{ $t('lbl_BaseData_EnterpriseCards _0') }}</div>
+  <div>{{ $t('lbl_BaseData_EnterpriseCards_0') }}</div>
 </template>
 <script>
 export default {}

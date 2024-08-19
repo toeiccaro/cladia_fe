@@ -478,7 +478,6 @@ export default {
     async getData() {
       try {
         const res = await api('getOrderById', this.$route.query?.sono)
-        console.log('res', this.form);
         if (res.status === 200) {
           this.form = res.data._1
           this.form.orderDate = this.convertDate(this.form.orderDate)
@@ -489,7 +488,6 @@ export default {
           this.dataDetail = JSON.parse(JSON.stringify(this.form))
           this.joinAttachmentString(compact(this.dataDetail.attachments))
 
-          console.log('this.dataTable', this.dataTable);
           this.dataTable = res?.data._2.map((item, index) => {
             item.promiseDate = this.convertDate(item.promiseDate)
             item.lineID = index + 1

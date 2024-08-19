@@ -4,7 +4,7 @@
   </div>
 </template>
 <script>
-import RBAdd from '~/components/ReceiveBrowse/Add/RBAdd.vue'
+import RBAdd from '~/components/Finance/ReceiveBrowse/Add/RBAdd.vue'
 export default {
   components: { RBAdd },
   middleware: ['authenticated'],

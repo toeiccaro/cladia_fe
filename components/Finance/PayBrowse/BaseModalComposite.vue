@@ -41,7 +41,7 @@
 <script>
 import BaseValidateMessage from '@/components/UI/BaseValidateMessage'
 import { SERVER_RESPONSE_CODE } from '@/constants'
-import ReceiveBrowseCompositeForm from '@/components/ReceiveBrowse/ReceiveBrowseCompositeForm'
+import ReceiveBrowseCompositeForm from '@/components/Finance/ReceiveBrowse/ReceiveBrowseCompositeForm'
 import ToolBar from '@/components/UI/ToolBar.vue'
 import BaseTableLoader from '@/components/loaders/BaseTableLoader'
 export default {

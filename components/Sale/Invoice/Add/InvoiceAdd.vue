@@ -479,7 +479,6 @@ export default {
     },
 
     updateInvoiceDetails(data) {
-      console.log('data', data);
       this.importErrorMessage = []
 
       const clonedListCustomers = Array.from(

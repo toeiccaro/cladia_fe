@@ -8,7 +8,10 @@
       :is-error="true"
       :list-error-message="listErrorMessage"
     />
-    <RBForm ref="addRBForm" :key="refreshAddRBFormKey" :data="form" />
+    <RBForm ref="addRBForm" 
+      :key="refreshAddRBFormKey"
+      :data="form"
+    />
     <BaseTableItemDetail
       ref="tableDetails"
       class="add-sale-order-table-details"
@@ -76,6 +79,7 @@ export default {
   mixins: [dateTime, systemMixins],
   data() {
     return {
+      lang: this.$i18n.locale,
       refreshAddRBFormKey: 0,
       listErrorMessage: [],
       listToolBars: [
@@ -94,16 +98,16 @@ export default {
           label: this.$t('btn_btnDel_0'),
           icon: '/images/delete.png',
         },
-        {
-          key: 'check',
-          label: this.$t('btn_btnCheck_0'),
-          icon: '/images/check.png',
-        },
-        {
-          key: 'unCheck',
-          label: this.$t('btn_btnUnCheck_0'),
-          icon: '/images/uncheck.png',
-        },
+        // {
+        //   key: 'check',
+        //   label: this.$t('btn_btnCheck_0'),
+        //   icon: '/images/check.png',
+        // },
+        // {
+        //   key: 'unCheck',
+        //   label: this.$t('btn_btnUnCheck_0'),
+        //   icon: '/images/uncheck.png',
+        // },
         {
           key: 'set',
           label: this.$t('btn_btnSet_0'),
@@ -123,10 +127,10 @@ export default {
       defaultFormData: {
         checker: '',
         departmentID: '',
-        editDate: this.convertDate(new Date()),
+        editDate: '',
         editor: '',
         entryDate: this.convertDate(new Date()),
-        margin: '',
+        margin: 0,
         memo: '',
         responsiblePerson: '',
         totalCreditAmount: 0,
@@ -138,16 +142,15 @@ export default {
           lineID: 1,
           companyName: "",
           creditAmount: 0,
-          currency: 0,
+          currency: '',
           date: this.convertDate(new Date()),
           debitAmount: 0,
           employee: "",
-          invoiceDate: this.convertDate(new Date()),
+          invoiceDate: "",
           invoiceNotes: "",
           invoiceNumber: "",
-          isInvoice: true,
+          isInvoice: false,
           itemID: 0,
-          lineID: 0,
           opponentSubject: "",
           reason: "",
           subject: "",
@@ -172,6 +175,9 @@ export default {
         this.getItemTypeOptionsFromAPI(),
         this.getUnitOptions(this.$i18n.locale),
         this.getScolumnHides(),
+        this.getCurrencyOptions(this.lang),
+        this.getListAccountingItems(this.lang),
+        this.getListCurrentAssets(this.lang),
       ])
     } catch (err) {
       console.error(err)
@@ -182,18 +188,38 @@ export default {
     ...mapGetters('base', {
       unitOptions: 'getUnitOptions',
       getItemTypeOptions: 'getItemTypeOptions',
+      currencyOptions: "getCurrencyOptions",
+      listAccountingItems: "getListAccountingItems",
+      listCurrentAssets: "getListCurrentAssets",
     }),
 
     ...mapGetters('base', ['getActiveButtonToolBar']),
 
-    itemTypeOptions() {
-      return this.getItemTypeOptions.map((item) => ({
-        text: this.$t(`${item.text}`),
+    itemCurrencyOptions() {
+      return this.currencyOptions.map((item) => ({
+        text: item.text,
         value: item.value,
       }))
     },
-    xFilter() {
-      return this.x?.filter((item) => item.itemID)
+    itemListAccountingItems() {
+      return this.listAccountingItems.map((item) => ({
+        text: item.text,
+        value: item.value,
+      }))
+    },
+    itemListCurrentAssets() {
+      return this.listCurrentAssets.map((item) => ({
+        text: item.text,
+        value: item.value,
+      }))
+    },
+
+    checkboxOptions() {
+      return [
+        { text: '', value: '' },
+        { text: 'Yes', value: 1 },
+        { text: 'No', value: 0 },
+      ]
     },
 
     isCheck() {
@@ -223,7 +249,7 @@ export default {
         },
         {
           key: 'date',
-          name: this.$t('lbl_RBDate_0'),
+          name: this.$t('lbl_RBdate_0'),
           filter: 'datetime',
           width: 200,
           align: 'left',
@@ -233,17 +259,19 @@ export default {
         },
         {
           key: 'subject',
-          name: this.$t('lbl_RBSubject_0'),
-          filter: 'input',
+          name: this.$t('lbl_RBsubject_0'),
+          filter: 'select',
+          typeInput: 'select',
           width: 150,
           align: 'left',
           disabled: this.isCheck,
           fieldRequired: true,
           hidden: false,
+          options: this.itemListAccountingItems
         },
         {
           key: 'creditAmount',
-          name: this.$t('lbl_RBAmount_0'),
+          name: this.$t('lbl_RBamount_0'),
           filter: 'input',
           width: 150,
           align: 'left',
@@ -252,17 +280,19 @@ export default {
         },
         {
           key: 'opponentSubject',
-          name: this.$t('lbl_RBOpponentSubject_0'),
-          filter: 'input',
-          width: 250,
+          name: this.$t('lbl_RBopponentSubject_0'),
+          filter: 'select',
+          typeInput: 'select',
+          width: 150,
           align: 'left',
+          disabled: this.isCheck,
           fieldRequired: true,
           hidden: false,
-          disabled: this.isCheck,
+          options: this.itemListCurrentAssets
         },
         {
           key: 'debitAmount',
-          name: this.$t('lbl_RBAmount_0'),
+          name: this.$t('lbl_RBamount_0'),
           filter: 'input',
           width: 200,
           align: 'left',
@@ -272,17 +302,20 @@ export default {
         },
         {
           key: 'currency',
-          name: this.$t('lbl_RBCurrency_0'),
-          filter: 'input',
+          name: this.$t('lbl_RBcurrency_0'),
+          filter: 'select',
+          typeInput: 'select',
           width: 150,
           align: 'left',
           fieldRequired: true,
           hidden: false,
           disabled: this.isCheck,
+          options: this.itemCurrencyOptions
+          
         },
         {
           key: 'companyName',
-          name: this.$t('lbl_RBCompanyName_0'),
+          name: this.$t('lbl_RBcompanyName_0'),
           filter: 'input',
           width: 150,
           align: 'right',
@@ -292,17 +325,20 @@ export default {
         },
         {
           key: 'isInvoice',
-          name: this.$t('lbl_RBInvoice_0'),
-          filter: 'input',
-          width: 150,
-          align: 'right',
-          disabled: this.isCheck,
+          name: this.$t('lbl_RBisInvoice_0'),
+          filter: 'checkbox',
+          width: 100,
+          align: 'center',
+          dataType: 'checkbox',
+          disabled: false,
           fieldRequired: false,
           hidden: false,
+          options: this.checkboxOptions,
+          headerFilter: 'select',
         },
         {
           key: 'invoiceNumber',
-          name: this.$t('lbl_RBInvoiceNumber_0'),
+          name: this.$t('lbl_RBinvoiceNumber_0'),
           filter: 'number',
           width: 150,
           align: 'right',
@@ -312,7 +348,7 @@ export default {
         },
         {
           key: 'invoiceDate',
-          name: this.$t('lbl_RBInvoiceDate_0'),
+          name: this.$t('lbl_RBinvoiceDate_0'),
           filter: 'datetime',
           width: 200,
           align: 'left',
@@ -322,7 +358,7 @@ export default {
         },
         {
           key: 'invoiceNotes',
-          name: this.$t('lbl_RBInvoiceNotes_0'),
+          name: this.$t('lbl_RBinvoiceNotes_0'),
           filter: 'input',
           width: 300,
           align: 'left',
@@ -333,7 +369,7 @@ export default {
         },
         {
           key: 'employee',
-          name: this.$t('lbl_RBEmployee_0'),
+          name: this.$t('lbl_RBemployee_0'),
           filter: 'input',
           width: 300,
           align: 'left',
@@ -344,7 +380,7 @@ export default {
         },
         {
           key: 'reason',
-          name: this.$t('lbl_RBReason_0'),
+          name: this.$t('lbl_RBreason_0'),
           filter: 'input',
           width: 300,
           align: 'left',
@@ -359,28 +395,27 @@ export default {
     newLine() {
       return {
         lineID: 1,
-        customerPO: '',
-        itemCode: '',
-        itemID: '',
-        itemTypeID: '',
-        itemName: '',
-        description: '',
-        unitID: '',
-        quantity: 0,
-        price: 0,
-        priceIncludeDiscount: 0,
-        priceIncludeTax: 0,
-        amount: 0,
-        amountIncludeTax: 0,
-        promiseDate: this.convertDate(new Date()),
-        memoDTL: '',
+        companyName: "",
+        creditAmount: 0,
+        currency: '',
+        date: this.convertDate(new Date()),
+        debitAmount: 0,
+        employee: "",
+        invoiceDate: "",
+        invoiceNotes: "",
+        invoiceNumber: "",
+        isInvoice: false,
+        itemID: 0,
+        opponentSubject: "",
+        reason: "",
+        subject: "",
+
         isUpdate: true,
         isNewLine: true,
       }
     },
 
     availableListDetails() {
-      console.log(' this.dataTable',  this.dataTable);
       return this.dataTable.filter((item) => !item.isNewLine)
     },
     listToolBarsCheckAuthority() {
@@ -392,12 +427,12 @@ export default {
           case 'attach':
             item.disabled = !this.getActiveButtonToolBar?.isAttachments
             break
-          case 'check':
-            item.disabled = !this.getActiveButtonToolBar?.isCheck
-            break
-          case 'unCheck':
-            item.disabled = !this.getActiveButtonToolBar?.isCheck
-            break
+          // case 'check':
+          //   item.disabled = !this.getActiveButtonToolBar?.isCheck
+          //   break
+          // case 'unCheck':
+          //   item.disabled = !this.getActiveButtonToolBar?.isCheck
+          //   break
           default:
             break
         }
@@ -405,16 +440,46 @@ export default {
       })
     },
   },
+  watch: {
+    dataTable: {
+      handler(value) {
+        let totalDebitAmount = 0;
+        let totalCreditAmount = 0;
+        let margin = 0;
+        
+        value.map((item) =>{
+          const debitAmount = item.debitAmount ?? 0;
+          const creditAmount = item.creditAmount ?? 0;
 
+          totalDebitAmount = totalDebitAmount + Number(debitAmount)
+          totalCreditAmount = totalCreditAmount + Number(creditAmount)
+        });
+
+        margin = totalCreditAmount - totalDebitAmount
+
+        this.form.totalDebitAmount = totalDebitAmount ?? 0
+        this.form.totalCreditAmount = totalCreditAmount ?? 0
+        this.form.margin = margin
+      },
+      deep: true,
+      immediate: true,
+    },
+  },
   methods: {
-    ...mapActions('base', ['getUnitOptions', 'getItemTypeOptionsFromAPI']),
+    ...mapActions('base', [
+      'getUnitOptions',
+      'getItemTypeOptionsFromAPI',
+      'getCurrencyOptions',
+      'getListAccountingItems',
+      'getListCurrentAssets'
+    ]),
 
     async getScolumnHides() {
       try {
         this.loading = true
 
         const response = await api('getScolumnHides', {
-          gridName: 'ReceiveBrowseDetail',
+          gridName: 'ReceiveBrowseManualDetail',
         })
         if (response.status === 200) {
           this.columnHides = response?.data || []
@@ -456,13 +521,13 @@ export default {
           this.$router.push(this.localePath({ path: '/' }))
           break
 
-        case 'check':
-          this.handleButtonCheck()
-          break
+        // case 'check':
+        //   this.handleButtonCheck()
+        //   break
         
-        case 'unCheck':
-          this.handleButtonUnCheck()
-          break
+        // case 'unCheck':
+        //   this.handleButtonUnCheck()
+        //   break
 
         case 'set':
           this.$refs.baseSetColumnModal.showModal = true
@@ -487,13 +552,13 @@ export default {
       this.refreshFormData()
       this.addNewLineData()
     },
-    handleButtonCheck() {
-      return window.confirm(this.$t('msg_NoCheck_0'))
-    },
+    // handleButtonCheck() {
+    //   return window.confirm(this.$t('msg_NoCheck_0'))
+    // },
 
-    handleButtonUnCheck() {
-      return window.confirm(this.$t('msg_NoCheck_0'))
-    },
+    // handleButtonUnCheck() {
+    //   return window.confirm(this.$t('msg_NoCheck_0'))
+    // },
 
     handleButtonAddOrder() {
       const confirm = window.confirm(this.$t('msg_ConfirmContinue_0'))
@@ -507,25 +572,27 @@ export default {
       const dataTable = this.availableListDetails
       
       const requiredFields = {
-        entryDate: 'EntryDate'
+        entryDate: 'EntryDate',
       };
       
       const requiredTableDetails = {
-        date: 'Date',
-        subject: 'Subject',
-        // creditAmount: 'CreditAmount',
-        // opponentSubject: 'OpponentSubject',
+        date: 'date',
+        subject: 'subject',
+        creditAmount: 'creditAmount',
+        opponentSubject: 'opponentSubject',
+        debitAmount: 'debitAmount',
+        currency: 'currency',
       };
 
       Object.keys(requiredFields).forEach((field) => {
         if (!this.form[field]) {
           errors.push({
-            fieldName: this.$t(`lbl_${requiredFields[field]}_0`),
+            fieldName: this.$t(`lbl_RB${requiredFields[field]}_0`),
             text: this.$t('msg_NoInput_0'),
           })
         }
       })
-      console.log('dataTable', dataTable);
+
       if (dataTable.length === 0) {
         errors.push({
           fieldName: this.$t('msg_Details_0'),
@@ -536,15 +603,22 @@ export default {
           Object.keys(requiredTableDetails).forEach((field) => {
             if (!item[field]) {
               errors.push({
-                fieldName: `${this.$t('lbl_LineID_0')} ${
+                fieldName: `${this.$t('lbl_RBlineID_0')} ${
                   item.lineID
-                } - ${this.$t(`lbl_${requiredTableDetails[field]}_0`)}`,
+                } - ${this.$t(`lbl_RB${requiredTableDetails[field]}_0`)}`,
                 text: this.$t('msg_NoInput_0'),
               })
             }
           })
         })
       }
+
+      if (this.form.margin !== 0) {
+          errors.push({
+            fieldName: this.$t(`lbl_RBmargin_0`),
+            text: this.$t('msg_MustBeZero_0'),
+          })
+        }
 
       this.listErrorMessage = getUnique(errors, 'fieldName')
       if (this.listErrorMessage.length > 0) {
@@ -564,11 +638,10 @@ export default {
       }
 
       const validateInfo = this.validateForm()
-      console.log('validateInfo', validateInfo);
 
       if (validateInfo) {
         const { dataTableFilter, payload } = validateInfo
-        console.log('dataTableFilter, payload', dataTableFilter, payload);
+
         const params = {
           checker: payload.checker,
           departmentID: payload.departmentID,
@@ -602,8 +675,6 @@ export default {
           }),
         }
 
-        console.log('params', params);
-
         try {
           this.loading = true
           const response = await api('addARReceiveBrowse', params)
@@ -616,7 +687,7 @@ export default {
           if (response.status === 200) {
             window.alert(this.$t('msg_IsSaved_0'))
             this.$router.push({
-              path: `/${this.$i18n.locale}/sales/order/detail?sono=${response.data._1.orderNumber}`,
+              // path: `/${this.$i18n.locale}/sales/order/detail?sono=${response.data._1.orderNumber}`,
             })
           }
         } catch (error) {

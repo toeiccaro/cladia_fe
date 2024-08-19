@@ -207,7 +207,7 @@ export default {
             },
             {
               path: '/master-data/name-cards',
-              text: this.$t('lbl_BaseData_EnterpriseCards _0'),
+              text: this.$t('lbl_BaseData_EnterpriseCards_0'),
               icon: BIconCaretRight,
               key: 'MD090',
               selected: this.path.includes('/master-data/name-cards'),

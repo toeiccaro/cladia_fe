@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import TableReceiveBrowseDetail from '@/components/ReceiveBrowse/TableReceiveBrowseDetail'
+import TableReceiveBrowseDetail from '@/components/Finance/ReceiveBrowse/TableReceiveBrowseDetail'
 import ToolBar from '@/components/UI/ToolBar.vue'
 export default {
   name: 'BaseModalDetails',
