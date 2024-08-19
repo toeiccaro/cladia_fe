@@ -215,9 +215,12 @@ export default {
             obj[mappingFieldName].type = this.getActiveButtonToolBar?.isEdit
               ? 'link'
               : '';
+
             obj[
               mappingFieldName
-            ].link = `/${this.$i18n.locale}/finance/pay-browse/detail?payBrowse=${item.id}`;
+            ].link = obj[mappingFieldName].value.slice(0,2) == 
+            'IV' ? `/${this.$i18n.locale}/finance/pay-browse/detail?sono=${obj[mappingFieldName].value}`: 
+            `/${this.$i18n.locale}/finance/pay-browse/detailAROrAP?sono=${obj[mappingFieldName].value}`
           }
 
           if (headerItem.fieldName === 'PBDate') {
