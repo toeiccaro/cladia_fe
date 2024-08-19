@@ -654,7 +654,7 @@ export default {
           PBresponsiblePerson: payload.responsiblePerson,
           PBtotalCreditAmount: payload.totalCreditAmount,
           PBtotalDebitAmount: payload.totalDebitAmount,
-          PBlistDetail: dataTableFilter.map((item) => {
+          listDetail: dataTableFilter.map((item) => {
             return {
               PBcompanyName: item.companyName,
               PBcreditAmount: item.creditAmount,
