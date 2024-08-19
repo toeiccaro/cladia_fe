@@ -65,6 +65,7 @@ import ToolBar from '@/components/UI/ToolBar.vue'
 import BaseModalAttach from '@/components/UI/BaseModalAttach.vue'
 import BaseTableItemDetail from '@/components/UI/Table/BaseTableItemDetail.vue'
 import BaseSetColumnDetail from '@/components/UI/Table/BaseSetColumnDetail.vue'
+import { formatNumberWithCommas } from '~/utils/utils'
 
 export default {
   components: {
@@ -494,8 +495,8 @@ export default {
           this.form.editDate = this.convertDate(res.data.PBeditDate)
           this.form.entryDate = this.convertDate(res.data.PBentryDate)
           this.form.responsiblePerson = res?.data?.responsiblePerson
-          this.form.totalCreditAmount = formatNumberWithCommas(res.data.PBtotalCreditAmount)
-          this.form.totalDebitAmount = formatNumberWithCommas(res.data.PBtotalDebitAmount)
+          this.form.totalCreditAmount = formatNumberWithCommas(res?.data.PBtotalCreditAmount)
+          this.form.totalDebitAmount = formatNumberWithCommas(res?.data.PBtotalDebitAmount)
           
           this.dataDetail = JSON.parse(JSON.stringify(this.form))
           this.joinAttachmentString(compact(this.dataDetail.attachments))
@@ -765,7 +766,7 @@ export default {
           PBresponsiblePerson: payload.responsiblePerson,
           PBtotalCreditAmount: payload.totalCreditAmount,
           PBtotalDebitAmount: payload.totalDebitAmount,
-          PBlistDetail: dataTableFilter.map((item) => {
+          listDetail: dataTableFilter.map((item) => {
             return {
               PBcompanyName: item.companyName,
               PBcreditAmount: item.creditAmount,

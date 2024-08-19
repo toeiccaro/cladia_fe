@@ -653,7 +653,7 @@ export default {
           RBresponsiblePerson: payload.responsiblePerson,
           RBtotalCreditAmount: payload.totalCreditAmount,
           RBtotalDebitAmount: payload.totalDebitAmount,
-          RBlistDetail: dataTableFilter.map((item) => {
+          listDetail: dataTableFilter.map((item) => {
             return {
               RBcompanyName: item.companyName,
               RBcreditAmount: item.creditAmount,
