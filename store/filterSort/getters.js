@@ -19,6 +19,7 @@ export default {
   getPayloadSaleOrder: (state) => state.payloadSaleOrder,
   getPayloadSaleInvoice: (state) => state.payloadSaleInvoice,
   getPayloadReceiveBrowse: (state) => state.payloadReceiveBrowse,
+  getPayloadPayBrowse: (state) => state.payloadPayBrowse,
   getPayloadPurchaseOrder: (state) => state.payloadPurchaseOrder,
   getPayloadPurchasePrice: (state) => state.payloadPurchasePrice,
   getPayloadPurchaseBrowse: (state) => state.payloadPurchaseBrowse,
@@ -62,7 +63,7 @@ export default {
   // Completion Report
   getPayloadCompletionReport: (state) => state.payloadCompletionReport,
   getPayloadCompletionReportImport: (state) =>
-  state.payloadCompletionReportImport,
+    state.payloadCompletionReportImport,
 
   // MRP
   getPayloadMRPHistory: (state) => state.payloadMRPHistory,
@@ -71,4 +72,4 @@ export default {
   getPayloadProductPlan: (state) => state.payloadProductPlan,
   getPayloadOutwardPlan: (state) => state.payloadOutwardPlan,
   getPayloadPurchaseRNBrowse: (state) => state.payloadPurchaseRNBrowse,
-}
+};

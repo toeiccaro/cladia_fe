@@ -46,18 +46,23 @@
   </div>
 </template>
 <script>
-import { mapMutations, mapGetters } from "vuex";
-import systemMixins from "@/mixins/system";
-import dateTimeMixins from "@/mixins/dateTime";
-import { SERVER_RESPONSE_CODE } from "@/constants";
-import api from "@/api/api";
-import BasePagination from "~/components/UI/BasePagination";
-import BaseTableDraggable from "~/components/MasterData/Parameter/BaseTableDraggable";
-import BaseTableLoader from "~/components/loaders/BaseTableLoader";
+import { mapMutations, mapGetters } from 'vuex';
+import systemMixins from '@/mixins/system';
+import dateTimeMixins from '@/mixins/dateTime';
+import { SERVER_RESPONSE_CODE } from '@/constants';
+import api from '@/api/api';
+import BasePagination from '~/components/UI/BasePagination';
+import BaseTableDraggable from '~/components/MasterData/Parameter/BaseTableDraggable';
+
+import BaseTableLoader from '~/components/loaders/BaseTableLoader';
 
 export default {
-  name: "TableParameter",
-  components: { BaseTableDraggable, BasePagination, BaseTableLoader },
+  name: 'TableParameter',
+  components: {
+    BaseTableDraggable,
+    BasePagination,
+    BaseTableLoader,
+  },
   mixins: [systemMixins, dateTimeMixins],
   data() {
     return {
@@ -68,20 +73,20 @@ export default {
       total: 0,
       currentPage: 1,
       perPage: 30,
-      sortKey: "",
+      sortKey: '',
       isAscending: false,
       isLoadingTable: false,
       parameterTypeDataTable: [],
       parameterTypeDataHeader: [
         {
-          key: "name",
-          name: "",
+          key: 'name',
+          name: '',
           width: 155,
         },
       ],
       lang: this.$i18n.locale,
-      parameterType: "",
-      chosenParameter: "",
+      parameterType: '',
+      chosenParameter: '',
     };
   },
   async fetch() {
@@ -99,14 +104,14 @@ export default {
   },
   computed: {
     ...mapGetters({
-      payloadParameter: "filterSort/getPayloadParameter",
+      payloadParameter: 'filterSort/getPayloadParameter',
     }),
 
     parameterTypeHeaderMapping() {
       const header = [
         {
-          key: "index",
-          name: "",
+          key: 'index',
+          name: '',
           width: 30,
         },
       ];
@@ -114,7 +119,7 @@ export default {
       this.parameterTypeDataHeader.forEach((item, index) => {
         const headerItem = {
           key: item.key,
-          filter: "input",
+          filter: 'input',
           width: item.width,
           fieldName: item.name,
           fieldOrder: index,
@@ -128,9 +133,9 @@ export default {
       const data = this.parameterTypeDataTable.map((item, index) => {
         const obj = {
           index: {
-            value: this.perPage * (this.currentPage - 1) + index + 1,
-            align: "center",
-            type: "index",
+            value: index + 1,
+            align: 'center',
+            type: 'index',
           },
           keyRow: item.receiptNO,
         };
@@ -151,8 +156,8 @@ export default {
         const obj = {
           index: {
             value: this.perPage * (this.currentPage - 1) + index + 1,
-            align: "center",
-            type: "index",
+            align: 'center',
+            type: 'index',
           },
           parameterDetailId: item.parameterDetailId,
           parameterTypeId: item.parameterTypeId,
@@ -174,8 +179,8 @@ export default {
     getMappingHeader() {
       const result = [
         {
-          key: "index",
-          name: "",
+          key: 'index',
+          name: '',
           width: 40,
         },
       ];
@@ -183,7 +188,7 @@ export default {
       this.dataHeader.forEach((item, index) => {
         const headerItem = {
           key: item.languageName,
-          filter: "input",
+          filter: 'input',
           name: this.$t(item.displayName),
           width: 150,
           fieldName: item.languageName,
@@ -198,16 +203,18 @@ export default {
     getMappingHeaderScolumnHides() {
       const result = [
         {
-          key: "index",
-          name: "",
+          key: 'index',
+          name: '',
           width: 40,
         },
       ];
       this.scolumnHides.forEach((item, index) => {
         const headerItem = {
           key: item.fieldName,
-          filter: "input",
-          name: this.shouldShowCodeField ? this.$t(`lbl_${item.fieldName}_0`) : this.$t(`lan_${item.fieldName}_0`),
+          filter: 'input',
+          name: this.shouldShowCodeField
+            ? this.$t(`lbl_${item.fieldName}_0`)
+            : this.$t(`lan_${item.fieldName}_0`),
           width: 150,
           fieldName: item.fieldName,
           fieldOrder: index,
@@ -235,17 +242,17 @@ export default {
   },
   methods: {
     ...mapMutations({
-      UPDATE_PAYLOAD_PARAMETER: "filterSort/UPDATE_PAYLOAD_PARAMETER",
-      SET_PAYLOAD_PARAMETER: "filterSort/SET_PAYLOAD_PARAMETER",
+      UPDATE_PAYLOAD_PARAMETER: 'filterSort/UPDATE_PAYLOAD_PARAMETER',
+      SET_PAYLOAD_PARAMETER: 'filterSort/SET_PAYLOAD_PARAMETER',
     }),
 
     handleSelectRow(data) {
-      this.$emit("handleSelectRow", data);
+      this.$emit('handleSelectRow', data);
     },
 
     handleChooseParameterType(data) {
       this.chosenParameter = data;
-      this.$emit("resetChosenRowIndex");
+      this.$emit('resetChosenRowIndex');
       this.SET_PAYLOAD_PARAMETER({
         pageSize: 30,
         pageNo: 1,
@@ -265,15 +272,20 @@ export default {
           keyCode: this.parameterType,
         };
 
-        const res = await api(this.shouldShowCodeField() ? "getFinanceSettingLanguage" :"getParameterLanguage" , payload)
+        const res = await api(
+          this.shouldShowCodeField()
+            ? 'getFinanceSettingLanguage'
+            : 'getParameterLanguage',
+          payload
+        );
         const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK;
         if (validResponse) {
-          this.dataTable = res.data?.tableContent?.content
+          this.dataTable = res.data?.tableContent?.content;
           this.scolumnHides = res.data?.scolumnHides;
           this.total = res.data.tableContent?.totalElements;
         }
 
-        this.$emit("resetData");
+        this.$emit('resetData');
       } catch (err) {
         console.error(err);
       } finally {
@@ -304,10 +316,10 @@ export default {
       try {
         this.isLoadingTable = true;
         const [languageResponse, paramTypeResponse] = await Promise.all([
-          api("getLanguage"),
-          this.shouldShowCodeField() 
-          ? api("getFinanceSettingKeyCodeName") 
-          : api("getParameterKeyCodeName"),
+          api('getLanguage'),
+          this.shouldShowCodeField()
+            ? api('getFinanceSettingKeyCodeName')
+            : api('getParameterKeyCodeName'),
         ]);
 
         if (languageResponse.length) {
@@ -338,7 +350,7 @@ export default {
 
         const finalFilterParams = {};
 
-        const ACTION_FILTER = "filter";
+        const ACTION_FILTER = 'filter';
         if (type === ACTION_FILTER) {
           this.currentPage = 1;
         }
@@ -347,7 +359,7 @@ export default {
           pageNo: this.currentPage,
           pageSize: this.perPage,
           sortByColumn: this.sortKey,
-          sortAscOrDesc: this.isAscending ? "ASC" : "DESC",
+          sortAscOrDesc: this.isAscending ? 'ASC' : 'DESC',
           language: this.lang,
           keyCode: this.parameterType,
         };
@@ -367,9 +379,9 @@ export default {
         );
 
         this.SET_PAYLOAD_PARAMETER(finalApiPayload);
-        const res =  this.shouldShowCodeField() 
-        ? await api("getFinanceSettingLanguage", this.payloadParameter) 
-        : await api("getParameterLanguage", this.payloadParameter);
+        const res = this.shouldShowCodeField()
+          ? await api('getFinanceSettingLanguage', this.payloadParameter)
+          : await api('getParameterLanguage', this.payloadParameter);
 
         this.loading = false;
         const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK;
@@ -388,20 +400,25 @@ export default {
           return property;
         }
       }
-      return "";
+      return '';
     },
 
     saveData() {
-      this.$emit("saveData");
+      this.$emit('saveData');
     },
 
     async searchKeyCodeName({ sortParams, filterParams }) {
       const { name } = filterParams;
       const language = this.$i18n.locale;
-      const res = await api(this.shouldShowCodeField() ? "searchKeyCodeNameFinanceSetting" : "searchKeyCodeName", {
-        searchValue: name,
-        language,
-      });
+      const res = await api(
+        this.shouldShowCodeField()
+          ? 'searchKeyCodeNameFinanceSetting'
+          : 'searchKeyCodeName',
+        {
+          searchValue: name,
+          language,
+        }
+      );
       const { status, data } = res;
       if (status === SERVER_RESPONSE_CODE.OK) {
         this.parameterTypeDataTable = data.map((item) => ({
@@ -412,16 +429,30 @@ export default {
     },
 
     resetFiltersTable() {
-      this.sortKey = "";
+      this.sortKey = '';
       this.isAscending = false;
       for (const filter in this.$refs.tableParameterDetail.filters) {
-        this.$refs.tableParameterDetail.filters[filter] = "";
+        this.$refs.tableParameterDetail.filters[filter] = '';
       }
     },
 
     shouldShowCodeField() {
-      return this.$route.name.includes("finance");
+      return this.$route.name.includes('finance');
     },
+    // getParameterTypeIndex(index) {
+    //   return (
+    //     (this.parameterTypeCurrentPage - 1) * this.parameterTypePerPage +
+    //     index +
+    //     1
+    //   );
+    // },
+    // getParameterDetailIndex(index) {
+    //   return (
+    //     (this.parameterDetailCurrentPage - 1) * this.parameterDetailPerPage +
+    //     index +
+    //     1
+    //   );
+    // },
   },
 };
 </script>

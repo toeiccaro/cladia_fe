@@ -26,15 +26,15 @@ const api = (config) => ({
   updateParameter: (payload) => config('post', 'parameter/update', payload),
   addParameter: (payload) => config('post', 'parameter/save', payload),
   getParameter: (payload) => {
-    const urlQuery = new URLSearchParams()
+    const urlQuery = new URLSearchParams();
 
     for (const key in payload) {
       if (payload[key]) {
-        urlQuery.set(key, payload[key])
+        urlQuery.set(key, payload[key]);
       }
     }
 
-    return config('get', `parameter/keyCode?${urlQuery}`)
+    return config('get', `parameter/keyCode?${urlQuery}`);
   },
   getParameterLanguage: (payload) =>
     config('post', `parameter/keyCodes?keyCode=${payload.keyCode}`, payload),
@@ -52,22 +52,29 @@ const api = (config) => ({
       'get',
       `finance-setting/delete?keyCode=${params.keyCode}&keyId=${params.keyId}`
     ),
-  updateFinanceSetting: (payload) => config('post', 'finance-setting/update', payload),
-  addFinanceSetting: (payload) => config('post', 'finance-setting/save', payload),
+  updateFinanceSetting: (payload) =>
+    config('post', 'finance-setting/update', payload),
+  addFinanceSetting: (payload) =>
+    config('post', 'finance-setting/save', payload),
   getFinanceSetting: (payload) => {
-    const urlQuery = new URLSearchParams()
+    const urlQuery = new URLSearchParams();
 
     for (const key in payload) {
       if (payload[key]) {
-        urlQuery.set(key, payload[key])
+        urlQuery.set(key, payload[key]);
       }
     }
 
-    return config('get', `finance-setting/keyCode?${urlQuery}`)
+    return config('get', `finance-setting/keyCode?${urlQuery}`);
   },
   getFinanceSettingLanguage: (payload) =>
-    config('post', `finance-setting/keyCodes?keyCode=${payload.keyCode}`, payload),
-  getFinanceSettingKeyCodeName: () => config('get', 'finance-setting/key-code-name'),
+    config(
+      'post',
+      `finance-setting/keyCodes?keyCode=${payload.keyCode}`,
+      payload
+    ),
+  getFinanceSettingKeyCodeName: () =>
+    config('get', 'finance-setting/key-code-name'),
   searchKeyCodeNameFinanceSetting: (payload) =>
     config(
       'get',
@@ -77,7 +84,7 @@ const api = (config) => ({
   // Item master
 
   getItemMaster: (payload) => {
-    return config('post', `item-master`, payload)
+    return config('post', `item-master`, payload);
   },
   getItemType: () => config('get', 'item-master/item-type'),
   getProductName: () => config('get', 'item-master/itemName'),
@@ -170,7 +177,8 @@ const api = (config) => ({
     config('delete', 'enterprise/record/delete?recordID=' + payload),
   getRelatedCompany: () => config('get', 'enterprise/relateCompanyList'),
   getSupplierName: () => config('get', 'enterprise/supplierName'),
-  getMixedSupplierName: (payload) => config('get', 'enterprise/mixedCompany', payload),
+  getMixedSupplierName: (payload) =>
+    config('get', 'enterprise/mixedCompany', payload),
   // Employee
   clearCompanyImage: () => config('get', 'company/clear-image'),
   editCompany: (payload) => config('post', 'company/edit', payload),
@@ -219,7 +227,7 @@ const api = (config) => ({
       'put',
       `InvAdjustment/edit?lang=${payload.lang}&type=${payload.type}`,
       payload.form
-    )
+    );
   },
   getEmployeeList: () => config('get', 'InvAdjustment/employeeList'),
   printInventoryAdjustmentDetails: (payload) =>
@@ -244,26 +252,26 @@ const api = (config) => ({
   receiveBrowseBatchCollection: (payload) =>
     config('post', 'receive-browse/batchCollection', payload),
   checkReceiveBrowses: (payload) => {
-    const urlQuery = new URLSearchParams()
+    const urlQuery = new URLSearchParams();
 
     for (const key in payload) {
       if (payload[key]) {
-        urlQuery.set(key, payload[key])
+        urlQuery.set(key, payload[key]);
       }
     }
 
-    return config('get', `receive-browse/check?${urlQuery}`)
+    return config('get', `receive-browse/check?${urlQuery}`);
   },
   unCheckReceiveBrowses: (payload) => {
-    const urlQuery = new URLSearchParams()
+    const urlQuery = new URLSearchParams();
 
     for (const key in payload) {
       if (payload[key]) {
-        urlQuery.set(key, payload[key])
+        urlQuery.set(key, payload[key]);
       }
     }
 
-    return config('get', `receive-browse/unCheck?${urlQuery}`)
+    return config('get', `receive-browse/unCheck?${urlQuery}`);
   },
   getReceiveBrowses: (payload) => config('post', 'receive-browse', payload),
   editReceiveBrowseDetails: (payload) =>
@@ -271,36 +279,103 @@ const api = (config) => ({
   exportReceiveBrowse: (payload) =>
     config('post', 'receive-browse/export-excel', payload),
   getReceiveBrowseDetailsById: (payload) => {
-    const urlQuery = new URLSearchParams()
+    const urlQuery = new URLSearchParams();
 
     for (const key in payload) {
       if (payload[key]) {
-        urlQuery.set(key, payload[key])
+        urlQuery.set(key, payload[key]);
       }
     }
 
-    return config('get', `receive-browse/edit/findById?${urlQuery}`)
+    return config('get', `receive-browse/edit/findById?${urlQuery}`);
   },
   searchReceiveBrowseByOrderNo: (payload) => {
-    const urlQuery = new URLSearchParams()
+    const urlQuery = new URLSearchParams();
 
     for (const key in payload) {
       if (payload[key]) {
-        urlQuery.set(key, payload[key])
+        urlQuery.set(key, payload[key]);
       }
     }
-    return config('get', `receive-browse/home-details?${urlQuery}`)
+    return config('get', `receive-browse/home-details?${urlQuery}`);
   },
   deleteReceiveBrowseDetail: (payload) => {
-    const urlQuery = new URLSearchParams()
+    const urlQuery = new URLSearchParams();
 
     for (const key in payload) {
       if (payload[key]) {
-        urlQuery.set(key, payload[key])
+        urlQuery.set(key, payload[key]);
       }
     }
 
-    return config('delete', `receive-browse/delete-detail?${urlQuery}`, payload)
+    return config(
+      'delete',
+      `receive-browse/delete-detail?${urlQuery}`,
+      payload
+    );
+  },
+
+  // Pay Browse
+  payBrowseBatchCollection: (payload) =>
+    config('post', 'pay-browse/batchCollection', payload),
+  checkPayBrowses: (payload) => {
+    const urlQuery = new URLSearchParams();
+
+    for (const key in payload) {
+      if (payload[key]) {
+        urlQuery.set(key, payload[key]);
+      }
+    }
+
+    return config('get', `pay-browse/check?${urlQuery}`);
+  },
+  unCheckPayBrowses: (payload) => {
+    const urlQuery = new URLSearchParams();
+
+    for (const key in payload) {
+      if (payload[key]) {
+        urlQuery.set(key, payload[key]);
+      }
+    }
+
+    return config('get', `pay-browse/unCheck?${urlQuery}`);
+  },
+  getPayBrowses: (payload) => config('post', 'pay-browse', payload),
+  editPayBrowseDetails: (payload) =>
+    config('put', `pay-browse/edit-detail`, payload),
+  exportPayBrowse: (payload) =>
+    config('post', 'pay-browse/export-excel', payload),
+  getPayBrowseDetailsById: (payload) => {
+    const urlQuery = new URLSearchParams();
+
+    for (const key in payload) {
+      if (payload[key]) {
+        urlQuery.set(key, payload[key]);
+      }
+    }
+
+    return config('get', `pay-browse/edit/findById?${urlQuery}`);
+  },
+  searchPayBrowseByOrderNo: (payload) => {
+    const urlQuery = new URLSearchParams();
+
+    for (const key in payload) {
+      if (payload[key]) {
+        urlQuery.set(key, payload[key]);
+      }
+    }
+    return config('get', `pay-browse/home-details?${urlQuery}`);
+  },
+  deletePayBrowseDetail: (payload) => {
+    const urlQuery = new URLSearchParams();
+
+    for (const key in payload) {
+      if (payload[key]) {
+        urlQuery.set(key, payload[key]);
+      }
+    }
+
+    return config('delete', `pay-browse/delete-detail?${urlQuery}`, payload);
   },
 
   // Stock Detail
@@ -423,6 +498,6 @@ const api = (config) => ({
   getApprovalPendingOptions: () => config('get', 'dashboard/getListCanUsing'),
   getAllApprovalPending: () =>
     config('get', `dashboard/getAllApprovalPending?sortType=asc`),
-})
+});
 
-export default api
+export default api;

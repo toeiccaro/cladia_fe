@@ -35,6 +35,12 @@ export default {
     pageSize: 100,
     sortByColumn: 'orderNo',
   },
+  payloadPayBrowse: {
+    pageNo: 1,
+    pageSize: 100,
+    sortByColumn: 'orderNo',
+  },
+
   payloadSaleDNBrowse: {
     pageNo: 1,
     pageSize: 30,
@@ -232,4 +238,4 @@ export default {
     pageNo: 1,
     pageSize: 30,
   },
-}
+};

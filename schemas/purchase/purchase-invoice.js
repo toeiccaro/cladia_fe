@@ -43,5 +43,5 @@ export const purchaseInvoiceSchema = {
   totalTariff: 'string',
   unit: 'string',
   weight: 'string',
-  memo: 'string'
+  memo: 'string',
 }

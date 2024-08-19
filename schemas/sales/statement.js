@@ -23,5 +23,14 @@ export const statementSchema = {
   SOPriceIncludeTax: 'string',
   SOAmountIncludeTax: 'string',
   SODiscountRate: 'string',
-  SOPriceIncludeDiscount: 'string'
+  SOPriceIncludeDiscount: 'string',
+  totalElement: 'string',
+  subID: 'string',
+  lineID: 'string',
+  customerID: 'string',
+  startDate: 'string',
+  endDate: 'string',
+  invoiceOrderDate: 'string',
+  isAttach: 'string',
+  currencyID: 'string',
 }
