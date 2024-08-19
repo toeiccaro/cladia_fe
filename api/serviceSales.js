@@ -232,7 +232,22 @@ const api = (config) => ({
     config('post', 'sales-price/batch-add', payload),
 
   // receive-browse-controller
-  addARReceiveBrowse: (payload) => config('post', '/receive-browse/addAR', payload),
+  addARRB: (payload) => config('post', '/receive-browse/addAR', payload),
+  getDetailRB: (payload) => config('get', '/receive-browse/detailAR/' + payload),
+  editRB: (payload) => config('put', '/receive-browse/detail/editAR', payload),
+
+  deleteRB: (payload) => config('delete', '/receive-browse/delete-detail', payload),
+  checkRB: (params) => config('get', `receive-browse/${params}/check`),
+  uncheckRB: (params) => config('get', `receive-browse/${params}/uncheck`),
+
+  // pay-browse-controller
+  addAPPB: (payload) => config('post', '/pay-browse/addAP', payload),
+  getDetailPB: (payload) => config('get', '/pay-browse/detailAR/' + payload),
+  editPB: (payload) => config('put', '/pay-browse/detail/editAR', payload),
+
+  deletePB: (payload) => config('delete', '/pay-browse/delete-detail', payload),
+  checkPB: (params) => config('get', `pay-browse/${params}/check`),
+  uncheckPB: (params) => config('get', `pay-browse/${params}/uncheck`),
 
 })
 export default api

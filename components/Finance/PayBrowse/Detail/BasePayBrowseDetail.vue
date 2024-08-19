@@ -5,10 +5,10 @@
       :is-error="true"
       :list-error-message="listErrorMessage"
     ></BaseValidateMessage>
-    <ReceiveBrowseDetailForm
+    <PayBrowseDetailForm
       :data="receiveBrowseData"
-    ></ReceiveBrowseDetailForm>
-    <ReceiveBrowseDetailTable
+    ></PayBrowseDetailForm>
+    <PayBrowseDetailTable
       ref="receiveBrowseDetailForm"
       :data="[...filteredDataTable, addDetails]"
       :list-item-master="listItemMaster"
@@ -18,7 +18,7 @@
       @validation-errors="(data) => (listErrorMessage = data)"
       @refresh-data="refresh"
       @filter="(data) => filterDetails(data)"
-    ></ReceiveBrowseDetailTable>
+    ></PayBrowseDetailTable>
     <BaseTableLoader v-if="loading" />
   </div>
 </template>
@@ -31,15 +31,15 @@ import ToolBar from '@/components/UI/ToolBar.vue'
 import api from '@/api/api'
 import dateTime from '@/mixins/dateTime'
 import BaseValidateMessage from '@/components/UI/BaseValidateMessage'
-import ReceiveBrowseDetailTable from '@/components/Finance/ReceiveBrowse/ReceiveBrowseDetailTable'
-import ReceiveBrowseDetailForm from '@/components/Finance/ReceiveBrowse/Detail/ReceiveBrowseDetailForm.vue'
+import PayBrowseDetailTable from '@/components/Finance/PayBrowse/PayBrowseDetailTable'
+import PayBrowseDetailForm from '@/components/Finance/PayBrowse/Detail/PayBrowseDetailForm.vue'
 import BaseTableLoader from '~/components/loaders/BaseTableLoader'
 
 export default {
   components: {
     ToolBar,
-    ReceiveBrowseDetailForm,
-    ReceiveBrowseDetailTable,
+    PayBrowseDetailForm,
+    PayBrowseDetailTable,
     BaseValidateMessage,
     BaseTableLoader,
   },
@@ -164,17 +164,17 @@ export default {
 
             this.loading = true
 
-            const deleteReceiveBrowsePromises = selectedDetailItems.map(
+            const deletePayBrowsePromises = selectedDetailItems.map(
               async (item) => {
                 if (item.value) {
-                  return await api('deleteReceiveBrowseDetail', {
+                  return await api('deletePayBrowseDetail', {
                     idDTL: item.id,
                   })
                 }
               }
             )
 
-            await Promise.all(deleteReceiveBrowsePromises)
+            await Promise.all(deletePayBrowsePromises)
 
             await this.getData()
 
@@ -242,7 +242,7 @@ export default {
     },
     async addOrUpdateItem(payload) {
       try {
-        const res = await api('editReceiveBrowseDetails', payload)
+        const res = await api('editPayBrowseDetails', payload)
         const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK
         if (validResponse) {
           window.alert(this.$t('msg_IsSaved_0'))
@@ -256,7 +256,7 @@ export default {
       try {
         this.loading = true
 
-        const res = await api('getReceiveBrowseDetailsById', {
+        const res = await api('getPayBrowseDetailsById', {
           id: this.$route.query?.receiveBrowse,
           language: this.$i18n.locale,
         })

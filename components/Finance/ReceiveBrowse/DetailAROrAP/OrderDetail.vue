@@ -53,7 +53,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import { compact } from 'lodash'
-import OrderForm from './PBForm.vue'
+import OrderForm from './RBForm.vue'
 import ModalImport from './ModalImport.vue'
 import { getUnique, formatNumberWithCommas } from '@/utils/utils'
 import api from '@/api/api'

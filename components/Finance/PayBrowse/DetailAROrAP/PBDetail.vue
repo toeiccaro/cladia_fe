@@ -8,8 +8,8 @@
       :is-error="true"
       :list-error-message="listErrorMessage"
     />
-    <RBForm ref="addRBForm" 
-      :key="refreshAddRBFormKey"
+    <PBForm ref="addPBForm" 
+      :key="refreshAddPBFormKey"
       :data="form"
     />
     <BaseTableItemDetail
@@ -54,7 +54,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import ModalImport from './ModalImport.vue'
-import RBForm from './RBForm.vue'
+import PBForm from './PBForm.vue'
 import systemMixins from '@/mixins/system'
 import api from '@/api/api'
 import dateTime from '@/mixins/dateTime'
@@ -69,7 +69,7 @@ import BaseSetColumnDetail from '@/components/UI/Table/BaseSetColumnDetail.vue'
 export default {
   components: {
     ToolBar,
-    RBForm,
+    PBForm,
     BaseModalAttach,
     BaseValidateMessage,
     ModalImport,
@@ -80,7 +80,7 @@ export default {
   data() {
     return {
       lang: this.$i18n.locale,
-      refreshAddRBFormKey: 0,
+      refreshAddPBFormKey: 0,
       listErrorMessage: [],
       listToolBars: [
         {
@@ -93,21 +93,21 @@ export default {
           label: this.$t('btn_btnSave_0'),
           icon: '/images/save.png',
         },
-        // {
-        //   key: 'delete',
-        //   label: this.$t('btn_btnDel_0'),
-        //   icon: '/images/delete.png',
-        // },
-        // {
-        //   key: 'check',
-        //   label: this.$t('btn_btnCheck_0'),
-        //   icon: '/images/check.png',
-        // },
-        // {
-        //   key: 'unCheck',
-        //   label: this.$t('btn_btnUnCheck_0'),
-        //   icon: '/images/uncheck.png',
-        // },
+        {
+          key: 'delete',
+          label: this.$t('btn_btnDel_0'),
+          icon: '/images/delete.png',
+        },
+        {
+          key: 'check',
+          label: this.$t('btn_btnCheck_0'),
+          icon: '/images/check.png',
+        },
+        {
+          key: 'unCheck',
+          label: this.$t('btn_btnUnCheck_0'),
+          icon: '/images/uncheck.png',
+        },
         {
           key: 'set',
           label: this.$t('btn_btnSet_0'),
@@ -178,6 +178,7 @@ export default {
         this.getCurrencyOptions(this.lang),
         this.getListAccountingItems(this.lang),
         this.getListCurrentAssets(this.lang),
+        this.getData(),
       ])
     } catch (err) {
       console.error(err)
@@ -249,7 +250,7 @@ export default {
         },
         {
           key: 'date',
-          name: this.$t('lbl_RBdate_0'),
+          name: this.$t('lbl_PBdate_0'),
           filter: 'datetime',
           width: 200,
           align: 'left',
@@ -259,7 +260,7 @@ export default {
         },
         {
           key: 'subject',
-          name: this.$t('lbl_RBsubject_0'),
+          name: this.$t('lbl_PBsubject_0'),
           filter: 'select',
           typeInput: 'select',
           width: 150,
@@ -271,7 +272,7 @@ export default {
         },
         {
           key: 'creditAmount',
-          name: this.$t('lbl_RBamount_0'),
+          name: this.$t('lbl_PBamount_0'),
           filter: 'input',
           width: 150,
           align: 'left',
@@ -280,7 +281,7 @@ export default {
         },
         {
           key: 'opponentSubject',
-          name: this.$t('lbl_RBopponentSubject_0'),
+          name: this.$t('lbl_PBopponentSubject_0'),
           filter: 'select',
           typeInput: 'select',
           width: 150,
@@ -292,7 +293,7 @@ export default {
         },
         {
           key: 'debitAmount',
-          name: this.$t('lbl_RBamount_0'),
+          name: this.$t('lbl_PBamount_0'),
           filter: 'input',
           width: 200,
           align: 'left',
@@ -302,7 +303,7 @@ export default {
         },
         {
           key: 'currency',
-          name: this.$t('lbl_RBcurrency_0'),
+          name: this.$t('lbl_PBcurrency_0'),
           filter: 'select',
           typeInput: 'select',
           width: 150,
@@ -315,7 +316,7 @@ export default {
         },
         {
           key: 'companyName',
-          name: this.$t('lbl_RBcompanyName_0'),
+          name: this.$t('lbl_PBcompanyName_0'),
           filter: 'input',
           width: 150,
           align: 'right',
@@ -325,7 +326,7 @@ export default {
         },
         {
           key: 'isInvoice',
-          name: this.$t('lbl_RBisInvoice_0'),
+          name: this.$t('lbl_PBisInvoice_0'),
           filter: 'checkbox',
           width: 100,
           align: 'center',
@@ -338,7 +339,7 @@ export default {
         },
         {
           key: 'invoiceNumber',
-          name: this.$t('lbl_RBinvoiceNumber_0'),
+          name: this.$t('lbl_PBinvoiceNumber_0'),
           filter: 'number',
           width: 150,
           align: 'right',
@@ -348,7 +349,7 @@ export default {
         },
         {
           key: 'invoiceDate',
-          name: this.$t('lbl_RBinvoiceDate_0'),
+          name: this.$t('lbl_PBinvoiceDate_0'),
           filter: 'datetime',
           width: 200,
           align: 'left',
@@ -358,7 +359,7 @@ export default {
         },
         {
           key: 'invoiceNotes',
-          name: this.$t('lbl_RBinvoiceNotes_0'),
+          name: this.$t('lbl_PBinvoiceNotes_0'),
           filter: 'input',
           width: 300,
           align: 'left',
@@ -369,7 +370,7 @@ export default {
         },
         {
           key: 'employee',
-          name: this.$t('lbl_RBemployee_0'),
+          name: this.$t('lbl_PBemployee_0'),
           filter: 'input',
           width: 300,
           align: 'left',
@@ -380,7 +381,7 @@ export default {
         },
         {
           key: 'reason',
-          name: this.$t('lbl_RBreason_0'),
+          name: this.$t('lbl_PBreason_0'),
           filter: 'input',
           width: 300,
           align: 'left',
@@ -421,18 +422,18 @@ export default {
     listToolBarsCheckAuthority() {
       return this.listToolBars.map((item) => {
         switch (item.key) {
-          // case 'delete':
-          //   item.disabled = !this.getActiveButtonToolBar?.isDelete
-          //   break
+          case 'delete':
+            item.disabled = !this.getActiveButtonToolBar?.isDelete
+            break
           case 'attach':
             item.disabled = !this.getActiveButtonToolBar?.isAttachments
             break
-          // case 'check':
-          //   item.disabled = !this.getActiveButtonToolBar?.isCheck
-          //   break
-          // case 'unCheck':
-          //   item.disabled = !this.getActiveButtonToolBar?.isCheck
-          //   break
+          case 'check':
+            item.disabled = !this.getActiveButtonToolBar?.isCheck
+            break
+          case 'unCheck':
+            item.disabled = !this.getActiveButtonToolBar?.isCheck
+            break
           default:
             break
         }
@@ -474,6 +475,37 @@ export default {
       'getListCurrentAssets'
     ]),
 
+    async getData() {
+      try {
+        const res = await api('getDetailPB', this.$route.query?.sono)
+        if (res.status === 200) {
+          this.form = res.data
+          this.form.editDate = this.convertDate(this.form.editDate)
+          this.form.entryDate = this.convertDate(this.form.entryDate)
+          this.form.totalCreditAmount = formatNumberWithCommas(this.form.totalCreditAmount)
+          this.form.totalDebitAmount = formatNumberWithCommas(this.form.totalDebitAmount)
+          
+          this.dataDetail = JSON.parse(JSON.stringify(this.form))
+          this.joinAttachmentString(compact(this.dataDetail.attachments))
+
+          this.dataTable = res?.data._2.map((item, index) => {
+            item.promiseDate = this.convertDate(item.promiseDate)
+            item.lineID = index + 1
+            return item
+          })
+
+          if (!this.isCheck) {
+            this.dataTable.push({
+              ...this.newLine,
+              lineID: this.dataTable.length + 1,
+            })
+          }
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    },
+
     async getScolumnHides() {
       try {
         this.loading = true
@@ -509,9 +541,9 @@ export default {
           this.handleSaveOrder()
           break
 
-        // case 'delete':
-        //   this.handleButtonDeleteOrder()
-        //   break
+        case 'delete':
+          this.handleButtonDeleteOrder()
+          break
 
         case 'backAdd':
           this.$router.push(this.localePath({ path: '/finance/receive-browse' }))
@@ -521,13 +553,13 @@ export default {
           this.$router.push(this.localePath({ path: '/' }))
           break
 
-        // case 'check':
-        //   this.handleButtonCheck()
-        //   break
+        case 'check':
+          this.handleButtonCheck()
+          break
         
-        // case 'unCheck':
-        //   this.handleButtonUnCheck()
-        //   break
+        case 'unCheck':
+          this.handleButtonUnCheck()
+          break
 
         case 'set':
           this.$refs.baseSetColumnModal.showModal = true
@@ -543,18 +575,86 @@ export default {
       this.$refs.tableDetails.activeRow = -1
     },
     refreshFormData() {
-      ++this.refreshAddRBFormKey
+      ++this.refreshAddPBFormKey
     },
     async handleRefresh() {
       this.listErrorMessage = []
       this.resetTableDetailData()
-      await Promise.all([this.$fetch(), this.$refs.addRBForm.$fetch()])
+      await Promise.all([this.$fetch(), this.$refs.addPBForm.$fetch()])
       this.refreshFormData()
       this.addNewLineData()
     },
-    // handleButtonCheck() {
-    //   return window.confirm(this.$t('msg_NoCheck_0'))
-    // },
+    async handleButtonCheck() {
+      const confirm = window.confirm(this.$t('msg_ConfirmCheck_0'))
+      const params = this.form?.orderNumber
+      if (!confirm) {
+        return
+      }
+
+      try {
+        this.loading = true
+        const response = await api('checkPB', params)
+        const errorCode = response?.data?.response?.status
+
+        if (errorCode === SERVER_RESPONSE_CODE.FOPBIDDEN) {
+          window.alert(this.$t(response?.data?.response?.data?.message))
+          return
+        }
+
+        if (response.status === SERVER_RESPONSE_CODE.OK) {
+          window.alert(this.$t('msg_IsChecked_0'))
+          this.dataDetail.checker = response.data.checker
+          this.dataDetail.checkDate = this.convertDateTillSecond(
+            response.data.checkDate
+          )
+          await this.getData()
+        } else {
+          window.alert(`${response?.message}`)
+        }
+      } catch (err) {
+        console.error(err)
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async handleButtonUnCheck() {
+      const confirm = window.confirm(this.$t('msg_ConfirmUncheck_0'))
+      const params = this.form?.orderNumber
+      if (!confirm) {
+        return
+      }
+
+      try {
+        this.loading = true
+        const response = await api('uncheckPB', params)
+        const errorCode = response?.data?.response?.status
+
+        if (errorCode === SERVER_RESPONSE_CODE.FOPBIDDEN) {
+          window.alert(this.$t(response?.data?.response?.data?.message))
+          return
+        }
+
+        const validResponse = response.status === SERVER_RESPONSE_CODE.OK
+        if (validResponse) {
+          window.alert(this.$t('msg_IsUnChecked_0'))
+          this.dataDetail.checker = response.data.checker
+          this.dataDetail.checkDate = response.data.checkDate
+
+          return await this.getData()
+        }
+
+        const errorMessage = response?.data?.response?.data?.message
+        const isInUsedError = errorMessage === SERVER_ERROR_MESSAGE.IS_IN_USED
+        if (isInUsedError) {
+          window.alert(this.$t(errorMessage))
+        }
+      } catch (err) {
+        console.error(err)
+      } finally {
+        this.loading = false
+      }
+    },
 
     // handleButtonUnCheck() {
     //   return window.confirm(this.$t('msg_NoCheck_0'))
@@ -587,7 +687,7 @@ export default {
       Object.keys(requiredFields).forEach((field) => {
         if (!this.form[field]) {
           errors.push({
-            fieldName: this.$t(`lbl_RB${requiredFields[field]}_0`),
+            fieldName: this.$t(`lbl_PB${requiredFields[field]}_0`),
             text: this.$t('msg_NoInput_0'),
           })
         }
@@ -602,9 +702,9 @@ export default {
           Object.keys(requiredTableDetails).forEach((field) => {
             if (!item[field]) {
               errors.push({
-                fieldName: `${this.$t('lbl_RBlineID_0')} ${
+                fieldName: `${this.$t('lbl_PBlineID_0')} ${
                   item.lineID
-                } - ${this.$t(`lbl_RB${requiredTableDetails[field]}_0`)}`,
+                } - ${this.$t(`lbl_PB${requiredTableDetails[field]}_0`)}`,
                 text: this.$t('msg_NoInput_0'),
               })
             }
@@ -614,7 +714,7 @@ export default {
 
       if (this.form.margin !== 0) {
           errors.push({
-            fieldName: this.$t(`lbl_RBmargin_0`),
+            fieldName: this.$t(`lbl_PBmargin_0`),
             text: this.$t('msg_MustBeZero_0'),
           })
         }
@@ -642,34 +742,34 @@ export default {
         const { dataTableFilter, payload } = validateInfo
 
         const params = {
-          RBchecker: payload.checker,
-          RBdepartmentID: payload.departmentID,
-          RBeditDate: payload.editDate,
-          RBeditor: payload.editor,
-          RBentryDate: payload.entryDate,
-          RBmargin: payload.margin,
-          RBmemo: payload.memo,
-          RBorderNumber: payload.orderNumber,
-          RBresponsiblePerson: payload.responsiblePerson,
-          RBtotalCreditAmount: payload.totalCreditAmount,
-          RBtotalDebitAmount: payload.totalDebitAmount,
-          RBlistDetail: dataTableFilter.map((item) => {
+          PBchecker: payload.checker,
+          PBdepartmentID: payload.departmentID,
+          PBeditDate: payload.editDate,
+          PBeditor: payload.editor,
+          PBentryDate: payload.entryDate,
+          PBmargin: payload.margin,
+          PBmemo: payload.memo,
+          PBorderNumber: payload.orderNumber,
+          PBresponsiblePerson: payload.responsiblePerson,
+          PBtotalCreditAmount: payload.totalCreditAmount,
+          PBtotalDebitAmount: payload.totalDebitAmount,
+          PBlistDetail: dataTableFilter.map((item) => {
             return {
-              RBcompanyName: item.companyName,
-              RBcreditAmount: item.creditAmount,
-              RBcurrency: item.currency,
-              RBdate: item.date,
-              RBdebitAmount: item.debitAmount,
-              RBemployee: item.employee,
-              RBinvoiceDate: item.invoiceDate,
-              RBinvoiceNotes: item.invoiceNotes,
-              RBinvoiceNumber: item.invoiceNumber,
-              RBisInvoice: item.isInvoice,
-              RBitemID: item.itemID,
-              RBlineID: item.lineID,
-              RBopponentSubject: item.opponentSubject,
-              RBreason: item.reason,
-              RBsubject: item.subject
+              PBcompanyName: item.companyName,
+              PBcreditAmount: item.creditAmount,
+              PBcurrency: item.currency,
+              PBdate: item.date,
+              PBdebitAmount: item.debitAmount,
+              PBemployee: item.employee,
+              PBinvoiceDate: item.invoiceDate,
+              PBinvoiceNotes: item.invoiceNotes,
+              PBinvoiceNumber: item.invoiceNumber,
+              PBisInvoice: item.isInvoice,
+              PBitemID: item.itemID,
+              PBlineID: item.lineID,
+              PBopponentSubject: item.opponentSubject,
+              PBreason: item.reason,
+              PBsubject: item.subject
             }
           }),
         }
@@ -677,18 +777,16 @@ export default {
 
         try {
           this.loading = true
-          const response = await api('addARReceiveBrowse', params)
+          const response = await api('editPB', params)
           const errorCode = response?.data?.response?.status
 
-          if (errorCode === SERVER_RESPONSE_CODE.FORBIDDEN) {
+          if (errorCode === SERVER_RESPONSE_CODE.FOPBIDDEN) {
             window.alert(this.$t(response?.data?.response?.data?.message))
             return
           }
           if (response.status === 200) {
             window.alert(this.$t('msg_IsSaved_0'))
-            this.$router.push({
-              // path: `/${this.$i18n.locale}/sales/order/detail?sono=${response.data._1.orderNumber}`,
-            })
+            await this.getData()
           }
         } catch (error) {
           console.error(error)
@@ -703,15 +801,29 @@ export default {
       this.listErrorMessage = [...this.listErrorMessage, ...listError]
     },
 
-    handleButtonDeleteOrder() {
+    async handleButtonDeleteOrder() {
+      const params = {
+        idDTL: this.form?.orderNumber,
+      }
       const confirm = window.confirm(this.$t('msg_ConfirmDel_0'))
       if (confirm) {
-        location.reload()
-        this.refreshFormData()
-        window.alert(this.$t('msg_IsDeleted_0'))
+        if (params.soNo) {
+          const response = await api('deletePB', params)
+          const errorCode = response?.data?.response?.status
+
+          if (errorCode === SERVER_RESPONSE_CODE.FOPBIDDEN) {
+            window.alert(this.$t(response?.data?.response?.data?.message))
+            return
+          }
+          if (response.status === SERVER_RESPONSE_CODE.OK) {
+            window.alert(this.$t('msg_IsDeleted_0'))
+            this.$router.push(this.localePath({ path: '/finance/receive-browse' }))
+          } else {
+            window.alert(`${response?.message}`)
+          }
+        }
       }
     },
-
     changeDataTable(data) {
       this.dataTable = data
     },

@@ -54,7 +54,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import ModalImport from './ModalImport.vue'
-import RBForm from './RBForm.vue'
+import RBForm from './PBForm.vue'
 import systemMixins from '@/mixins/system'
 import api from '@/api/api'
 import dateTime from '@/mixins/dateTime'
@@ -592,6 +592,7 @@ export default {
           })
         }
       })
+
       if (dataTable.length === 0) {
         errors.push({
           fieldName: this.$t('msg_Details_0'),
@@ -642,42 +643,41 @@ export default {
         const { dataTableFilter, payload } = validateInfo
 
         const params = {
-          RBchecker: payload.checker,
-          RBdepartmentID: payload.departmentID,
-          RBeditDate: payload.editDate,
-          RBeditor: payload.editor,
-          RBentryDate: payload.entryDate,
-          RBmargin: payload.margin,
-          RBmemo: payload.memo,
-          RBorderNumber: payload.orderNumber,
-          RBresponsiblePerson: payload.responsiblePerson,
-          RBtotalCreditAmount: payload.totalCreditAmount,
-          RBtotalDebitAmount: payload.totalDebitAmount,
-          RBlistDetail: dataTableFilter.map((item) => {
+          PBchecker: payload.checker,
+          PBdepartmentID: payload.departmentID,
+          PBeditDate: payload.editDate,
+          PBeditor: payload.editor,
+          PBentryDate: payload.entryDate,
+          PBmargin: payload.margin,
+          PBmemo: payload.memo,
+          PBorderNumber: payload.orderNumber,
+          PBresponsiblePerson: payload.responsiblePerson,
+          PBtotalCreditAmount: payload.totalCreditAmount,
+          PBtotalDebitAmount: payload.totalDebitAmount,
+          PBlistDetail: dataTableFilter.map((item) => {
             return {
-              RBcompanyName: item.companyName,
-              RBcreditAmount: item.creditAmount,
-              RBcurrency: item.currency,
-              RBdate: item.date,
-              RBdebitAmount: item.debitAmount,
-              RBemployee: item.employee,
-              RBinvoiceDate: item.invoiceDate,
-              RBinvoiceNotes: item.invoiceNotes,
-              RBinvoiceNumber: item.invoiceNumber,
-              RBisInvoice: item.isInvoice,
-              RBitemID: item.itemID,
-              RBlineID: item.lineID,
-              RBopponentSubject: item.opponentSubject,
-              RBreason: item.reason,
-              RBsubject: item.subject
+              PBcompanyName: item.companyName,
+              PBcreditAmount: item.creditAmount,
+              PBcurrency: item.currency,
+              PBdate: item.date,
+              PBdebitAmount: item.debitAmount,
+              PBemployee: item.employee,
+              PBinvoiceDate: item.invoiceDate,
+              PBinvoiceNotes: item.invoiceNotes,
+              PBinvoiceNumber: item.invoiceNumber,
+              PBisInvoice: item.isInvoice,
+              PBitemID: item.itemID,
+              PBlineID: item.lineID,
+              PBopponentSubject: item.opponentSubject,
+              PBreason: item.reason,
+              PBsubject: item.subject
             }
           }),
         }
 
-
         try {
           this.loading = true
-          const response = await api('addARReceiveBrowse', params)
+          const response = await api('addAPPayBrowse', params)
           const errorCode = response?.data?.response?.status
 
           if (errorCode === SERVER_RESPONSE_CODE.FORBIDDEN) {
