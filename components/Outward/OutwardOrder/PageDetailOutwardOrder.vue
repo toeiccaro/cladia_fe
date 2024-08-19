@@ -220,16 +220,6 @@ export default {
           hidden: false,
         },
         {
-          key: 'OODiscountRate',
-          name: this.$t('lbl_OODiscountRate_0'),
-          filter: 'input',
-          width: 150,
-          align: 'left',
-          disabled: true,
-          fieldRequired: false,
-          hidden: false,
-        },
-        {
           key: 'OOPriceIncludeDiscount',
           name: this.$t('lbl_OOPriceIncludeDiscount_0'),
           filter: 'input',

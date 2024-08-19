@@ -127,7 +127,7 @@ export default {
       defaultFormData: {
         checker: '',
         departmentID: '',
-        editDate: '',
+        editDate: this.convertDate(new Date()),
         editor: '',
         entryDate: this.convertDate(new Date()),
         margin: 0,
@@ -687,7 +687,7 @@ export default {
           if (response.status === 200) {
             window.alert(this.$t('msg_IsSaved_0'))
             this.$router.push({
-              // path: `/${this.$i18n.locale}/sales/order/detail?sono=${response.data._1.orderNumber}`,
+              path: `/${this.$i18n.locale}/finance/pay-browse/detailAROrAP?sono=${response.data.PBorderNumber}`,
             })
           }
         } catch (error) {

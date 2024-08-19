@@ -477,13 +477,25 @@ export default {
 
     async getData() {
       try {
-        const res = await api('getDetailPB', this.$route.query?.sono)
+        const res = await api('getDetailPB', {
+          orderNo: this.$route.query?.sono,
+          language: this.$i18n.locale          
+        })
         if (res.status === 200) {
-          this.form = res.data
-          this.form.editDate = this.convertDate(this.form.editDate)
-          this.form.entryDate = this.convertDate(this.form.entryDate)
-          this.form.totalCreditAmount = formatNumberWithCommas(this.form.totalCreditAmount)
-          this.form.totalDebitAmount = formatNumberWithCommas(this.form.totalDebitAmount)
+          // this.form = res.data
+          orderNumber
+          this.form.orderNumber = res?.data?.PBorderNumber
+          this.form.checker = res?.data?.checker
+          this.form.departmentID = res?.data?.departmentID
+          this.form.editor = res?.data?.editor
+          this.form.margin = res?.data?.margin
+          this.form.memo = res?.data?.memo
+
+          this.form.editDate = this.convertDate(res.data.PBeditDate)
+          this.form.entryDate = this.convertDate(res.data.PBentryDate)
+          this.form.responsiblePerson = res?.data?.responsiblePerson
+          this.form.totalCreditAmount = formatNumberWithCommas(res.data.PBtotalCreditAmount)
+          this.form.totalDebitAmount = formatNumberWithCommas(res.data.PBtotalDebitAmount)
           
           this.dataDetail = JSON.parse(JSON.stringify(this.form))
           this.joinAttachmentString(compact(this.dataDetail.attachments))

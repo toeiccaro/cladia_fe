@@ -477,7 +477,10 @@ export default {
 
     async getData() {
       try {
-        const res = await api('getDetailRB', this.$route.query?.sono)
+        const res = await api('getDetailRB', {
+          orderNo: this.$route.query?.sono,
+          language: this.$i18n.locale
+        })
         if (res.status === 200) {
           this.form = res.data
           this.form.editDate = this.convertDate(this.form.editDate)

@@ -127,7 +127,7 @@ export default {
       defaultFormData: {
         checker: '',
         departmentID: '',
-        editDate: '',
+        editDate: this.convertDate(new Date()),
         editor: '',
         entryDate: this.convertDate(new Date()),
         margin: 0,
@@ -677,7 +677,7 @@ export default {
 
         try {
           this.loading = true
-          const response = await api('addARReceiveBrowse', params)
+          const response = await api('addARRB', params)
           const errorCode = response?.data?.response?.status
 
           if (errorCode === SERVER_RESPONSE_CODE.FORBIDDEN) {
@@ -687,7 +687,7 @@ export default {
           if (response.status === 200) {
             window.alert(this.$t('msg_IsSaved_0'))
             this.$router.push({
-              // path: `/${this.$i18n.locale}/sales/order/detail?sono=${response.data._1.orderNumber}`,
+              path: `/${this.$i18n.locale}/finance/receive-browse/detailAROrAP?sono=${response.data.RBorderNumber}`,
             })
           }
         } catch (error) {
