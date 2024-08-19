@@ -256,7 +256,7 @@ export default {
       try {
         this.loading = true
 
-        const res = await api('getPayBrowseDetailsById', {
+        const res = await api('getDetailPB', {
           id: this.$route.query?.receiveBrowse,
           language: this.$i18n.locale,
         })
