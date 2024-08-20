@@ -204,6 +204,46 @@
             </div>
           </div>
         </div>
+        <div
+          class="py-1 table-item-container d-flex align-items-center"
+        >
+          <div class="text-center" :style="{ width: `5%` }">
+          </div>
+          <div class="px-1" :style="{ width: `5%` }">
+          </div>
+          <div class="px-1" :style="{ width: `12%` }">
+            <input
+              v-model="dataTotalTable.RBamount"
+              class="w-100 filter-input"
+              disabled
+            />
+          </div>
+          <div class="px-1" :style="{ width: `12%` }">
+            <input
+              class="w-100 filter-input"
+              disabled
+            />
+          </div>
+          <div class="px-1" :style="{ width: `12%` }">
+            <input
+              v-model="dataTotalTable.RBdate"
+              class="w-100 filter-input"
+              disabled
+            />
+          </div>
+          <div class="px-1" :style="{ width: `12%` }">
+            <input
+              class="w-100 filter-input"
+              disabled
+            />
+          </div>
+          <div class="px-1" :style="{ width: `18%` }">
+            <input
+              class="w-100 filter-input"
+              disabled
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -236,6 +276,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    dataTotalTable: {
+      type: Object,
+      default: () => {},
+    }
   },
   data() {
     return {
@@ -267,35 +311,35 @@ export default {
     header() {
       return [
         {
-          key: 'amount',
-          name: this.$t('lbl_AmountReceiveBrowse_0'),
+          key: 'RBamount',
+          name: this.$t('lbl_RBamount_0'),
           filter: 'input-number',
           width: `12%`,
           align: 'right',
         },
         {
-          key: 'otherAmount',
-          name: this.$t('lbl_OtherAmount_0'),
+          key: 'RBotherAmount',
+          name: this.$t('lbl_RBotherAmount_0'),
           filter: 'input-number',
           width: `12%`,
           align: 'right',
         },
         {
-          key: 'date',
-          name: this.$t('lbl_ARDate_0'),
+          key: 'RBdate',
+          name: this.$t('lbl_RBdate_0'),
           filter: 'date',
           width: `12%`,
         },
         {
-          key: 'user',
-          name: this.$t('lbl_ARUser_0'),
+          key: 'RBarUser',
+          name: this.$t('lbl_RBarUser_0'),
           filter: 'autocomplete',
           width: `12%`,
           options: this.listEmployeeName,
         },
         {
-          key: 'memo',
-          name: this.$t('lbl_Memo_0'),
+          key: 'RBmemo',
+          name: this.$t('lbl_RBmemo_0'),
           filter: 'input',
           width: `18%`,
         },

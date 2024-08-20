@@ -12,6 +12,7 @@
       ref="receiveBrowseDetailForm"
       :data="[...filteredDataTable, addDetails]"
       :list-item-master="listItemMaster"
+      :data-total-table="dataTotalTable"
       @calculated-aramount="setArAmount"
       @add-detail="(data) => (addDetails = data)"
       @changeTable="changeDataTable"
@@ -53,13 +54,14 @@ export default {
       hasError: false,
       listErrorMessage: [],
       dataTable: [],
+      dataTotalTable: [],
       filteredDataTable: [],
       addDetails: {
-        amount: '',
-        otherAmount: '',
-        date: '',
-        user: '',
-        memo: '',
+        RBamount: '',
+        RBotherAmount: '',
+        RBdate: '',
+        RBaruser: '',
+        RBmemo: '',
         isUpdate: true,
         isNewLine: true,
       },
@@ -204,27 +206,13 @@ export default {
         if (!confirm) {
           return
         }
-
-        const listDetails =
-          this.$refs.receiveBrowseDetailForm.itemDetailAvailable || []
-
-        const apiPayload = []
-
-        for (const item of listDetails) {
-          apiPayload.push({
-            ...item,
-            update: !!item.id,
-            languge: this.lang,
-          })
-        }
-
-        await this.addOrUpdateItem(apiPayload)
+        await this.addOrUpdateItem(this.receiveBrowseData)
         this.addDetails = {
-          amount: '',
-          otherAmount: '',
-          date: '',
-          user: '',
-          memo: '',
+          RBamount: '',
+          RBotherAmount: '',
+          RBdate: '',
+          RBaruser: '',
+          RBmemo: '',
           isUpdate: true,
           isNewLine: true,
         }
@@ -236,7 +224,7 @@ export default {
     },
     async addOrUpdateItem(payload) {
       try {
-        const res = await api('editReceiveBrowseDetails', payload)
+        const res = await api('editInvoiceRB', payload)
         const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK
         if (validResponse) {
           window.alert(this.$t('msg_IsSaved_0'))
@@ -250,23 +238,40 @@ export default {
       try {
         this.loading = true
 
-        const res = await api('getReceiveBrowseDetailsById', {
-          id: this.$route.query?.receiveBrowse,
+        const res = await api('getInvoiceDetailRB', {
+          orderNo: this.$route.query?.sono,
           language: this.$i18n.locale,
         })
+
+        console.log('res', res);
 
         const validReceiveResponse =
           res && res.status === SERVER_RESPONSE_CODE.OK
 
         if (validReceiveResponse) {
+
           this.receiveBrowseData = res?.data
           this.dataTable = res?.data?.receiveBrowsDTL || []
-          this.receiveBrowseData.receiveDate = this.convertDate(
-            this.receiveBrowseData.receiveDate
+
+          const totalAmount = this.dataTable.reduce((sum, item) => sum + item.amount, 0);
+          this.dataTotalTable = {
+            RBamount: totalAmount,
+            RBotherAmount: "",
+            RBdate: this.convertDate(new Date()),
+            RBapUser: "",
+            RBmemo: "",
+            isUpdate: true,
+            isNewLine: true,
+          }
+          
+          this.receiveBrowseData.RBbalanceAmount = formatNumberWithCommas(
+            this.receiveBrowseData.RBbalanceAmount
           )
-          this.addDetails.amount = this.receiveBrowseData?.blanceAmount
-          this.receiveBrowseData.totalAmount = formatNumberWithCommas(
-            this.receiveBrowseData.totalAmount
+          this.receiveBrowseData.RBactualAmount = formatNumberWithCommas(
+            this.receiveBrowseData.RBactualAmount
+          )
+          this.receiveBrowseData.RBtotalAmount = formatNumberWithCommas(
+            this.receiveBrowseData.RBtotalAmount
           )
         }
       } catch (err) {

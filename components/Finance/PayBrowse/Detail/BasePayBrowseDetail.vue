@@ -6,12 +6,13 @@
       :list-error-message="listErrorMessage"
     ></BaseValidateMessage>
     <PayBrowseDetailForm
-      :data="receiveBrowseData"
+      :data="payBrowseData"
     ></PayBrowseDetailForm>
     <PayBrowseDetailTable
-      ref="receiveBrowseDetailForm"
+      ref="payBrowseDetailForm"
       :data="[...filteredDataTable, addDetails]"
       :list-item-master="listItemMaster"
+      :data-total-table="dataTotalTable"
       @calculated-aramount="setArAmount"
       @add-detail="(data) => (addDetails = data)"
       @changeTable="changeDataTable"
@@ -47,19 +48,20 @@ export default {
   data() {
     return {
       lang: this.$i18n.locale,
-      receiveBrowseData: {},
+      payBrowseData: {},
       loading: false,
       listItemMaster: [],
       hasError: false,
       listErrorMessage: [],
+      dataTotalTable: [],
       dataTable: [],
       filteredDataTable: [],
       addDetails: {
-        amount: '',
-        otherAmount: '',
-        date: '',
-        user: '',
-        memo: '',
+        PBamount: '',
+        PBotherAmount: '',
+        PBdate: '',
+        PBapUser: '',
+        PBmemo: '',
         isUpdate: true,
         isNewLine: true,
       },
@@ -112,7 +114,7 @@ export default {
   },
   methods: {
     setArAmount(data) {
-      this.receiveBrowseData.amount = formatNumberWithCommas(data) || 0
+      this.payBrowseData.amount = formatNumberWithCommas(data) || 0
     },
     async getListItemMaster() {
       const res = await api('getItemCode')
@@ -130,16 +132,10 @@ export default {
     async handleAction(key) {
       try {
         if (key === 'add') {
-          this.$refs.receiveBrowseDetailForm.filters = {}
-          return (this.addDetails = {
-            amount: '',
-            otherAmount: '',
-            date: '',
-            user: '',
-            memo: '',
-            isUpdate: true,
-            isNewLine: true,
-          })
+          const confirm = window.confirm(this.$t('msg_ConfirmContinue_0'))
+          if (confirm) {
+            this.$router.push(this.localePath({ path: '/sales/invoice/add' }))
+          }
         }
         if (key === 'save') {
           return await this.save()
@@ -147,7 +143,7 @@ export default {
         if (key === 'delete') {
           try {
             const selectedDetailItems =
-              this.$refs.receiveBrowseDetailForm.itemDetailAvailable
+              this.$refs.payBrowseDetailForm.itemDetailAvailable
 
             const hasNoSelectedDetailItems = selectedDetailItems.every(
               (item) => !item.value
@@ -178,7 +174,7 @@ export default {
 
             await this.getData()
 
-            this.$refs.receiveBrowseDetailForm.selectedItem = {}
+            this.$refs.payBrowseDetailForm.selectedItem = {}
 
             window.alert(this.$t('msg_IsDeleted_0'))
           } catch (err) {
@@ -205,32 +201,18 @@ export default {
     async save() {
       try {
         this.loading = true
-
         const confirm = window.confirm(this.$t('msg_ConfirmSave_0'))
         if (!confirm) {
           return
         }
 
-        const listDetails =
-          this.$refs.receiveBrowseDetailForm.itemDetailAvailable || []
-
-        const apiPayload = []
-
-        for (const item of listDetails) {
-          apiPayload.push({
-            ...item,
-            update: !!item.id,
-            languge: this.lang,
-          })
-        }
-
-        await this.addOrUpdateItem(apiPayload)
+        await this.addOrUpdateItem(this.payBrowseData)
         this.addDetails = {
-          amount: '',
-          otherAmount: '',
-          date: '',
-          user: '',
-          memo: '',
+          PBamount: '',
+          PBotherAmount: '',
+          PBdate: '',
+          PBapUser: '',
+          PBmemo: '',
           isUpdate: true,
           isNewLine: true,
         }
@@ -242,7 +224,7 @@ export default {
     },
     async addOrUpdateItem(payload) {
       try {
-        const res = await api('editPayBrowseDetails', payload)
+        const res = await api('editInvoicePB', payload)
         const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK
         if (validResponse) {
           window.alert(this.$t('msg_IsSaved_0'))
@@ -256,23 +238,39 @@ export default {
       try {
         this.loading = true
 
-        const res = await api('getDetailPB', {
-          id: this.$route.query?.receiveBrowse,
+        const res = await api('getInvoiceDetailPB', {
+          orderNo: this.$route.query?.sono,
           language: this.$i18n.locale,
         })
 
-        const validReceiveResponse =
+        const validPayResponse =
           res && res.status === SERVER_RESPONSE_CODE.OK
 
-        if (validReceiveResponse) {
-          this.receiveBrowseData = res?.data
+        if (validPayResponse) {
+
+          this.payBrowseData = res?.data
           this.dataTable = res?.data?.receiveBrowsDTL || []
-          this.receiveBrowseData.receiveDate = this.convertDate(
-            this.receiveBrowseData.receiveDate
+          
+          const totalAmount = this.dataTable.reduce((sum, item) => sum + item.amount, 0);
+          console.log('totalAmount', totalAmount);
+          this.dataTotalTable = {
+            RBamount: totalAmount,
+            RBotherAmount: "",
+            RBdate: this.convertDate(new Date()),
+            RBapUser: "",
+            RBmemo: "",
+            isUpdate: true,
+            isNewLine: true,
+          }
+          
+          this.payBrowseData.PBbalanceAmount = formatNumberWithCommas(
+            this.payBrowseData.PBbalanceAmount
           )
-          this.addDetails.amount = this.receiveBrowseData?.blanceAmount
-          this.receiveBrowseData.totalAmount = formatNumberWithCommas(
-            this.receiveBrowseData.totalAmount
+          this.payBrowseData.PBactualAmount = formatNumberWithCommas(
+            this.payBrowseData.PBactualAmount
+          )
+          this.payBrowseData.PBtotalAmount = formatNumberWithCommas(
+            this.payBrowseData.PBtotalAmount
           )
         }
       } catch (err) {

@@ -4,11 +4,11 @@
       <tbody>
         <tr class="tr-1">
           <td class="label">
-            <span id="OrderNumber">{{ $t('lbl_OrderNO_0') }}</span>
+            <span id="orderNumber">{{ $t('lbl_PBorderNumber_0') }}</span>
           </td>
           <td class="input">
             <b-form-input
-              :value="form.orderNumber"
+              :value="form.PBorderNumber"
               disabled
               name="txtOrderNumber"
               type="text"
@@ -18,54 +18,51 @@
           <td class="info"></td>
 
           <td class="label">
-            <span id="OrderDate">{{ $t('lbl_InvoiceNo_0') }}</span>
+            <span id="subject">{{ $t('lbl_PBsubject_0') }}</span>
           </td>
           <td class="input">
-            <b-form-input
-              v-model="form.invoiceNO"
-              name="txtInvoiceNo"
-              type="text"
-              required
+            <b-form-select
+              v-model="form.PBsubjectId"
+              :options="listAccountingItems"
               disabled
-            />
+              class="select"
+            ></b-form-select>
           </td>
           <td class="info"></td>
 
           <td class="label">
-            <span id="ReceiveDate">{{ $t('lbl_ReceiveBrowseDate_0') }}</span>
+            <span id="opponentSubjectId">{{ $t('lbl_PBopponentSubjectId_0') }}</span>
           </td>
           <td class="input">
-            <b-form-input
-              v-model="form.receiveDate"
-              name="txtReceiveDate"
-              type="text"
-              required
-              disabled
-            />
+            <b-form-select
+              v-model="form.PBopponentSubjectId"
+              :options="listCurrentAssets"
+              class="select"
+            ></b-form-select>
           </td>
           <td class="info"></td>
         </tr>
 
         <tr class="tr-2">
           <td class="label">
-            <span id="CustomerName">{{ $t('lbl_CustomerName_0') }}</span>
+            <span id="customerName">{{ $t('lbl_PBCustomerName_0') }}</span>
           </td>
           <td rows="1" colspan="4" class="input position-relative">
-            <b-form-input
-              v-model="form.customerName"
-              name="txtCustomerName"
-              type="text"
-              required
+            <b-form-select
+              v-model="form.PBcustomerId"
+              :options="itemCustomerNameList"
               disabled
-            />
+              class="select"
+            ></b-form-select>
+            
           </td>
           <td class="info"></td>
           <td class="label">
-            <span id="Currency">{{ $t('lbl_Currency_0') }}</span>
+            <span id="currency">{{ $t('lbl_PBcurrency_0') }}</span>
           </td>
           <td class="input">
             <b-form-select
-              v-model="form.currencyID"
+              v-model="form.PBcurrencyId"
               :options="currencyOptions"
               disabled
               class="select"
@@ -76,12 +73,12 @@
 
         <tr class="tr-3">
           <td class="label">
-            <span id="TotalAmount">{{ $t('lbl_TotalAmount_0') }}</span>
+            <span id="totalAmount">{{ $t('lbl_PBtotalAmount_0') }}</span>
           </td>
           <td class="input">
             <b-form-input
-              :value="form.totalAmount"
-              name="TotalAmount"
+              :value="form.PBtotalAmount"
+              name="txtTotalAmount"
               type="text"
               class="number"
               disabled
@@ -89,12 +86,12 @@
           </td>
           <td class="info"></td>
           <td class="label">
-            <span id="Amount">{{ $t('lbl_AmountReceiveBrowse_0') }}</span>
+            <span id="balanceAmount">{{ $t('lbl_PBbalanceAmount_0') }}</span>
           </td>
           <td class="input">
             <b-form-input
-              :value="form.amount"
-              name="Amount"
+              :value="form.PBbalanceAmount"
+              name="txtBalanceAmount"
               type="text"
               class="number"
               disabled
@@ -102,13 +99,13 @@
           </td>
           <td class="info">&nbsp;</td>
           <td class="label">
-            <span id="ResponsibleMan">{{ $t('lbl_ResponsibleMan_0') }}</span>
+            <span id="actualAmount">{{ $t('lbl_PBactualAmount_0') }}</span>
           </td>
           <td class="input">
             <b-form-input
-              v-model="form.responsibleMan"
+              v-model="form.PBactualAmount"
               disabled
-              name="txtTaxRate"
+              name="txtActualAmount"
               type="text"
             />
           </td>
@@ -120,13 +117,24 @@
           </td>
           <td rows="1" colspan="4" class="input">
             <b-form-input
-              v-model="form.memo"
+              v-model="form.PBmemo"
               disabled
               name="Memo"
               type="text"
             />
           </td>
           <td class="info">&nbsp;</td>
+          <td class="label">
+            <span id="otherExpensesAmount">{{ $t('lbl_PBotherExpensesAmount_0') }}</span>
+          </td>
+          <td class="input">
+            <b-form-input
+              v-model="form.PBotherExpensesAmount"
+              disabled
+              name="txtOtherExpensesAmount"
+              type="text"
+            />
+          </td>
         </tr>
       </tbody>
     </table>
@@ -155,7 +163,17 @@ export default {
   computed: {
     ...mapGetters('base', {
       currencyOptions: 'getCurrencyOptions',
+      listAccountingItems: "getListAccountingItems",
+      listCurrentAssets: "getListCurrentAssets",
+      customerNameList: "getCustomerNameList"
     }),
+
+    itemCustomerNameList() {
+      return this.customerNameList.map((item) => ({
+        text: item.companyName,
+        value: item.id,
+      }))
+    },
   },
   watch: {
     data: {
@@ -166,10 +184,18 @@ export default {
     },
   },
   async created() {
-    await this.getCurrencyOptions(this.lang)
+    await this.getCurrencyOptions(this.lang),
+    await this.getListAccountingItems(this.lang),
+    await this.getListCurrentAssets(this.lang)
+    await this.getListCustomerName()
   },
   methods: {
-    ...mapActions('base', ['getCurrencyOptions']),
+    ...mapActions('base', [
+      'getCurrencyOptions',
+      'getListAccountingItems',
+      'getListCurrentAssets',
+      'getListCustomerName'
+    ]),
 
     makeFormatNumberWithCommas(number) {
       return formatNumberWithCommas(number)

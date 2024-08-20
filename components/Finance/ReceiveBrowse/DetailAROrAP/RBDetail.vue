@@ -65,6 +65,7 @@ import ToolBar from '@/components/UI/ToolBar.vue'
 import BaseModalAttach from '@/components/UI/BaseModalAttach.vue'
 import BaseTableItemDetail from '@/components/UI/Table/BaseTableItemDetail.vue'
 import BaseSetColumnDetail from '@/components/UI/Table/BaseSetColumnDetail.vue'
+import { formatNumberWithCommas } from '~/utils/utils'
 
 export default {
   components: {
