@@ -22,7 +22,6 @@
       :column-hides="columnHides"
       :disable-input="isCheck"
       :header-detail="tableHeaders"
-      :show-quantity="true"
       :type-action="'ADD'"
       :new-line="newLine"
       @changeTable="changeDataDetailTable"

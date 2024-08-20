@@ -59,6 +59,7 @@ export default {
       addDetails: {
         PBamount: '',
         PBotherAmount: '',
+        PBexpenseCategory:'',
         PBdate: '',
         PBapUser: '',
         PBmemo: '',
@@ -210,6 +211,7 @@ export default {
         this.addDetails = {
           PBamount: '',
           PBotherAmount: '',
+          PBexpenseCategory: '',
           PBdate: '',
           PBapUser: '',
           PBmemo: '',
@@ -252,13 +254,14 @@ export default {
           this.dataTable = res?.data?.receiveBrowsDTL || []
           
           const totalAmount = this.dataTable.reduce((sum, item) => sum + item.amount, 0);
-          console.log('totalAmount', totalAmount);
+
           this.dataTotalTable = {
-            RBamount: totalAmount,
-            RBotherAmount: "",
-            RBdate: this.convertDate(new Date()),
-            RBapUser: "",
-            RBmemo: "",
+            PBamount: totalAmount,
+            PBotherAmount: "",
+            PBexpenseCategory: "",
+            PBdate: this.convertDate(new Date()),
+            PBapUser: "",
+            PBmemo: "",
             isUpdate: true,
             isNewLine: true,
           }

@@ -802,6 +802,8 @@ export default {
             responsibleMan: this.dataInvoice.responsibleMan,
             tradeTerm: this.dataInvoice.tradeTerm,
             warehouseId: this.dataInvoice.warehouseId,
+            taxRate: this.dataInvoice.taxRate,
+            discountRate: this.dataInvoice.discountRate,
             salesInDtl: currentListDetails.map((item) => {
               return {
                 customerPO: item.customerPO,
@@ -819,6 +821,7 @@ export default {
                 sono: item.sono,
                 unitId: item.unitID,
                 warehouseId: item.warehouseID,
+                
               }
             }),
           }

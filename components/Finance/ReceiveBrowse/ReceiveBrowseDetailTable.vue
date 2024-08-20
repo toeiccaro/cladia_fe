@@ -226,6 +226,12 @@
           </div>
           <div class="px-1" :style="{ width: `12%` }">
             <input
+              class="w-100 filter-input"
+              disabled
+            />
+          </div>
+          <div class="px-1" :style="{ width: `12%` }">
+            <input
               v-model="dataTotalTable.RBdate"
               class="w-100 filter-input"
               disabled
@@ -320,6 +326,13 @@ export default {
         {
           key: 'RBotherAmount',
           name: this.$t('lbl_RBotherAmount_0'),
+          filter: 'input-number',
+          width: `12%`,
+          align: 'right',
+        },
+        {
+          key: 'PBexpenseCategory',
+          name: this.$t('lbl_PBexpenseCategory_0'),
           filter: 'input-number',
           width: `12%`,
           align: 'right',
