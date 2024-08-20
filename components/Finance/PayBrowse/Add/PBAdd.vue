@@ -22,12 +22,10 @@
       :column-hides="columnHides"
       :disable-input="isCheck"
       :header-detail="tableHeaders"
-      :show-quantity="true"
       :type-action="'ADD'"
       :new-line="newLine"
       @changeTable="changeDataDetailTable"
     ></BaseTableItemDetail>
-    <ModalImport ref="importOrder" @importData="handleImportData"></ModalImport>
     <BaseModalAttach
       ref="attachments"
       :data="form"
@@ -53,7 +51,6 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import ModalImport from './ModalImport.vue'
 import RBForm from './PBForm.vue'
 import systemMixins from '@/mixins/system'
 import api from '@/api/api'
@@ -72,7 +69,6 @@ export default {
     RBForm,
     BaseModalAttach,
     BaseValidateMessage,
-    ModalImport,
     BaseTableItemDetail,
     BaseSetColumnDetail,
   },
@@ -93,21 +89,26 @@ export default {
           label: this.$t('btn_btnSave_0'),
           icon: '/images/save.png',
         },
-        // {
-        //   key: 'delete',
-        //   label: this.$t('btn_btnDel_0'),
-        //   icon: '/images/delete.png',
-        // },
-        // {
-        //   key: 'check',
-        //   label: this.$t('btn_btnCheck_0'),
-        //   icon: '/images/check.png',
-        // },
-        // {
-        //   key: 'unCheck',
-        //   label: this.$t('btn_btnUnCheck_0'),
-        //   icon: '/images/uncheck.png',
-        // },
+        {
+          key: 'delete',
+          label: this.$t('btn_btnDel_0'),
+          icon: '/images/delete.png',
+        },
+        {
+          key: 'check',
+          label: this.$t('btn_btnCheck_0'),
+          icon: '/images/check.png',
+        },
+        {
+          key: 'unCheck',
+          label: this.$t('btn_btnUnCheck_0'),
+          icon: '/images/uncheck.png',
+        },
+        {
+          key: 'print',
+          label: this.$t('btn_btnPrint_0'),
+          icon: '/images/print.png',
+        },
         {
           key: 'set',
           label: this.$t('btn_btnSet_0'),
@@ -178,6 +179,7 @@ export default {
         this.getCurrencyOptions(this.lang),
         this.getListAccountingItems(this.lang),
         this.getListCurrentAssets(this.lang),
+        this.getListCustomerName()
       ])
     } catch (err) {
       console.error(err)
@@ -191,9 +193,17 @@ export default {
       currencyOptions: "getCurrencyOptions",
       listAccountingItems: "getListAccountingItems",
       listCurrentAssets: "getListCurrentAssets",
+      customerNameList: "getCustomerNameList"
     }),
 
     ...mapGetters('base', ['getActiveButtonToolBar']),
+
+    itemCustomerNameList() {
+      return this.customerNameList.map((item) => ({
+        text: item.companyName,
+        value: item.id,
+      }))
+    },
 
     itemCurrencyOptions() {
       return this.currencyOptions.map((item) => ({
@@ -270,7 +280,7 @@ export default {
           options: this.itemListAccountingItems
         },
         {
-          key: 'creditAmount',
+          key: 'debitAmount',
           name: this.$t('lbl_RBamount_0'),
           filter: 'input',
           width: 150,
@@ -291,7 +301,7 @@ export default {
           options: this.itemListCurrentAssets
         },
         {
-          key: 'debitAmount',
+          key: 'creditAmount',
           name: this.$t('lbl_RBamount_0'),
           filter: 'input',
           width: 200,
@@ -311,17 +321,18 @@ export default {
           hidden: false,
           disabled: this.isCheck,
           options: this.itemCurrencyOptions
-          
         },
         {
           key: 'companyName',
           name: this.$t('lbl_RBcompanyName_0'),
-          filter: 'input',
+          filter: 'select',
+          typeInput: 'select',
           width: 150,
-          align: 'right',
-          disabled: this.isCheck,
-          fieldRequired: false,
+          align: 'left',
+          fieldRequired: true,
           hidden: false,
+          disabled: this.isCheck,
+          options: this.itemCustomerNameList
         },
         {
           key: 'isInvoice',
@@ -471,7 +482,9 @@ export default {
       'getItemTypeOptionsFromAPI',
       'getCurrencyOptions',
       'getListAccountingItems',
-      'getListCurrentAssets'
+      'getListCurrentAssets',
+      'getListCustomerName'
+
     ]),
 
     async getScolumnHides() {

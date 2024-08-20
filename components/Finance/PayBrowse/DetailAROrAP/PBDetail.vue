@@ -26,7 +26,6 @@
       :new-line="newLine"
       @changeTable="changeDataDetailTable"
     ></BaseTableItemDetail>
-    <ModalImport ref="importOrder" @importData="handleImportData"></ModalImport>
     <BaseModalAttach
       ref="attachments"
       :data="form"
@@ -52,7 +51,6 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import ModalImport from './ModalImport.vue'
 import PBForm from './PBForm.vue'
 import systemMixins from '@/mixins/system'
 import api from '@/api/api'
@@ -72,7 +70,6 @@ export default {
     PBForm,
     BaseModalAttach,
     BaseValidateMessage,
-    ModalImport,
     BaseTableItemDetail,
     BaseSetColumnDetail,
   },
@@ -179,6 +176,7 @@ export default {
         this.getListAccountingItems(this.lang),
         this.getListCurrentAssets(this.lang),
         this.getData(),
+        this.getListCustomerName()
       ])
     } catch (err) {
       console.error(err)
@@ -192,9 +190,17 @@ export default {
       currencyOptions: "getCurrencyOptions",
       listAccountingItems: "getListAccountingItems",
       listCurrentAssets: "getListCurrentAssets",
+      customerNameList: "getCustomerNameList"
     }),
 
     ...mapGetters('base', ['getActiveButtonToolBar']),
+
+    itemCustomerNameList() {
+      return this.customerNameList.map((item) => ({
+        text: item.companyName,
+        value: item.id,
+      }))
+    },
 
     itemCurrencyOptions() {
       return this.currencyOptions.map((item) => ({
@@ -271,7 +277,7 @@ export default {
           options: this.itemListAccountingItems
         },
         {
-          key: 'creditAmount',
+          key: 'debitAmount',
           name: this.$t('lbl_PBamount_0'),
           filter: 'input',
           width: 150,
@@ -292,7 +298,7 @@ export default {
           options: this.itemListCurrentAssets
         },
         {
-          key: 'debitAmount',
+          key: 'creditAmount',
           name: this.$t('lbl_PBamount_0'),
           filter: 'input',
           width: 200,
@@ -316,13 +322,15 @@ export default {
         },
         {
           key: 'companyName',
-          name: this.$t('lbl_PBcompanyName_0'),
-          filter: 'input',
+          name: this.$t('lbl_RBcompanyName_0'),
+          filter: 'select',
+          typeInput: 'select',
           width: 150,
-          align: 'right',
-          disabled: this.isCheck,
-          fieldRequired: false,
+          align: 'left',
+          fieldRequired: true,
           hidden: false,
+          disabled: this.isCheck,
+          options: this.itemCustomerNameList
         },
         {
           key: 'isInvoice',
@@ -472,7 +480,8 @@ export default {
       'getItemTypeOptionsFromAPI',
       'getCurrencyOptions',
       'getListAccountingItems',
-      'getListCurrentAssets'
+      'getListCurrentAssets',
+      'getListCustomerName'
     ]),
 
     async getData() {
@@ -483,7 +492,6 @@ export default {
         })
         if (res.status === 200) {
           // this.form = res.data
-          orderNumber
           this.form.orderNumber = res?.data?.PBorderNumber
           this.form.checker = res?.data?.checker
           this.form.departmentID = res?.data?.departmentID
@@ -504,10 +512,11 @@ export default {
 
             for (const key in item) {
               const newKey = key.replace(/^PB/, '');
+              if(newKey == 'date') {
+                item[key] = this.convertDate(item[key])
+              }
               newObject[newKey] = item[key];
-              
             }
-            console.log('newObject', newObject);
             return newObject
           })
 

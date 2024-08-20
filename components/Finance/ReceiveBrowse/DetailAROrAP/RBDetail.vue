@@ -22,12 +22,10 @@
       :column-hides="columnHides"
       :disable-input="isCheck"
       :header-detail="tableHeaders"
-      :show-quantity="true"
       :type-action="'ADD'"
       :new-line="newLine"
       @changeTable="changeDataDetailTable"
     ></BaseTableItemDetail>
-    <ModalImport ref="importOrder" @importData="handleImportData"></ModalImport>
     <BaseModalAttach
       ref="attachments"
       :data="form"
@@ -53,7 +51,6 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import ModalImport from './ModalImport.vue'
 import RBForm from './RBForm.vue'
 import systemMixins from '@/mixins/system'
 import api from '@/api/api'
@@ -73,7 +70,6 @@ export default {
     RBForm,
     BaseModalAttach,
     BaseValidateMessage,
-    ModalImport,
     BaseTableItemDetail,
     BaseSetColumnDetail,
   },
@@ -180,6 +176,7 @@ export default {
         this.getListAccountingItems(this.lang),
         this.getListCurrentAssets(this.lang),
         this.getData(),
+        this.getListCustomerName()
       ])
     } catch (err) {
       console.error(err)
@@ -193,9 +190,17 @@ export default {
       currencyOptions: "getCurrencyOptions",
       listAccountingItems: "getListAccountingItems",
       listCurrentAssets: "getListCurrentAssets",
+      customerNameList: "getCustomerNameList"
     }),
 
     ...mapGetters('base', ['getActiveButtonToolBar']),
+
+    itemCustomerNameList() {
+      return this.customerNameList.map((item) => ({
+        text: item.companyName,
+        value: item.id,
+      }))
+    },
 
     itemCurrencyOptions() {
       return this.currencyOptions.map((item) => ({
@@ -272,7 +277,7 @@ export default {
           options: this.itemListAccountingItems
         },
         {
-          key: 'creditAmount',
+          key: 'debitAmount',
           name: this.$t('lbl_RBamount_0'),
           filter: 'input',
           width: 150,
@@ -293,7 +298,7 @@ export default {
           options: this.itemListCurrentAssets
         },
         {
-          key: 'debitAmount',
+          key: 'creditAmount',
           name: this.$t('lbl_RBamount_0'),
           filter: 'input',
           width: 200,
@@ -318,12 +323,14 @@ export default {
         {
           key: 'companyName',
           name: this.$t('lbl_RBcompanyName_0'),
-          filter: 'input',
+          filter: 'select',
+          typeInput: 'select',
           width: 150,
-          align: 'right',
-          disabled: this.isCheck,
-          fieldRequired: false,
+          align: 'left',
+          fieldRequired: true,
           hidden: false,
+          disabled: this.isCheck,
+          options: this.itemCustomerNameList
         },
         {
           key: 'isInvoice',
@@ -473,7 +480,8 @@ export default {
       'getItemTypeOptionsFromAPI',
       'getCurrencyOptions',
       'getListAccountingItems',
-      'getListCurrentAssets'
+      'getListCurrentAssets',
+      'getListCustomerName'
     ]),
 
     async getData() {
@@ -483,19 +491,33 @@ export default {
           language: this.$i18n.locale
         })
         if (res.status === 200) {
-          this.form = res.data
-          this.form.editDate = this.convertDate(this.form.editDate)
-          this.form.entryDate = this.convertDate(this.form.entryDate)
-          this.form.totalCreditAmount = formatNumberWithCommas(this.form.totalCreditAmount)
-          this.form.totalDebitAmount = formatNumberWithCommas(this.form.totalDebitAmount)
+          this.form.orderNumber = res?.data?.RBorderNumber
+          this.form.checker = res?.data?.checker
+          this.form.departmentID = res?.data?.departmentID
+          this.form.editor = res?.data?.editor
+          this.form.margin = res?.data?.margin
+          this.form.memo = res?.data?.memo
+
+          this.form.editDate = this.convertDate(res.data.RBeditDate)
+          this.form.entryDate = this.convertDate(res.data.RBentryDate)
+          this.form.responsiblePerson = res?.data?.responsiblePerson
+          this.form.totalCreditAmount = formatNumberWithCommas(res?.data.RBtotalCreditAmount)
+          this.form.totalDebitAmount = formatNumberWithCommas(res?.data.RBtotalDebitAmount)
           
           this.dataDetail = JSON.parse(JSON.stringify(this.form))
-          this.joinAttachmentString(compact(this.dataDetail.attachments))
 
-          this.dataTable = res?.data._2.map((item, index) => {
-            item.promiseDate = this.convertDate(item.promiseDate)
-            item.lineID = index + 1
-            return item
+          this.dataTable = res?.data.listDetail.map((item, index) => {
+            const newObject = {};
+            
+            for (const key in item) {
+              const newKey = key.replace(/^RB/, '');
+              if(newKey == 'date') {
+                item[key] = this.convertDate(item[key])
+              }
+              newObject[newKey] = item[key];
+            }
+            
+            return newObject
           })
 
           if (!this.isCheck) {
