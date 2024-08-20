@@ -174,7 +174,7 @@ export default {
       await Promise.all([
         this.getListItemCode(),
         this.getItemTypeOptionsFromAPI(),
-        this.getUnitOptions(this.$i18n.locale),
+        this.getUnitOptions(this.lang),
         this.getScolumnHides(),
         this.getCurrencyOptions(this.lang),
         this.getListAccountingItems(this.lang),
@@ -282,7 +282,7 @@ export default {
         {
           key: 'debitAmount',
           name: this.$t('lbl_RBamount_0'),
-          filter: 'input',
+          filter: 'number',
           width: 150,
           align: 'left',
           fieldRequired: true,
@@ -303,7 +303,7 @@ export default {
         {
           key: 'creditAmount',
           name: this.$t('lbl_RBamount_0'),
-          filter: 'input',
+          filter: 'number',
           width: 200,
           align: 'left',
           fieldRequired: true,
