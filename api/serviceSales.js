@@ -248,9 +248,28 @@ const api = (config) => ({
   editRB: (payload) => config('put', '/receive-browse/detail/editAR', payload),
 
   deleteRB: (payload) => config('delete', '/receive-browse/delete-detail', payload),
-  checkRB: (params) => config('get', `receive-browse/${params}/check`),
-  uncheckRB: (params) => config('get', `receive-browse/${params}/uncheck`),
+  checkRB: (payload) => {
+    const urlQuery = new URLSearchParams()
 
+    for (const key in payload) {
+      if (payload[key]) {
+        urlQuery.set(key, payload[key])
+      }
+    }
+
+    return config('get', `/receive-browse/detailAR/check?${urlQuery}`)
+  },
+  uncheckRB: (payload) => {
+    const urlQuery = new URLSearchParams()
+
+    for (const key in payload) {
+      if (payload[key]) {
+        urlQuery.set(key, payload[key])
+      }
+    }
+
+    return config('get', `/receive-browse/detailAR/unCheck?${urlQuery}`)
+  },
   // pay-browse-controller
   addAPPB: (payload) => config('post', '/pay-browse/addAP', payload),
   getDetailPB: (payload) =>  {
@@ -264,11 +283,30 @@ const api = (config) => ({
 
     return config('get', `/pay-browse/detailAP?${urlQuery}`)
   },
-  editPB: (payload) => config('put', '/pay-browse/detail/editAR', payload),
+  editPB: (payload) => config('put', '/pay-browse/detail/editAP', payload),
 
   deletePB: (payload) => config('delete', '/pay-browse/delete-detail', payload),
-  checkPB: (params) => config('get', `pay-browse/${params}/check`),
-  uncheckPB: (params) => config('get', `pay-browse/${params}/uncheck`),
+  checkPB: (payload) => {
+    const urlQuery = new URLSearchParams()
 
+    for (const key in payload) {
+      if (payload[key]) {
+        urlQuery.set(key, payload[key])
+      }
+    }
+
+    return config('get', `/pay-browse/detailAP/check?${urlQuery}`)
+  },
+  uncheckPB: (payload) => {
+    const urlQuery = new URLSearchParams()
+
+    for (const key in payload) {
+      if (payload[key]) {
+        urlQuery.set(key, payload[key])
+      }
+    }
+
+    return config('get', `/pay-browse/detailAP/unCheck?${urlQuery}`)
+  },
 })
 export default api

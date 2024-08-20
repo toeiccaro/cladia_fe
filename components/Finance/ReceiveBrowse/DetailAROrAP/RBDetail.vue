@@ -589,7 +589,9 @@ export default {
     },
     async handleButtonCheck() {
       const confirm = window.confirm(this.$t('msg_ConfirmCheck_0'))
-      const params = this.form?.orderNumber
+      const params = {
+        orderNo: this.form?.orderNumber
+      }
       if (!confirm) {
         return
       }
@@ -623,7 +625,9 @@ export default {
 
     async handleButtonUnCheck() {
       const confirm = window.confirm(this.$t('msg_ConfirmUncheck_0'))
-      const params = this.form?.orderNumber
+      const params = {
+        orderNo: this.form?.orderNumber
+      }
       if (!confirm) {
         return
       }
@@ -666,7 +670,7 @@ export default {
     handleButtonAddOrder() {
       const confirm = window.confirm(this.$t('msg_ConfirmContinue_0'))
       if (confirm) {
-        location.reload()
+        this.$router.push(this.localePath({ path: '/finance/receive-browse/add' }))
       }
     },
 

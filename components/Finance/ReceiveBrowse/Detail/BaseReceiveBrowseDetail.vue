@@ -130,16 +130,10 @@ export default {
     async handleAction(key) {
       try {
         if (key === 'add') {
-          this.$refs.receiveBrowseDetailForm.filters = {}
-          return (this.addDetails = {
-            amount: '',
-            otherAmount: '',
-            date: '',
-            user: '',
-            memo: '',
-            isUpdate: true,
-            isNewLine: true,
-          })
+          const confirm = window.confirm(this.$t('msg_ConfirmContinue_0'))
+          if (confirm) {
+            this.$router.push(this.localePath({ path: '/sales/invoice/add' }))
+          }
         }
         if (key === 'save') {
           return await this.save()
