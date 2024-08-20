@@ -59,6 +59,7 @@ export default {
       addDetails: {
         RBamount: '',
         RBotherAmount: '',
+        PBexpenseCategory: '',
         RBdate: '',
         RBaruser: '',
         RBmemo: '',
@@ -210,6 +211,7 @@ export default {
         this.addDetails = {
           RBamount: '',
           RBotherAmount: '',
+          PBexpenseCategory: '',
           RBdate: '',
           RBaruser: '',
           RBmemo: '',
@@ -257,6 +259,7 @@ export default {
           this.dataTotalTable = {
             RBamount: totalAmount,
             RBotherAmount: "",
+            PBexpenseCategory: "",
             RBdate: this.convertDate(new Date()),
             RBapUser: "",
             RBmemo: "",
