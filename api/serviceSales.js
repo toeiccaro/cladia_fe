@@ -244,8 +244,22 @@ const api = (config) => ({
 
     return config('get', `/receive-browse/detailAR?${urlQuery}`)
   },
-    
+  
   editRB: (payload) => config('put', '/receive-browse/detail/editAR', payload),
+  
+  getInvoiceDetailRB: (payload) =>  {
+    const urlQuery = new URLSearchParams()
+
+    for (const key in payload) {
+      if (payload[key]) {
+        urlQuery.set(key, payload[key])
+      }
+    }
+
+    return config('get', `/receive-browse/detailInvoice?${urlQuery}`)
+  },
+
+  editInvoiceRB: (payload) => config('put', '/receive-browse/detailInvoice/edit', payload),
 
   deleteRB: (payload) => config('delete', '/receive-browse/delete-detail', payload),
   checkRB: (payload) => {
@@ -284,6 +298,21 @@ const api = (config) => ({
     return config('get', `/pay-browse/detailAP?${urlQuery}`)
   },
   editPB: (payload) => config('put', '/pay-browse/detail/editAP', payload),
+
+  getInvoiceDetailPB: (payload) =>  {
+    const urlQuery = new URLSearchParams()
+
+    for (const key in payload) {
+      if (payload[key]) {
+        urlQuery.set(key, payload[key])
+      }
+    }
+
+    return config('get', `/pay-browse/detailPurchaseInvoice?${urlQuery}`)
+  },
+
+  editInvoicePB: (payload) => config('put', '/pay-browse/detailPurchaseInvoice/edit', payload),
+
 
   deletePB: (payload) => config('delete', '/pay-browse/delete-detail', payload),
   checkPB: (payload) => {

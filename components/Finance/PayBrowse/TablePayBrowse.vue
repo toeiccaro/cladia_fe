@@ -218,8 +218,8 @@ export default {
 
             obj[
               mappingFieldName
-            ].link = obj[mappingFieldName].value.slice(0,2) == 
-            'IV' ? `/${this.$i18n.locale}/finance/pay-browse/detail?sono=${obj[mappingFieldName].value}`: 
+            ].link = obj[mappingFieldName].value.slice(0,3) == 
+            'PIV' ? `/${this.$i18n.locale}/finance/pay-browse/detail?sono=${obj[mappingFieldName].value}`: 
             `/${this.$i18n.locale}/finance/pay-browse/detailAROrAP?sono=${obj[mappingFieldName].value}`
           }
 
