@@ -32,7 +32,7 @@ export const payBrowseSchema = {
   totalElement: 'string',
   PBCustomerName: 'string',
   PBReceiveDate: 'string',
-  PBCurrency: 'string',
+  PBcurrency: 'string',
   PBTotalAmount: 'string',
   PBAmount: 'string',
   PBBalanceAmount: 'string',

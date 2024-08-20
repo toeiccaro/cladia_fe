@@ -21,16 +21,18 @@
           </td>
           <td class="input">
             <datepicker
-              v-model="form.orderDate"
+              ref="orderDatepickerInput"
               v-only-date="{
                 isAppendToChild: true,
                 childClass: 'input__orderDate',
               }"
+              :v-model="form.orderDate === null ? '' : form.orderDate"
               typeable
               format="yyyy-MM-dd"
-              :disabled="isDisableInput"
               input-class="input__orderDate"
               :highlighted="highlighted"
+              @input="changeOrderDate"
+              @change="changeOrderDateBlur"
             ></datepicker>
           </td>
           <td class="info">*</td>
@@ -86,16 +88,18 @@
           </td>
           <td class="input">
             <datepicker
-              v-model="form.effectiveDate"
+              ref="effectiveDatepickerInput"
               v-only-date="{
                 isAppendToChild: true,
-                childClass: 'input__effectiveDate',
+                childClass: 'input__orderDate',
               }"
+              :v-model="form.effectiveDate === null ? '' : form.effectiveDate"
               typeable
               format="yyyy-MM-dd"
-              :disabled="isDisableInput"
-              input-class="input__effectiveDate"
+              input-class="input__orderDate"
               :highlighted="highlighted"
+              @input="changeEffectiveDate"
+              @change="changeEffectiveDateBlur"
             ></datepicker>
           </td>
           <td class="info">*</td>
@@ -235,7 +239,7 @@
               :disabled="isDisableInput"
             />
           </td>
-          
+
           <td class="info"></td>
         </tr>
 
@@ -273,8 +277,11 @@
 import { mapGetters, mapActions } from 'vuex'
 import api from '@/api/api'
 import BaseTypeaheadAutocomplete from '@/components/UI/BaseTypeaheadAutocomplete.vue'
+import dateTime from '@/mixins/dateTime'
+
 export default {
   components: { BaseTypeaheadAutocomplete },
+  mixins: [dateTime],
   props: {
     paramsQuotation: {
       type: Object,
@@ -356,6 +363,84 @@ export default {
           : null
       this.form.responsibleMan = result?.responsibleMan
     },
+
+    //Update date picker
+    updateDate(field, value) {
+      const convertedDate = this.convertDate(value)
+      this.$set(this.form, field, convertedDate)
+    },
+
+    handleDateBlur(refName, field) {
+      const inputElement = this.$refs[refName].$el.querySelector('input')
+      if (inputElement) {
+        this.updateDate(field, inputElement.value)
+        if (this.form[field] === null) {
+          inputElement.value = ''
+        }
+      }
+    },
+
+    changeOrderDate(value) {
+      this.updateDate('orderDate', value)
+    },
+    changeEffectiveDate(value) {
+      this.updateDate('effectiveDate', value)
+    },
+
+    changeOrderDateBlur() {
+      this.handleDateBlur('orderDatepickerInput', 'orderDate')
+    },
+    changeEffectiveDateBlur() {
+      this.handleDateBlur('effectiveDatepickerInput', 'effectiveDate')
+    },
+
+    setupFocusOutListener() {
+      this.$nextTick(() => {
+        const orderDateInputElement =
+          this.$refs.orderDatepickerInput.$el.querySelector('input')
+
+        const effectiveInputElement =
+          this.$refs.effectiveDatepickerInput.$el.querySelector('input')
+
+        if (orderDateInputElement) {
+          orderDateInputElement.addEventListener(
+            'focusout',
+            this.changeOrderDateBlur
+          )
+        }
+
+        if (effectiveInputElement) {
+          effectiveInputElement.addEventListener(
+            'focusout',
+            this.changeEffectiveDateBlur
+          )
+        }
+      })
+    },
+  },
+  mounted() {
+    this.setupFocusOutListener()
+  },
+  beforeDestroy() {
+    const orderDateInputElement =
+      this.$refs.orderDatepickerInput?.$el?.querySelector('input')
+
+    const effectiveDateInputElement =
+      this.$refs.effectiveDatepickerInput?.$el?.querySelector('input')
+
+    if (orderDateInputElement) {
+      orderDateInputElement.removeEventListener(
+        'focusout',
+        this.changeOrderDateBlur
+      )
+    }
+
+    if (effectiveDateInputElement) {
+      effectiveDateInputElement.removeEventListener(
+        'focusout',
+        this.changeEffectiveDateBlur
+      )
+    }
   },
 }
 </script>

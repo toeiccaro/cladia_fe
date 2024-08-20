@@ -530,7 +530,9 @@ export default {
                   text: this.$t('lbl_MRP_Production_Plan_0'),
                   icon: BIconCaretRight,
                   key: 'MRP050',
-                  selected: this.path.includes('/mrp/demand-supply/product-plan'),
+                  selected: this.path.includes(
+                    '/mrp/demand-supply/product-plan'
+                  ),
                 },
                 {
                   path: '/mrp/demand-supply/outward-plan',
@@ -546,7 +548,9 @@ export default {
                   text: this.$t('lbl_MRP_Purchase_Plan_0'),
                   icon: BIconCaretRight,
                   key: 'MRP070',
-                  selected: this.path.includes('/mrp/demand-supply/purchase-plan'),
+                  selected: this.path.includes(
+                    '/mrp/demand-supply/purchase-plan'
+                  ),
                 },
               ],
             },
@@ -685,7 +689,9 @@ export default {
               text: this.$t('lbl_Finance_AccountsReceivableAnnual_0'),
               icon: BIconCaretRight,
               key: 'FM060',
-              selected: this.path.includes('/finance/accounts-receivable-annual'),
+              selected: this.path.includes(
+                '/finance/accounts-receivable-annual'
+              ),
             },
             {
               path: '/finance/accounts-payable-annual',
@@ -701,7 +707,7 @@ export default {
               key: 'FM080',
               selected: this.path.includes('/finance/bank-balance'),
             },
-              // New option added here
+            // New option added here
             {
               path: '/finance/new-option',
               text: this.$t('New Option'),
@@ -767,7 +773,9 @@ export default {
               key: 'SS050',
               text: this.$t('lbl_Barcode_Management_0'),
               icon: BIconCaretRight,
-              selected: this.path.includes('/system-maintenance/barcode-management'),
+              selected: this.path.includes(
+                '/system-maintenance/barcode-management'
+              ),
             },
             {
               path: '/system-maintenance/about',
@@ -795,20 +803,28 @@ export default {
 
       return 0
     },
-    parseFloatCalculatePrice({quantity, price, discountRate, taxRate}) {
-      quantity = quantity ?? 0;
-      price = price ?? 0;
-      discountRate = discountRate/100 ?? 0;
-      taxRate = taxRate/100 ?? 0;
 
-      //discount
-      const priceIncludeDiscount = this.parseFloatPrice(price * (1 - discountRate));
-      const amount = this.parseFloatPrice(quantity * priceIncludeDiscount);
-      //tax
-      const priceIncludeTax = this.parseFloatPrice(priceIncludeDiscount * (1 + taxRate));
-      const amountIncludeTax =  this.parseFloatPrice(quantity * priceIncludeTax);
+    parseFloatCalculatePrice({ quantity, price, discountRate, taxRate }) {
+      quantity = quantity ?? 0
+      price = price ?? 0
+      discountRate = discountRate / 100 ?? 0
+      taxRate = taxRate / 100 ?? 0
 
-      return {priceIncludeDiscount, amount, priceIncludeTax, amountIncludeTax}
+      // Discount
+      const priceIncludeDiscount = price * (1 - discountRate)
+      const amount = quantity * priceIncludeDiscount
+
+      // Tax
+      const priceIncludeTax = priceIncludeDiscount * (1 + taxRate)
+      const amountIncludeTax = quantity * priceIncludeTax
+
+      // Chỉ làm tròn kết quả cuối cùng
+      return {
+        priceIncludeDiscount: this.parseFloatPrice(priceIncludeDiscount),
+        amount: this.parseFloatPrice(amount),
+        priceIncludeTax: this.parseFloatPrice(priceIncludeTax),
+        amountIncludeTax: this.parseFloatPrice(amountIncludeTax),
+      }
     },
 
     parseFloatPrice(number) {

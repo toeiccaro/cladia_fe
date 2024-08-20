@@ -24,4 +24,11 @@ export const salePriceSchema = {
   sortAscOrDesc: 'string',
   sortByColumn: 'string',
   unit: 'string',
+  subID: 'string',
+  currencyID: 'string',
+  unitID: 'string',
+  itemBrand: 'string',
+  apparelCodeID: 'string',
+  sopriceID: 'string',
+  totalElement: 'string',
 }

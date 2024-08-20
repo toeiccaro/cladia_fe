@@ -3,15 +3,15 @@ export default {
     headerMockData() {
       return [
         {
-          fieldName: 'OrderNO',
+          fieldName: 'PBOrderNO',
           fieldOrder: 1,
           fieldWide: 120,
-          labelName: this.$t('lbl_OrderNO_0'),
+          labelName: this.$t('lbl_PBOrderNO_0'),
           gridName: 'PayBrowse',
           hidden: false,
         },
         {
-          fieldName: 'InvoiceNo',
+          fieldName: 'PBInvoiceNo',
           fieldOrder: 1,
           fieldWide: 120,
           labelName: this.$t('lbl_PBInvoiceNo_0'),
@@ -19,7 +19,7 @@ export default {
           hidden: false,
         },
         {
-          fieldName: 'CustomerName',
+          fieldName: 'PBCustomerName',
           fieldOrder: 1,
           fieldWide: 200,
           labelName: this.$t(`lbl_CustomerName_0`),
@@ -27,7 +27,7 @@ export default {
           hidden: false,
         },
         {
-          fieldName: 'Currency',
+          fieldName: 'PBCurrency',
           fieldOrder: 1,
           fieldWide: 90,
           labelName: this.$t(`lbl_Currency_0`),
@@ -35,7 +35,7 @@ export default {
           hidden: false,
         },
         {
-          fieldName: 'ReceiveDate',
+          fieldName: 'PBReceiveDate',
           fieldOrder: 1,
           fieldWide: 90,
           labelName: this.$t(`lbl_PayBrowseDate_0`),
@@ -82,7 +82,7 @@ export default {
           gridName: 'PayBrowse',
           hidden: false,
         },
-      ];
+      ]
     },
   },
-};
+}

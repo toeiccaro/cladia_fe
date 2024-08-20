@@ -102,7 +102,7 @@
           </td>
           <td class="info">&nbsp;</td>
           <td class="label">
-            <span id="COCustom1">{{ $t('lbl_COCustom1_0') }}</span>  
+            <span id="COCustom1">{{ $t('lbl_COCustom1_0') }}</span>
           </td>
           <td class="input">
             <b-form-select
@@ -124,7 +124,7 @@
           </td>
           <td class="info"></td>
           <td class="label">
-            <span id="COCustom2">{{ $t('lbl_COCustom2_0') }}</span> 
+            <span id="COCustom2">{{ $t('lbl_COCustom2_0') }}</span>
           </td>
           <td class="input">
             <b-form-select
@@ -150,16 +150,22 @@
           </td>
           <td class="input">
             <datepicker
+              ref="datepickerInput"
               v-only-date="{
                 isAppendToChild: true,
                 childClass: 'input__orderDate',
               }"
-              :value="paramsEnterprise.btransDate"
+              :v-model="
+                paramsEnterprise.btransDate === null
+                  ? ''
+                  : paramsEnterprise.btransDate
+              "
               typeable
               format="yyyy-MM-dd"
               input-class="input__orderDate"
               :highlighted="highlighted"
               @input="changeBTDate"
+              @change="changeBTDateBlur"
             ></datepicker>
           </td>
           <td class="info"></td>
@@ -181,16 +187,22 @@
           </td>
           <td class="input">
             <datepicker
+              ref="etransDatepickerInput"
               v-only-date="{
                 isAppendToChild: true,
                 childClass: 'input__orderDate',
               }"
-              :value="paramsEnterprise.etransDate"
+              :v-model="
+                paramsEnterprise.btransDate === null
+                  ? ''
+                  : paramsEnterprise.btransDate
+              "
               typeable
               format="yyyy-MM-dd"
               input-class="input__orderDate"
               :highlighted="highlighted"
               @input="changeETDate"
+              @change="changeETDateBlur"
             ></datepicker>
           </td>
           <td class="info"></td>
@@ -229,7 +241,7 @@
             />
           </td>
           <td class="info"></td>
-           <td class="label" style="width: 4%">
+          <td class="label" style="width: 4%">
             <span id="discountRate">{{ $t('lbl_QDiscountRate_0') }}</span>
           </td>
           <td class="input">
@@ -432,9 +444,7 @@ export default {
   },
   data() {
     return {
-      paramsEnterprise: {
-        
-      },
+      paramsEnterprise: {},
       listRelatedCompany: [],
       highlighted: {
         dates: [new Date()],
@@ -448,7 +458,7 @@ export default {
       paymentTypeOptions: 'getPaymentTypeOptions',
       companyTypeOptions: 'getCompanyTypeOptions',
       listCOCustom1: 'getListCOCustom1',
-      listCOCustom2: 'getListCOCustom2'
+      listCOCustom2: 'getListCOCustom2',
     }),
     listRelatedCompanyName() {
       const result = []
@@ -475,7 +485,6 @@ export default {
       handler(val) {
         this.paramsEnterprise = val
       },
-      
     },
   },
   async created() {
@@ -486,7 +495,7 @@ export default {
       this.getPaymentTypeOptionsFromAPI(this.lang),
       this.getCompanyTypeOptions(this.lang),
       this.getListCOCustom1OptionFromAPI(this.lang),
-      this.getListCOCustom2OptionFromAPI(this.lang)
+      this.getListCOCustom2OptionFromAPI(this.lang),
     ])
   },
   methods: {
@@ -501,12 +510,67 @@ export default {
       const response = await api('getRelatedCompany')
       this.listRelatedCompany = response?.data
     },
-    changeETDate(value) {
-      this.paramsEnterprise.etransDate = this.convertDate(value)
-    },
+
     changeBTDate(value) {
-      this.paramsEnterprise.btransDate = this.convertDate(value)
+      const convertedDate = this.convertDate(value)
+      this.paramsEnterprise.btransDate = convertedDate
     },
+    changeBTDateBlur() {
+      const inputElement = this.$refs.datepickerInput.$el.querySelector('input')
+      if (inputElement) {
+        this.changeBTDate(inputElement.value)
+
+        if (this.paramsEnterprise.btransDate === null) {
+          inputElement.value = ''
+        }
+      }
+    },
+
+    changeETDate(value) {
+      const convertedDate = this.convertDate(value)
+      this.paramsEnterprise.etransDate = convertedDate
+    },
+    changeETDateBlur() {
+      const inputElement =
+        this.$refs.etransDatepickerInput.$el.querySelector('input')
+      if (inputElement) {
+        this.changeETDate(inputElement.value)
+
+        if (this.paramsEnterprise.etransDate === null) {
+          inputElement.value = ''
+        }
+      }
+    },
+    setupFocusOutListener() {
+      this.$nextTick(() => {
+        const btInputElement =
+          this.$refs.datepickerInput.$el.querySelector('input')
+        const etInputElement =
+          this.$refs.etransDatepickerInput.$el.querySelector('input')
+        if (btInputElement) {
+          btInputElement.addEventListener('focusout', this.changeBTDateBlur)
+        }
+        if (etInputElement) {
+          etInputElement.addEventListener('focusout', this.changeETDateBlur)
+        }
+      })
+    },
+  },
+
+  mounted() {
+    this.setupFocusOutListener()
+  },
+  beforeDestroy() {
+    const btInputElement =
+      this.$refs.datepickerInput?.$el?.querySelector('input')
+    const etInputElement =
+      this.$refs.etransDatepickerInput?.$el?.querySelector('input')
+    if (btInputElement) {
+      btInputElement.removeEventListener('focusout', this.changeBTDateBlur)
+    }
+    if (etInputElement) {
+      etInputElement.removeEventListener('focusout', this.changeETDateBlur)
+    }
   },
 }
 </script>
