@@ -22,16 +22,22 @@
           </td>
           <td class="input">
             <datepicker
-              v-model="newInvoiceData.orderDate"
+              ref="orderDatepickerInput"
               v-only-date="{
                 isAppendToChild: true,
                 childClass: 'input__orderDate',
               }"
+              :v-model="
+                newInvoiceData.orderDate === null
+                  ? ''
+                  : newInvoiceData.orderDate
+              "
               typeable
-              class="input-date"
               format="yyyy-MM-dd"
               input-class="input__orderDate"
               :highlighted="highlighted"
+              @input="changeOrderDate"
+              @change="changeOrderDateBlur"
             ></datepicker>
           </td>
           <td class="info">*</td>
@@ -59,7 +65,7 @@
               :items="finalListCustomerNames"
               :initial-text="newInvoiceData.companyName"
               :initial-value="newInvoiceData.customerId"
-              @change-selected-item="changeSelectedItem" 
+              @change-selected-item="changeSelectedItem"
             />
           </td>
           <td class="info">*</td>
@@ -127,16 +133,20 @@
           </td>
           <td class="input">
             <datepicker
-              v-model="newInvoiceData.payDate"
+              ref="payDatepickerInput"
               v-only-date="{
                 isAppendToChild: true,
                 childClass: 'input__payDate',
               }"
+              :v-model="
+                newInvoiceData.payDate === null ? '' : newInvoiceData.payDate
+              "
               typeable
-              class="input-date"
               format="yyyy-MM-dd"
               input-class="input__payDate"
               :highlighted="highlighted"
+              @input="changePayDate"
+              @change="changePayDateBlur"
             ></datepicker>
           </td>
           <td class="info">*</td>
@@ -159,16 +169,22 @@
           </td>
           <td class="input">
             <datepicker
-              v-model="newInvoiceData.receiveDate"
+              ref="receiveDatepickerInput"
               v-only-date="{
                 isAppendToChild: true,
                 childClass: 'input__receiveDate',
               }"
+              :v-model="
+                newInvoiceData.receiveDate === null
+                  ? ''
+                  : newInvoiceData.receiveDate
+              "
               typeable
-              class="input-date"
               format="yyyy-MM-dd"
-              :highlighted="highlighted"
               input-class="input__receiveDate"
+              :highlighted="highlighted"
+              @input="changeReceiveDate"
+              @change="changeReceiveDateBlur"
             ></datepicker>
           </td>
           <td class="info">&nbsp;</td>
@@ -379,20 +395,124 @@ export default {
     },
 
     changeSelectedItem(item) {
-      const date = new Date();
-      const year = date.getFullYear();
-      const month = date.getMonth() + 1;
+      const date = new Date()
+      const year = date.getFullYear()
+      const month = date.getMonth() + 1
 
-      if(item.payPeriod){
-        const lastDayOfMonth = new Date(year, month, 0).getDate();
+      if (item.payPeriod) {
+        const lastDayOfMonth = new Date(year, month, 0).getDate()
         if (item.payPeriod > lastDayOfMonth) {
-          item.payPeriod = lastDayOfMonth;
+          item.payPeriod = lastDayOfMonth
         }
 
-        date.setDate(item.payPeriod);
-        this.newInvoiceData.payDate = this.convertDate(date);
-      } 
-      
+        date.setDate(item.payPeriod)
+        this.newInvoiceData.payDate = this.convertDate(date)
+      }
+    },
+
+    //Update date picker
+    updateDate(field, value) {
+      const convertedDate = this.convertDate(value)
+      this.$set(this.newInvoiceData, field, convertedDate)
+      console.log(`${field} updated to`, convertedDate)
+    },
+
+    handleDateBlur(refName, field) {
+      console.log(`${field} input không focus`)
+      const inputElement = this.$refs[refName].$el.querySelector('input')
+      if (inputElement) {
+        this.updateDate(field, inputElement.value)
+        if (this.newInvoiceData[field] === null) {
+          inputElement.value = ''
+        }
+      }
+      console.log('inputElement', inputElement.value)
+      console.log(`${field} updated to`, this.newInvoiceData[field])
+    },
+
+    changeOrderDate(value) {
+      this.updateDate('orderDate', value)
+    },
+
+    changePayDate(value) {
+      this.updateDate('payDate', value)
+    },
+    changeReceiveDate(value) {
+      this.updateDate('receiveDate', value)
+    },
+
+    changeOrderDateBlur() {
+      this.handleDateBlur('orderDatepickerInput', 'orderDate')
+    },
+    changePayDateBlur() {
+      this.handleDateBlur('payDatepickerInput', 'payDate')
+    },
+    changeReceiveDateBlur() {
+      this.handleDateBlur('receiveDatepickerInput', 'receiveDate')
+    },
+
+    setupFocusOutListener() {
+      this.$nextTick(() => {
+        const orderDateInputElement =
+          this.$refs.orderDatepickerInput.$el.querySelector('input')
+
+        const payDateInputElement =
+          this.$refs.payDatepickerInput.$el.querySelector('input')
+
+        const receiveDateInputElement =
+          this.$refs.receiveDatepickerInput.$el.querySelector('input')
+
+        if (orderDateInputElement) {
+          orderDateInputElement.addEventListener(
+            'focusout',
+            this.changeOrderDateBlur
+          )
+        }
+        if (payDateInputElement) {
+          payDateInputElement.addEventListener(
+            'focusout',
+            this.changePayDateBlur
+          )
+        }
+
+        if (receiveDateInputElement) {
+          receiveDateInputElement.addEventListener(
+            'focusout',
+            this.changeReceiveDateBlur
+          )
+        }
+      })
+    },
+  },
+
+  mounted() {
+    this.setupFocusOutListener()
+  },
+  beforeDestroy() {
+    const orderDateInputElement =
+      this.$refs.orderDatepickerInput?.$el?.querySelector('input')
+    const payDateInputElement =
+      this.$refs.payDatepickerInput?.$el?.querySelector('input')
+    const receiveDateInputElement =
+      this.$refs.receiveDatepickerInput?.$el?.querySelector('input')
+
+    if (orderDateInputElement) {
+      orderDateInputElement.removeEventListener(
+        'focusout',
+        this.changeOrderDateBlur
+      )
+    }
+    if (payDateInputElement) {
+      payDateInputElement.removeEventListener(
+        'focusout',
+        this.changePayDateBlur
+      )
+    }
+    if (receiveDateInputElement) {
+      receiveDateInputElement.removeEventListener(
+        'focusout',
+        this.changeReceiveDateBlur
+      )
     }
   },
 }

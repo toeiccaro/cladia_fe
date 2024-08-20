@@ -91,7 +91,7 @@ export default {
       isLoadingTable: false,
       isCheckAll: false,
       listIgnoreFieldName: ['Blance'],
-      dataHeader: []
+      dataHeader: [],
     }
   },
   async fetch() {
@@ -202,7 +202,7 @@ export default {
             obj[mappingFieldName] = {
               value: formatNumberWithCommas(item[mappingFieldName]) || 0,
               align: 'right',
-              type: 'amount'
+              type: 'amount',
             }
           }
 
@@ -210,12 +210,10 @@ export default {
             obj[mappingFieldName].type = this.getActiveButtonToolBar?.isEdit
               ? 'link'
               : ''
-              
-            obj[
-              mappingFieldName
-            ].link = obj[mappingFieldName].value.slice(0,2) == 
-            'IV' ? `/${this.$i18n.locale}/finance/receive-browse/detail?sono=${obj[mappingFieldName].value}`: 
-            `/${this.$i18n.locale}/finance/receive-browse/detailAROrAP?sono=${obj[mappingFieldName].value}`
+            obj[mappingFieldName].link =
+              obj[mappingFieldName].value.slice(0, 2) == 'IV'
+                ? `/${this.$i18n.locale}/finance/receive-browse/detail?sono=${obj[mappingFieldName].value}`
+                : `/${this.$i18n.locale}/finance/receive-browse/detailAROrAP?sono=${obj[mappingFieldName].value}`
           }
 
           if (headerItem.fieldName === 'Date') {
@@ -243,7 +241,15 @@ export default {
       return data
     },
     headerMapping() {
-      const listNumberField = ['TotalAmount', 'Amount', 'RBBalanceAmount', 'IsStop', 'Currency', 'Date', 'ReceiveDate' ]
+      const listNumberField = [
+        'TotalAmount',
+        'Amount',
+        'RBBalanceAmount',
+        'IsStop',
+        'Currency',
+        'Date',
+        'ReceiveDate',
+      ]
       const header = [
         {
           key: 'index',
@@ -262,7 +268,9 @@ export default {
 
       const listOptionsFields = ['IsStop']
       this.listDataShow.forEach((item) => {
-        const maxLength = listNumberField.includes(item.fieldName) ? '125' : '200'
+        const maxLength = listNumberField.includes(item.fieldName)
+          ? '125'
+          : '200'
         const headerItem = {
           key: this.mappingProperty(
             this.dataTable[0] || receiveBrowseSchema,
@@ -412,10 +420,10 @@ export default {
         this.total = res.data.tableContent?.totalElements
         this.dataHeader = res.data?.scolumnHides
         this.SET_DATA_COLUMN_HIDE(
-            this.dataHeader.filter(
-              (_el) => !this.listIgnoreFieldName.includes(_el.fieldName)
-            )
+          this.dataHeader.filter(
+            (_el) => !this.listIgnoreFieldName.includes(_el.fieldName)
           )
+        )
       } catch (err) {
         console.error(err)
       } finally {

@@ -39,4 +39,12 @@ export const purchaseBrowseSchema = {
   taxRate: 0,
   unit: 'string',
   unitID: 'string',
+  isStop: 'string',
+  totalElement: 'string',
+  amount: 'string',
+  currencyID: 'string',
+  subID: 'string',
+  supplierID: 'string',
+  rowKey: 'string',
+  pono1: 'string',
 }

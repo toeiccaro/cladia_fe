@@ -49,16 +49,18 @@
           </td>
           <td class="input">
             <datepicker
+              ref="datepickerInput"
               v-only-date="{
                 isAppendToChild: true,
                 childClass: 'input__orderDate',
               }"
-              :value="form.effectiveDate"
+              :v-model="form.effectiveDate === null ? '' : form.effectiveDate"
               typeable
               format="yyyy-MM-dd"
               input-class="input__orderDate"
               :highlighted="highlighted"
               @input="changeEffectiveDate"
+              @change="changeEffectiveDateBlur"
             ></datepicker>
           </td>
           <td class="info">*</td>
@@ -115,9 +117,42 @@ export default {
     ...mapActions({
       getCurrencyOptions: 'base/getCurrencyOptions',
     }),
+
     changeEffectiveDate(value) {
-      this.form.effectiveDate = this.convertDate(value)
+      const convertedDate = this.convertDate(value)
+      this.form.effectiveDate = convertedDate
     },
+    changeEffectiveDateBlur() {
+      const inputElement = this.$refs.datepickerInput.$el.querySelector('input')
+      if (inputElement) {
+        this.changeEffectiveDate(inputElement.value)
+
+        if (this.form.effectiveDate === null) {
+          inputElement.value = ''
+        }
+      }
+    },
+    setupFocusOutListener() {
+      this.$nextTick(() => {
+        const inputElement =
+          this.$refs.datepickerInput.$el.querySelector('input')
+        if (inputElement) {
+          inputElement.addEventListener(
+            'focusout',
+            this.changeEffectiveDateBlur
+          )
+        }
+      })
+    },
+  },
+  mounted() {
+    this.setupFocusOutListener()
+  },
+  beforeDestroy() {
+    const inputElement = this.$refs.datepickerInput?.$el?.querySelector('input')
+    if (inputElement) {
+      inputElement.removeEventListener('focusout', this.changeEffectiveDateBlur)
+    }
   },
 }
 </script>
