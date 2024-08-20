@@ -146,7 +146,7 @@ export default {
           date: this.convertDate(new Date()),
           debitAmount: 0,
           employee: "",
-          invoiceDate: "",
+          invoiceDate: this.convertDate(new Date()),
           invoiceNotes: "",
           invoiceNumber: "",
           isInvoice: false,

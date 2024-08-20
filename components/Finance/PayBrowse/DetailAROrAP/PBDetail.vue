@@ -499,12 +499,17 @@ export default {
           this.form.totalDebitAmount = formatNumberWithCommas(res?.data.PBtotalDebitAmount)
           
           this.dataDetail = JSON.parse(JSON.stringify(this.form))
-          this.joinAttachmentString(compact(this.dataDetail.attachments))
 
-          this.dataTable = res?.data._2.map((item, index) => {
-            item.promiseDate = this.convertDate(item.promiseDate)
-            item.lineID = index + 1
-            return item
+          this.dataTable = res?.data.listDetail.map((item, index) => {
+            const newObject = {};
+
+            for (const key in item) {
+              const newKey = key.replace(/^PB/, '');
+              newObject[newKey] = item[key];
+              
+            }
+            console.log('newObject', newObject);
+            return newObject
           })
 
           if (!this.isCheck) {
@@ -599,7 +604,9 @@ export default {
     },
     async handleButtonCheck() {
       const confirm = window.confirm(this.$t('msg_ConfirmCheck_0'))
-      const params = this.form?.orderNumber
+      const params = {
+        orderNo: this.form?.orderNumber
+      }      
       if (!confirm) {
         return
       }
@@ -610,7 +617,7 @@ export default {
         const errorCode = response?.data?.response?.status
 
         if (errorCode === SERVER_RESPONSE_CODE.FOPBIDDEN) {
-          window.alert(this.$t(response?.data?.response?.data?.message))
+          window.alert(this.$t(response?.message))
           return
         }
 
@@ -633,7 +640,9 @@ export default {
 
     async handleButtonUnCheck() {
       const confirm = window.confirm(this.$t('msg_ConfirmUncheck_0'))
-      const params = this.form?.orderNumber
+      const params = {
+        orderNo: this.form?.orderNumber
+      }
       if (!confirm) {
         return
       }
@@ -644,7 +653,7 @@ export default {
         const errorCode = response?.data?.response?.status
 
         if (errorCode === SERVER_RESPONSE_CODE.FOPBIDDEN) {
-          window.alert(this.$t(response?.data?.response?.data?.message))
+          window.alert(this.$t(response?.message))
           return
         }
 
@@ -676,7 +685,7 @@ export default {
     handleButtonAddOrder() {
       const confirm = window.confirm(this.$t('msg_ConfirmContinue_0'))
       if (confirm) {
-        location.reload()
+        this.$router.push(this.localePath({ path: '/finance/pay-browse/add' }))
       }
     },
 
