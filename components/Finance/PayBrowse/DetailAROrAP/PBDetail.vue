@@ -106,6 +106,11 @@ export default {
           icon: '/images/uncheck.png',
         },
         {
+          key: 'print',
+          label: this.$t('btn_btnPrint_0'),
+          icon: '/images/print.png',
+        },
+        {
           key: 'set',
           label: this.$t('btn_btnSet_0'),
           icon: '/images/set.png',
@@ -279,7 +284,7 @@ export default {
         {
           key: 'debitAmount',
           name: this.$t('lbl_PBamount_0'),
-          filter: 'input',
+          filter: 'number',
           width: 150,
           align: 'left',
           fieldRequired: true,
@@ -300,7 +305,7 @@ export default {
         {
           key: 'creditAmount',
           name: this.$t('lbl_PBamount_0'),
-          filter: 'input',
+          filter: 'number',
           width: 200,
           align: 'left',
           fieldRequired: true,
@@ -433,14 +438,14 @@ export default {
           case 'delete':
             item.disabled = !this.getActiveButtonToolBar?.isDelete
             break
-          case 'attach':
-            item.disabled = !this.getActiveButtonToolBar?.isAttachments
-            break
           case 'check':
             item.disabled = !this.getActiveButtonToolBar?.isCheck
             break
           case 'unCheck':
             item.disabled = !this.getActiveButtonToolBar?.isCheck
+            break
+          case 'print':
+            item.disabled = !this.getActiveButtonToolBar?.isPrint
             break
           default:
             break
