@@ -150,7 +150,6 @@
           </td>
           <td class="input">
             <datepicker
-              ref="datepickerInput"
               v-only-date="{
                 isAppendToChild: true,
                 childClass: 'input__orderDate',
@@ -161,7 +160,6 @@
               input-class="input__orderDate"
               :highlighted="highlighted"
               @input="changeBTDate"
-              @change="changeBTDateBlur"
             ></datepicker>
           </td>
           <td class="info"></td>
@@ -183,18 +181,16 @@
           </td>
           <td class="input">
             <datepicker
-              ref="etransDatepickerInput"
               v-only-date="{
                 isAppendToChild: true,
                 childClass: 'input__orderDate',
               }"
-              v-model="paramsEnterprise.btransDate"
+              :value="paramsEnterprise.etransDate"
               typeable
               format="yyyy-MM-dd"
               input-class="input__orderDate"
               :highlighted="highlighted"
               @input="changeETDate"
-              @change="changeETDateBlur"
             ></datepicker>
           </td>
           <td class="info"></td>
@@ -503,66 +499,12 @@ export default {
       this.listRelatedCompany = response?.data
     },
 
-    changeBTDate(value) {
-      const convertedDate = this.convertDate(value)
-      this.paramsEnterprise.btransDate = convertedDate
-    },
-    changeBTDateBlur() {
-      const inputElement = this.$refs.datepickerInput.$el.querySelector('input')
-      if (inputElement) {
-        this.changeBTDate(inputElement.value)
-
-        if (this.paramsEnterprise.btransDate === null) {
-          inputElement.value = ''
-        }
-      }
-    },
-
     changeETDate(value) {
-      const convertedDate = this.convertDate(value)
-      this.paramsEnterprise.etransDate = convertedDate
+      this.paramsEnterprise.etransDate = this.convertDate(value)
     },
-    changeETDateBlur() {
-      const inputElement =
-        this.$refs.etransDatepickerInput.$el.querySelector('input')
-      if (inputElement) {
-        this.changeETDate(inputElement.value)
-
-        if (this.paramsEnterprise.etransDate === null) {
-          inputElement.value = ''
-        }
-      }
+    changeBTDate(value) {
+      this.paramsEnterprise.btransDate = this.convertDate(value)
     },
-    setupFocusOutListener() {
-      this.$nextTick(() => {
-        const btInputElement =
-          this.$refs.datepickerInput.$el.querySelector('input')
-        const etInputElement =
-          this.$refs.etransDatepickerInput.$el.querySelector('input')
-        if (btInputElement) {
-          btInputElement.addEventListener('focusout', this.changeBTDateBlur)
-        }
-        if (etInputElement) {
-          etInputElement.addEventListener('focusout', this.changeETDateBlur)
-        }
-      })
-    },
-  },
-
-  mounted() {
-    this.setupFocusOutListener()
-  },
-  beforeDestroy() {
-    const btInputElement =
-      this.$refs.datepickerInput?.$el?.querySelector('input')
-    const etInputElement =
-      this.$refs.etransDatepickerInput?.$el?.querySelector('input')
-    if (btInputElement) {
-      btInputElement.removeEventListener('focusout', this.changeBTDateBlur)
-    }
-    if (etInputElement) {
-      etInputElement.removeEventListener('focusout', this.changeETDateBlur)
-    }
   },
 }
 </script>

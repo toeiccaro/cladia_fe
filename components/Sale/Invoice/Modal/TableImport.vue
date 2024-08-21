@@ -154,7 +154,18 @@ export default {
       return ratio
     },
     dataTableMapping() {
-      const numberFields = ['SOQTY', 'Blance', 'Price', 'StopQty', 'Amount']
+      const numberFields = [
+        'SOQTY',
+        'Blance',
+        'Price',
+        'StopQty',
+        'Amount',
+        'SIDiscountRate',
+        'SIPriceIncludeDiscount',
+        'SITaxRate',
+        'SIPriceIncludeTax',
+        'SIAmountIncludeTax',
+      ]
       const data = this.dataTable.map((item, index) => {
         const obj = {
           index: {

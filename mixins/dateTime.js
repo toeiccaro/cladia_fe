@@ -1,44 +1,16 @@
 export default {
   methods: {
     convertDate(value) {
-      if (typeof value === 'string' && value.trim() !== '') {
-        const parts = value.split('-')
-        if (parts.length !== 3) {
-          return null // Trả về null nếu định dạng không đúng
-        }
-        const year = parseInt(parts[0], 10)
-        const month = parseInt(parts[1], 10) - 1 // JavaScript tháng bắt đầu từ 0
-        const day = parseInt(parts[2], 10)
-
-        // Tạo đối tượng Date và kiểm tra tính hợp lệ
-        const date = new Date(year, month, day)
-        if (
-          isNaN(date.getTime()) ||
-          date.getFullYear() !== year ||
-          date.getMonth() !== month ||
-          date.getDate() !== day
-        ) {
-          return null // Trả về null nếu ngày không hợp lệ
-        }
+      if (value) {
+        const date = new Date(value)
         return `${date.getFullYear().toString().padStart(4, '0')}-${(
           date.getMonth() + 1
         )
           .toString()
           .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
       }
-      return null
+      return ''
     },
-    // convertDate(value) {
-    //   if (value) {
-    //     const date = new Date(value)
-    //     return `${date.getFullYear().toString().padStart(4, '0')}-${(
-    //       date.getMonth() + 1
-    //     )
-    //       .toString()
-    //       .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
-    //   }
-    //   return ''
-    // },
     convertDateTillSecond(value) {
       if (value) {
         const date = new Date(value)

@@ -148,6 +148,10 @@ export default {
         'Price',
         'EndQuantity',
         'TaxRate',
+        'OOPriceIncludeTax',
+        'OODiscountRate',
+        'OOPriceIncludeDiscount',
+        'OOAmountIncludeTax',
       ]
 
       const data = this.dataTable?.map((item, index) => {

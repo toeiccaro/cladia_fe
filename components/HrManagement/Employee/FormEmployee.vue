@@ -230,18 +230,15 @@
           </td>
           <td class="input">
             <datepicker
-              ref="bornDatepickerInput"
+              v-model="form.born"
               v-only-date="{
                 isAppendToChild: true,
-                childClass: 'input__orderDate',
+                childClass: 'input__bornDate',
               }"
-              :value="form.born"
               typeable
               format="yyyy-MM-dd"
-              input-class="input__orderDate"
               :highlighted="highlighted"
-              @input="changeBornDate"
-              @change="changeBornBlur"
+              input-class="input__bornDate"
             ></datepicker>
           </td>
           <td class="info">*</td>
@@ -282,18 +279,15 @@
           </td>
           <td class="input">
             <datepicker
-              ref="enterDatepickerInput"
+              v-model="form.enterDate"
               v-only-date="{
                 isAppendToChild: true,
-                childClass: 'input__orderDate',
+                childClass: 'input__enterDate',
               }"
-              :value="form.enterDate"
               typeable
               format="yyyy-MM-dd"
-              input-class="input__orderDate"
+              input-class="input__enterDate"
               :highlighted="highlighted"
-              @input="changeEnterDate"
-              @change="changeEnterDateBlur"
             ></datepicker>
           </td>
         </tr>
@@ -327,18 +321,15 @@
           </td>
           <td class="input">
             <datepicker
-              ref="entryDatepickerInput"
+              v-model="form.entryDate"
               v-only-date="{
                 isAppendToChild: true,
-                childClass: 'input__orderDate',
+                childClass: 'input__entryDate',
               }"
-              :value="form.entryDate"
               typeable
               format="yyyy-MM-dd"
-              input-class="input__orderDate"
+              input-class="input__entryDate"
               :highlighted="highlighted"
-              @input="changeEntryDate"
-              @change="changeEntryDateBlur"
             ></datepicker>
           </td>
           <td class="info"></td>
@@ -347,18 +338,15 @@
           </td>
           <td class="input">
             <datepicker
-              ref="leaveDatepickerInput"
+              v-model="form.leaveDate"
               v-only-date="{
                 isAppendToChild: true,
-                childClass: 'input__orderDate',
+                childClass: 'input__leaveDate',
               }"
-              :value="form.leaveDate"
               typeable
               format="yyyy-MM-dd"
-              input-class="input__orderDate"
+              input-class="input__leaveDate"
               :highlighted="highlighted"
-              @input="changeLeaveDate"
-              @change="changeLeaveDateBlur"
             ></datepicker>
           </td>
         </tr>
@@ -547,129 +535,6 @@ export default {
       this.$emit('file-upload', this.file)
       document.getElementById('imgEpic').src = ''
     },
-
-    //Update date picker
-    updateDate(field, value) {
-      const convertedDate = this.convertDate(value)
-      this.$set(this.form, field, convertedDate)
-    },
-
-    handleDateBlur(refName, field) {
-      const inputElement = this.$refs[refName].$el.querySelector('input')
-      if (inputElement) {
-        this.updateDate(field, inputElement.value)
-        if (this.form[field] === null) {
-          inputElement.value = ''
-        }
-      }
-    },
-
-    // Wrapper methods to call the generalized methods
-    changeBornDate(value) {
-      this.updateDate('born', value)
-    },
-    changeEnterDate(value) {
-      this.updateDate('enterDate', value)
-    },
-    changeEntryDate(value) {
-      this.updateDate('entryDate', value)
-    },
-    changeLeaveDate(value) {
-      this.updateDate('leaveDate', value)
-    },
-
-    changeBornBlur() {
-      this.handleDateBlur('bornDatepickerInput', 'born')
-    },
-    changeEnterDateBlur() {
-      this.handleDateBlur('enterDatepickerInput', 'enterDate')
-    },
-    changeEntryDateBlur() {
-      this.handleDateBlur('entryDatepickerInput', 'entryDate')
-    },
-    changeLeaveDateBlur() {
-      this.handleDateBlur('leaveDatepickerInput', 'leaveDate')
-    },
-
-    setupFocusOutListener() {
-      this.$nextTick(() => {
-        const bornInputElement =
-          this.$refs.bornDatepickerInput.$el.querySelector('input')
-
-        const enterInputElement =
-          this.$refs.enterDatepickerInput.$el.querySelector('input')
-
-        const entryInputElement =
-          this.$refs.entryDatepickerInput.$el.querySelector('input')
-
-        const leaveInputElement =
-          this.$refs.leaveDatepickerInput.$el.querySelector('input')
-
-        if (bornInputElement) {
-          bornInputElement.addEventListener('focusout', this.changeBornBlur)
-        }
-
-        if (enterInputElement) {
-          enterInputElement.addEventListener(
-            'focusout',
-            this.changeEnterDateBlur
-          )
-        }
-
-        if (entryInputElement) {
-          entryInputElement.addEventListener(
-            'focusout',
-            this.changeEntryDateBlur
-          )
-        }
-
-        if (leaveInputElement) {
-          leaveInputElement.addEventListener(
-            'focusout',
-            this.changeLeaveDateBlur
-          )
-        }
-      })
-    },
-  },
-  mounted() {
-    this.setupFocusOutListener()
-  },
-  beforeDestroy() {
-    const bornInputElement =
-      this.$refs.datepickerInput?.$el?.querySelector('input')
-
-    const enterInputElement =
-      this.$refs.etransDatepickerInput?.$el?.querySelector('input')
-
-    const entryInputElement =
-      this.$refs.entryDatepickerInput?.$el?.querySelector('input')
-
-    const leaveInputElement =
-      this.$refs.leaveDatepickerInput?.$el?.querySelector('input')
-
-    if (bornInputElement) {
-      bornInputElement.removeEventListener('focusout', this.changeBornBlur)
-    }
-
-    if (enterInputElement) {
-      enterInputElement.removeEventListener(
-        'focusout',
-        this.changeEnterDateBlur
-      )
-    }
-    if (entryInputElement) {
-      entryInputElement.removeEventListener(
-        'focusout',
-        this.changeEntryDateBlur
-      )
-    }
-    if (leaveInputElement) {
-      leaveInputElement.removeEventListener(
-        'focusout',
-        this.changeLeaveDateBlur
-      )
-    }
   },
 }
 </script>

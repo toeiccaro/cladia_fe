@@ -332,7 +332,7 @@ export default {
           name: this.$t('lbl_SIDiscountRate_0'),
           filter: 'input',
           width: 150,
-          align: 'left',
+          align: 'right',
           disabled: true,
           fieldRequired: false,
           hidden: false,
@@ -342,7 +342,7 @@ export default {
           name: this.$t('lbl_SIPriceIncludeDiscount_0'),
           filter: 'input',
           width: 200,
-          align: 'left',
+          align: 'right',
           disabled: true,
           fieldRequired: false,
           hidden: false,
@@ -352,7 +352,7 @@ export default {
           name: this.$t('lbl_SITaxRate_0'),
           filter: 'input',
           width: 200,
-          align: 'left',
+          align: 'right',
           disabled: true,
           fieldRequired: false,
           hidden: false,
@@ -362,7 +362,7 @@ export default {
           name: this.$t('lbl_SIPriceIncludeTax_0'),
           filter: 'input',
           width: 200,
-          align: 'left',
+          align: 'right',
           disabled: true,
           fieldRequired: false,
           hidden: false,
@@ -382,7 +382,7 @@ export default {
           name: this.$t('lbl_SIAmountIncludeTax_0'),
           filter: 'input',
           width: 150,
-          align: 'left',
+          align: 'right',
           disabled: true,
           fieldRequired: false,
           hidden: false,
@@ -821,7 +821,6 @@ export default {
                 sono: item.sono,
                 unitId: item.unitID,
                 warehouseId: item.warehouseID,
-                
               }
             }),
           }
@@ -882,33 +881,33 @@ export default {
           lineID: index + 1,
         }))
 
-        this.dataTable = this.dataTable.map(obj => {
-          let newObj = {};
-          
+        this.dataTable = this.dataTable.map((obj) => {
+          let newObj = {}
+
           for (let key in obj) {
             switch (key) {
               case 'priceIncludeTax':
-                newObj['SIPriceIncludeTax'] = obj[key];
-                break;
+                newObj['SIPriceIncludeTax'] = obj[key]
+                break
               case 'amountIncludeTax':
-                newObj['SIAmountIncludeTax'] = obj[key];
-                break;
+                newObj['SIAmountIncludeTax'] = obj[key]
+                break
               case 'priceIncludeDiscount':
-                newObj['SIPriceIncludeDiscount'] = obj[key];
-                break;
+                newObj['SIPriceIncludeDiscount'] = obj[key]
+                break
               case 'discountRate':
-                newObj['SIDiscountRate'] = obj[key];
-                break;
+                newObj['SIDiscountRate'] = obj[key]
+                break
               case 'taxRate':
-                newObj['SITaxRate'] = obj[key];
-                break;
+                newObj['SITaxRate'] = obj[key]
+                break
               default:
-                newObj[key] = obj[key];
-                break;
+                newObj[key] = obj[key]
+                break
             }
           }
-          return newObj;
-        });
+          return newObj
+        })
 
         const convertDateFields = [
           'invoiceDate',

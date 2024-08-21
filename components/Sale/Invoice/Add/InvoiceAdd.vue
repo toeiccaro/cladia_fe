@@ -14,7 +14,6 @@
       :selected-details="availableListDetails"
       @update-data="(data) => (newInvoiceData = data)"
       @update-warehouse="updateWarehouse"
-
     />
     <base-table-item-detail
       ref="invoiceFormTableItems"
@@ -305,7 +304,7 @@ export default {
           name: this.$t('lbl_SIDiscountRate_0'),
           filter: 'input',
           width: 150,
-          align: 'left',
+          align: 'right',
           disabled: true,
           fieldRequired: false,
           hidden: false,
@@ -315,7 +314,7 @@ export default {
           name: this.$t('lbl_SIPriceIncludeDiscount_0'),
           filter: 'input',
           width: 150,
-          align: 'left',
+          align: 'right',
           disabled: true,
           fieldRequired: false,
           hidden: false,
@@ -325,7 +324,7 @@ export default {
           name: this.$t('lbl_SITaxRate_0'),
           filter: 'input',
           width: 150,
-          align: 'left',
+          align: 'right',
           disabled: true,
           fieldRequired: false,
           hidden: false,
@@ -335,7 +334,7 @@ export default {
           name: this.$t('lbl_SIPriceIncludeTax_0'),
           filter: 'input',
           width: 150,
-          align: 'left',
+          align: 'right',
           disabled: true,
           fieldRequired: false,
           hidden: false,
@@ -355,7 +354,7 @@ export default {
           name: this.$t('lbl_SIAmountIncludeTax_0'),
           filter: 'input',
           width: 150,
-          align: 'left',
+          align: 'right',
           disabled: true,
           fieldRequired: false,
           hidden: false,

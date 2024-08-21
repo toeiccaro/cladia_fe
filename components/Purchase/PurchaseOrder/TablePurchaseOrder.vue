@@ -172,7 +172,10 @@ export default {
             case 'POAmountIncludeTax':
             case 'POPriceIncludeDiscount':
             case 'PODiscountRate':
-              obj[mappingFieldName].value = obj[mappingFieldName].value == 0 ? 0 : obj[mappingFieldName].value
+              obj[mappingFieldName].value =
+                obj[mappingFieldName].value == 0
+                  ? 0
+                  : obj[mappingFieldName].value
               break
           }
           if (headerItem.fieldName === 'IsCheck') {
@@ -185,7 +188,16 @@ export default {
             obj[mappingFieldName].align = 'center'
           }
 
-          const alignRight = ['Quantity', 'Price', 'Amount', 'EndQuantity']
+          const alignRight = [
+            'Quantity',
+            'Price',
+            'Amount',
+            'EndQuantity',
+            'POAmountIncludeTax',
+            'POPriceIncludeTax',
+            'POPriceIncludeDiscount',
+            'PODiscountRate',
+          ]
           if (alignRight.includes(headerItem.fieldName)) {
             obj[mappingFieldName].align = 'right'
           }
@@ -225,7 +237,9 @@ export default {
       ]
 
       this.listDataShow.forEach((item) => {
-        const maxLength = listNumberField.includes(item.fieldName) ? '30' : '256'
+        const maxLength = listNumberField.includes(item.fieldName)
+          ? '30'
+          : '256'
         const headerItem = {
           key: this.mappingProperty(
             this.dataTable[0] || purchaseOrderSchema,
@@ -342,7 +356,6 @@ export default {
         const res = await api('getListPurchaseOrder', this.payloadPurchaseOrder)
         this.isLoadingTable = false
         if (res && res.status === SERVER_RESPONSE_CODE.OK) {
-
           this.dataHeader = res.data.scolumnHides
           this.dataTable = res.data.tableContent.content
           this.total = res.data.tableContent.totalElements

@@ -180,7 +180,16 @@ export default {
             )
             obj[mappingFieldName].align = 'center'
           }
-          const alignRight = ['Quantity', 'Price', 'Amount', 'TaxRate']
+          const alignRight = [
+            'Quantity',
+            'Price',
+            'Amount',
+            'TaxRate',
+            'QDiscountRate',
+            'QAmountIncludeTax',
+            'QPriceIncludeTax',
+            'QPriceIncludeDiscount',
+          ]
           if (alignRight.includes(headerItem.fieldName)) {
             obj[mappingFieldName].align = 'right'
           }

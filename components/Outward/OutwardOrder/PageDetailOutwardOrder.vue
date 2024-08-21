@@ -398,21 +398,31 @@ export default {
     ...mapMutations('base', ['SET_LOADING']),
 
     updateTable(val) {
-      this.dataTable = this.dataTable.map((item) =>{
+      this.dataTable = this.dataTable.map((item) => {
         const quantity = item.quantity
         const price = item.price
         const discountRate = val.discountRate
         const taxRate = val.taxRate
 
-        const { priceIncludeDiscount, amount, priceIncludeTax, amountIncludeTax } = this.parseFloatCalculatePrice({quantity, price, discountRate, taxRate});
+        const {
+          priceIncludeDiscount,
+          amount,
+          priceIncludeTax,
+          amountIncludeTax,
+        } = this.parseFloatCalculatePrice({
+          quantity,
+          price,
+          discountRate,
+          taxRate,
+        })
 
         return Object.assign({}, item, {
           amount,
           OOPriceIncludeDiscount: priceIncludeDiscount,
-          OOPriceIncludeTax: priceIncludeTax,
-          OOAmountIncludeTax: amountIncludeTax
+          OOpriceIncludeTax: priceIncludeTax,
+          OOAmountIncludeTax: amountIncludeTax,
         })
-      });
+      })
     },
 
     async getScolumnHides() {
