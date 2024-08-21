@@ -303,9 +303,6 @@ export default {
   },
   async fetch() {
     try {
-      await Promise.all([
-        this.getListAccountingItems(this.lang),
-      ])
       const res = await api('getEmployeeList')
       if (res && res.status === SERVER_RESPONSE_CODE.OK) {
         this.listEmployee = res.data || {}

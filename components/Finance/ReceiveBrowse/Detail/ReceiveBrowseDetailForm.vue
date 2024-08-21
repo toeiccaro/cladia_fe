@@ -31,7 +31,7 @@
           <td class="info"></td>
 
           <td class="label">
-            <span id="opponentSubjectId">{{ $t('lbl_PBCustomerName_0') }}</span>
+            <span id="opponentSubjectId">{{ $t('lbl_RBOpponentSubjectId_0') }}</span>
           </td>
           <td class="input">
             <b-form-select
