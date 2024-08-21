@@ -516,7 +516,8 @@ export default {
             const newObject = {};
 
             for (const key in item) {
-              const newKey = key.replace(/^PB/, '');
+              let newKey = key.replace(/^PB/, '');
+              newKey = newKey[0].toLowerCase() + newKey.slice(1);
               if(newKey == 'date') {
                 item[key] = this.convertDate(item[key])
               }
