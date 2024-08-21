@@ -163,7 +163,7 @@ export default {
         'PBInvoiceNO',
         'PBCurrency',
         'CustomerName',
-        'RBStatement',
+        'PBStatement',
       ]
       const listAlignRightFields = [
         'PBTotalAmount',
@@ -237,7 +237,7 @@ export default {
             }
           }
 
-          if (headerItem.fieldName === 'RBStatement') {
+          if (headerItem.fieldName === 'PBStatement') {
             obj[mappingFieldName].type = this.getActiveButtonToolBar?.isEdit
               ? 'link'
               : ''

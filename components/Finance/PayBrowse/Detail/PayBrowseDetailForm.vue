@@ -4,11 +4,11 @@
       <tbody>
         <tr class="tr-1">
           <td class="label">
-            <span id="orderNumber">{{ $t('lbl_PBorderNumber_0') }}</span>
+            <span id="orderNumber">{{ $t('lbl_PBOrderNumber_0') }}</span>
           </td>
           <td class="input">
             <b-form-input
-              :value="form.PBorderNumber"
+              :value="form.PBOrderNumber"
               disabled
               name="txtOrderNumber"
               type="text"
@@ -18,24 +18,24 @@
           <td class="info"></td>
 
           <td class="label">
-            <span id="subject">{{ $t('lbl_PBsubject_0') }}</span>
+            <span id="subject">{{ $t('lbl_PBSubject_0') }}</span>
           </td>
           <td class="input">
-            <b-form-select
-              v-model="form.PBsubjectId"
-              :options="listAccountingItems"
+            <b-form-input
+              :value="currentLanguage"
               disabled
-              class="select"
-            ></b-form-select>
+              name="txtSubject"
+              type="text"
+            />
           </td>
           <td class="info"></td>
 
           <td class="label">
-            <span id="opponentSubjectId">{{ $t('lbl_PBopponentSubjectId_0') }}</span>
+            <span id="opponentSubjectId">{{ $t('lbl_PBOpponentSubjectId_0') }}</span>
           </td>
           <td class="input">
             <b-form-select
-              v-model="form.PBopponentSubjectId"
+              v-model="form.PBOpponentSubjectId"
               :options="listCurrentAssets"
               class="select"
             ></b-form-select>
@@ -58,11 +58,11 @@
           </td>
           <td class="info"></td>
           <td class="label">
-            <span id="currency">{{ $t('lbl_PBcurrency_0') }}</span>
+            <span id="currency">{{ $t('lbl_PBCurrency_0') }}</span>
           </td>
           <td class="input">
             <b-form-select
-              v-model="form.PBcurrencyId"
+              v-model="form.PBCurrencyId"
               :options="currencyOptions"
               disabled
               class="select"
@@ -73,11 +73,11 @@
 
         <tr class="tr-3">
           <td class="label">
-            <span id="totalAmount">{{ $t('lbl_PBtotalAmount_0') }}</span>
+            <span id="totalAmount">{{ $t('lbl_PBTotalAmount_0') }}</span>
           </td>
           <td class="input">
             <b-form-input
-              :value="form.PBtotalAmount"
+              :value="form.PBTotalAmount"
               name="txtTotalAmount"
               type="text"
               class="number"
@@ -86,11 +86,11 @@
           </td>
           <td class="info"></td>
           <td class="label">
-            <span id="balanceAmount">{{ $t('lbl_PBbalanceAmount_0') }}</span>
+            <span id="balanceAmount">{{ $t('lbl_PBBalanceAmount_0') }}</span>
           </td>
           <td class="input">
             <b-form-input
-              :value="form.PBbalanceAmount"
+              :value="form.PBBalanceAmount"
               name="txtBalanceAmount"
               type="text"
               class="number"
@@ -99,11 +99,11 @@
           </td>
           <td class="info">&nbsp;</td>
           <td class="label">
-            <span id="actualAmount">{{ $t('lbl_PBactualAmount_0') }}</span>
+            <span id="actualAmount">{{ $t('lbl_PBActualAmount_0') }}</span>
           </td>
           <td class="input">
             <b-form-input
-              v-model="form.PBactualAmount"
+              v-model="form.PBActualAmount"
               disabled
               name="txtActualAmount"
               type="text"
@@ -117,7 +117,7 @@
           </td>
           <td rows="1" colspan="4" class="input">
             <b-form-input
-              v-model="form.PBmemo"
+              v-model="form.PBMemo"
               disabled
               name="Memo"
               type="text"
@@ -173,6 +173,10 @@ export default {
         text: item.companyName,
         value: item.id,
       }))
+    },
+
+    currentLanguage() {
+      return this.languageText(this.$i18n.locale);
     },
   },
   watch: {

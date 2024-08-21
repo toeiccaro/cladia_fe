@@ -86,16 +86,6 @@ export default {
           icon: '/images/add.png',
         },
         {
-          key: 'save',
-          label: this.$t('btn_btnSave_0'),
-          icon: '/images/save.png',
-        },
-        {
-          key: 'delete',
-          label: this.$t('btn_btnDel_0'),
-          icon: '/images/delete.png',
-        },
-        {
           key: 'check',
           label: this.$t('btn_btnCheck_0'),
           icon: '/images/check.png',
@@ -104,6 +94,16 @@ export default {
           key: 'unCheck',
           label: this.$t('btn_btnUnCheck_0'),
           icon: '/images/uncheck.png',
+        },
+        {
+          key: 'save',
+          label: this.$t('btn_btnSave_0'),
+          icon: '/images/save.png',
+        },
+        {
+          key: 'delete',
+          label: this.$t('btn_btnDel_0'),
+          icon: '/images/delete.png',
         },
         {
           key: 'print',
@@ -261,7 +261,7 @@ export default {
         },
         {
           key: 'date',
-          name: this.$t('lbl_PBdate_0'),
+          name: this.$t('lbl_PBDate_0'),
           filter: 'datetime',
           width: 200,
           align: 'left',
@@ -271,7 +271,7 @@ export default {
         },
         {
           key: 'subject',
-          name: this.$t('lbl_PBsubject_0'),
+          name: this.$t('lbl_PBSubject_0'),
           filter: 'select',
           typeInput: 'select',
           width: 150,
@@ -283,7 +283,7 @@ export default {
         },
         {
           key: 'debitAmount',
-          name: this.$t('lbl_PBamount_0'),
+          name: this.$t('lbl_PBAmount_0'),
           filter: 'number',
           width: 150,
           align: 'left',
@@ -292,7 +292,7 @@ export default {
         },
         {
           key: 'opponentSubject',
-          name: this.$t('lbl_PBopponentSubject_0'),
+          name: this.$t('lbl_PBOpponentSubject_0'),
           filter: 'select',
           typeInput: 'select',
           width: 150,
@@ -304,7 +304,7 @@ export default {
         },
         {
           key: 'creditAmount',
-          name: this.$t('lbl_PBamount_0'),
+          name: this.$t('lbl_PBAmount_0'),
           filter: 'number',
           width: 200,
           align: 'left',
@@ -314,7 +314,7 @@ export default {
         },
         {
           key: 'currency',
-          name: this.$t('lbl_PBcurrency_0'),
+          name: this.$t('lbl_PBCurrency_0'),
           filter: 'select',
           typeInput: 'select',
           width: 150,
@@ -327,7 +327,7 @@ export default {
         },
         {
           key: 'companyName',
-          name: this.$t('lbl_RBcompanyName_0'),
+          name: this.$t('lbl_PBCompanyName_0'),
           filter: 'select',
           typeInput: 'select',
           width: 150,
@@ -339,7 +339,7 @@ export default {
         },
         {
           key: 'isInvoice',
-          name: this.$t('lbl_PBisInvoice_0'),
+          name: this.$t('lbl_PBIsInvoice_0'),
           filter: 'checkbox',
           width: 100,
           align: 'center',
@@ -352,7 +352,7 @@ export default {
         },
         {
           key: 'invoiceNumber',
-          name: this.$t('lbl_PBinvoiceNumber_0'),
+          name: this.$t('lbl_PBInvoiceNumber_0'),
           filter: 'number',
           width: 150,
           align: 'right',
@@ -362,7 +362,7 @@ export default {
         },
         {
           key: 'invoiceDate',
-          name: this.$t('lbl_PBinvoiceDate_0'),
+          name: this.$t('lbl_PBInvoiceDate_0'),
           filter: 'datetime',
           width: 200,
           align: 'left',
@@ -372,7 +372,7 @@ export default {
         },
         {
           key: 'invoiceNotes',
-          name: this.$t('lbl_PBinvoiceNotes_0'),
+          name: this.$t('lbl_PBInvoiceNotes_0'),
           filter: 'input',
           width: 300,
           align: 'left',
@@ -383,7 +383,7 @@ export default {
         },
         {
           key: 'employee',
-          name: this.$t('lbl_PBemployee_0'),
+          name: this.$t('lbl_PBEmployee_0'),
           filter: 'input',
           width: 300,
           align: 'left',
@@ -394,7 +394,7 @@ export default {
         },
         {
           key: 'reason',
-          name: this.$t('lbl_PBreason_0'),
+          name: this.$t('lbl_PBReason_0'),
           filter: 'input',
           width: 300,
           align: 'left',
@@ -497,18 +497,18 @@ export default {
         })
         if (res.status === 200) {
           // this.form = res.data
-          this.form.orderNumber = res?.data?.PBorderNumber
+          this.form.orderNumber = res?.data?.PBOrderNumber
           this.form.checker = res?.data?.checker
           this.form.departmentID = res?.data?.departmentID
           this.form.editor = res?.data?.editor
           this.form.margin = res?.data?.margin
           this.form.memo = res?.data?.memo
 
-          this.form.editDate = this.convertDate(res.data.PBeditDate)
-          this.form.entryDate = this.convertDate(res.data.PBentryDate)
+          this.form.editDate = this.convertDate(res.data.PBEditDate)
+          this.form.entryDate = this.convertDate(res.data.PBEntryDate)
           this.form.responsiblePerson = res?.data?.responsiblePerson
-          this.form.totalCreditAmount = formatNumberWithCommas(res?.data.PBtotalCreditAmount)
-          this.form.totalDebitAmount = formatNumberWithCommas(res?.data.PBtotalDebitAmount)
+          this.form.totalCreditAmount = formatNumberWithCommas(res?.data.PBTotalCreditAmount)
+          this.form.totalDebitAmount = formatNumberWithCommas(res?.data.PBTotalDebitAmount)
           
           this.dataDetail = JSON.parse(JSON.stringify(this.form))
 
@@ -707,7 +707,7 @@ export default {
       const dataTable = this.availableListDetails
       
       const requiredFields = {
-        entryDate: 'EntryDate',
+        entryDate: 'entryDate',
       };
       
       const requiredTableDetails = {
@@ -737,7 +737,7 @@ export default {
           Object.keys(requiredTableDetails).forEach((field) => {
             if (!item[field]) {
               errors.push({
-                fieldName: `${this.$t('lbl_PBlineID_0')} ${
+                fieldName: `${this.$t('lbl_PBLineID_0')} ${
                   item.lineID
                 } - ${this.$t(`lbl_PB${requiredTableDetails[field]}_0`)}`,
                 text: this.$t('msg_NoInput_0'),
@@ -749,7 +749,7 @@ export default {
 
       if (this.form.margin !== 0) {
           errors.push({
-            fieldName: this.$t(`lbl_PBmargin_0`),
+            fieldName: this.$t(`lbl_PBMargin_0`),
             text: this.$t('msg_MustBeZero_0'),
           })
         }
@@ -777,34 +777,34 @@ export default {
         const { dataTableFilter, payload } = validateInfo
 
         const params = {
-          PBchecker: payload.checker,
-          PBdepartmentID: payload.departmentID,
-          PBeditDate: payload.editDate,
-          PBeditor: payload.editor,
-          PBentryDate: payload.entryDate,
-          PBmargin: payload.margin,
-          PBmemo: payload.memo,
-          PBorderNumber: payload.orderNumber,
-          PBresponsiblePerson: payload.responsiblePerson,
-          PBtotalCreditAmount: payload.totalCreditAmount,
-          PBtotalDebitAmount: payload.totalDebitAmount,
+          PBChecker: payload.checker,
+          PBDepartmentID: payload.departmentID,
+          PBEditDate: payload.editDate,
+          PBEditor: payload.editor,
+          PBEntryDate: payload.entryDate,
+          PBMargin: payload.margin,
+          PBMemo: payload.memo,
+          PBOrderNumber: payload.orderNumber,
+          PBResponsiblePerson: payload.responsiblePerson,
+          PBTotalCreditAmount: payload.totalCreditAmount,
+          PBTotalDebitAmount: payload.totalDebitAmount,
           listDetail: dataTableFilter.map((item) => {
             return {
-              PBcompanyName: item.companyName,
-              PBcreditAmount: item.creditAmount,
-              PBcurrency: item.currency,
-              PBdate: item.date,
-              PBdebitAmount: item.debitAmount,
-              PBemployee: item.employee,
-              PBinvoiceDate: item.invoiceDate,
-              PBinvoiceNotes: item.invoiceNotes,
-              PBinvoiceNumber: item.invoiceNumber,
-              PBisInvoice: item.isInvoice,
-              PBitemID: item.itemID,
-              PBlineID: item.lineID,
-              PBopponentSubject: item.opponentSubject,
-              PBreason: item.reason,
-              PBsubject: item.subject
+              PBCompanyName: item.companyName,
+              PBCreditAmount: item.creditAmount,
+              PBCurrency: item.currency,
+              PBDate: item.date,
+              PBDebitAmount: item.debitAmount,
+              PBEmployee: item.employee,
+              PBInvoiceDate: item.invoiceDate,
+              PBInvoiceNotes: item.invoiceNotes,
+              PBInvoiceNumber: item.invoiceNumber,
+              PBIsInvoice: item.isInvoice,
+              PBItemID: item.itemID,
+              PBLineID: item.lineID,
+              PBOpponentSubject: item.opponentSubject,
+              PBReason: item.reason,
+              PBSubject: item.subject
             }
           }),
         }

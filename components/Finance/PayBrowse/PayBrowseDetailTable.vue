@@ -131,6 +131,7 @@
                 oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
                 type="text"
                 class="filter-number"
+                @keyup.enter="handleEnter(item, headerItem.key, index)"
               />
               <datepicker
                 v-else-if="headerItem.filter === 'date'"
@@ -213,7 +214,7 @@
           </div>
           <div class="px-1" :style="{ width: `12%` }">
             <input
-              v-model="dataTotalTable.PBamount"
+              v-model="dataTotalTable.PBAmount"
               class="w-100 filter-input"
               disabled
             />
@@ -232,7 +233,7 @@
           </div>
           <div class="px-1" :style="{ width: `12%` }">
             <input
-              v-model="dataTotalTable.PBdate"
+              v-model="dataTotalTable.PBDate"
               class="w-100 filter-input"
               disabled
             />
@@ -256,7 +257,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import { get } from 'lodash'
 import api from '@/api/api'
 import { SERVER_RESPONSE_CODE } from '@/constants'
@@ -301,6 +302,7 @@ export default {
     }
   },
   async fetch() {
+    
     const res = await api('getEmployeeList')
     if (res && res.status === SERVER_RESPONSE_CODE.OK) {
       this.listEmployee = res.data || {}
@@ -309,7 +311,16 @@ export default {
   computed: {
     ...mapGetters('base', {
       warehouseOptions: 'getWarehouseOptions',
+      listAccountingItems: "getListAccountingItems",
     }),
+
+    itemListAccountingItems() {
+      return this.listAccountingItems.map((item) => ({
+        text: item.text,
+        value: item.text,
+      }))
+    },
+
     isChecked() {
       return get(this.data, 'isCheck', false) === true
     },
@@ -317,42 +328,42 @@ export default {
     header() {
       return [
         {
-          key: 'PBamount',
-          name: this.$t('lbl_PBamount_0'),
+          key: 'PBAmount',
+          name: this.$t('lbl_PBAmount_0'),
           filter: 'input-number',
           width: `12%`,
           align: 'right',
         },
         {
-          key: 'PBotherAmount',
-          name: this.$t('lbl_PBotherAmount_0'),
+          key: 'PBOtherAmount',
+          name: this.$t('lbl_PBOtherAmount_0'),
           filter: 'input-number',
           width: `12%`,
           align: 'right',
         },
         {
-          key: 'PBexpenseCategory',
-          name: this.$t('lbl_PBexpenseCategory_0'),
-          filter: 'input-number',
+          key: 'PBExpenseCategory',
+          name: this.$t('lbl_PBExpenseCategory_0'),
+          filter: 'autocomplete',
           width: `12%`,
-          align: 'right',
+          options: this.itemListAccountingItems,
         },
         {
-          key: 'PBdate',
-          name: this.$t('lbl_PBdate_0'),
+          key: 'PBDate',
+          name: this.$t('lbl_PBDate_0'),
           filter: 'date',
           width: `12%`,
         },
         {
-          key: 'PBapUser',
-          name: this.$t('lbl_PBapUser_0'),
+          key: 'PBApUser',
+          name: this.$t('lbl_PBApUser_0'),
           filter: 'autocomplete',
           width: `12%`,
           options: this.listEmployeeName,
         },
         {
-          key: 'PBmemo',
-          name: this.$t('lbl_PBmemo_0'),
+          key: 'PBMemo',
+          name: this.$t('lbl_PBMemo_0'),
           filter: 'input',
           width: `18%`,
         },
@@ -425,6 +436,9 @@ export default {
     })
   },
   methods: {
+    ...mapActions('base', [
+      'getListAccountingItems',
+    ]),
     makeFormatNumberWithCommas(number) {
       return formatNumberWithCommas(number)
     },
@@ -466,30 +480,26 @@ export default {
     },
 
     handleEnter(item, columnKey, index) {
-      if (item && columnKey !== 'memo') {
-        return
-      }
-
       this.listErrorMessage = []
-      const requiredFields = {
-        amount: 'Amount',
-        date: 'ARDate',
-        user: 'ARUser',
-      }
+      // const requiredFields = {
+      //   amount: 'Amount',
+      //   date: 'ARDate',
+      //   user: 'ARUser',
+      // }
 
-      const numberFields = ['amount']
-      for (const field of numberFields) {
-        item[field] = Number(item[field])
-      }
+      // const numberFields = ['amount']
+      // for (const field of numberFields) {
+      //   item[field] = Number(item[field])
+      // }
 
-      for (const prop in requiredFields) {
-        if (!item[prop]) {
-          this.listErrorMessage.push({
-            fieldName: this.$t(`lbl_${requiredFields[prop]}_0`),
-            text: this.$t('msg_NoInput_0'),
-          })
-        }
-      }
+      // for (const prop in requiredFields) {
+      //   if (!item[prop]) {
+      //     this.listErrorMessage.push({
+      //       fieldName: this.$t(`lbl_${requiredFields[prop]}_0`),
+      //       text: this.$t('msg_NoInput_0'),
+      //     })
+      //   }
+      // }
 
       const hasError = this.listErrorMessage.length > 0
       if (hasError) {
@@ -516,17 +526,21 @@ export default {
       Object.assign(item, {
         isNewLine: false,
         isUpdate: false,
-        parentID: this.$route.query.receiveBrowse,
+        parentID: this.$route.query.sono,
       })
       this.emitData()
       this.$emit('add-detail', {
-        amount: '',
-        otherAmount: '',
-        date: '',
-        user: '',
-        memo: '',
-        isUpdate: true,
-        isNewLine: true,
+        PBAmount: "",
+        PBOtherAmount: "",
+        PBExpenseCategory: "",
+        PBDate: "",
+        PBApUser: "",
+        PBMemo: "",
+        isUpdate: false,
+        isNewLine: false,
+        value: false,
+        parentID: this.$route.query.sono,
+        itemID: item.itemID + 1
       })
     },
 

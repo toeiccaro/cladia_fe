@@ -441,12 +441,6 @@ export default {
     dataTable: {
       deep: true,
       handler(data) {
-        const purchaseOrderAmounts = data.map((item) => item.amount)
-        const totalAmount = purchaseOrderAmounts.reduce(
-          (partialSum, amount) => partialSum + amount,
-          0
-        )
-        this.dataDetail.totalAmount = totalAmount
       },
     },
   },

@@ -86,16 +86,6 @@ export default {
           icon: '/images/add.png',
         },
         {
-          key: 'save',
-          label: this.$t('btn_btnSave_0'),
-          icon: '/images/save.png',
-        },
-        {
-          key: 'delete',
-          label: this.$t('btn_btnDel_0'),
-          icon: '/images/delete.png',
-        },
-        {
           key: 'check',
           label: this.$t('btn_btnCheck_0'),
           icon: '/images/check.png',
@@ -104,6 +94,16 @@ export default {
           key: 'unCheck',
           label: this.$t('btn_btnUnCheck_0'),
           icon: '/images/uncheck.png',
+        },
+        {
+          key: 'save',
+          label: this.$t('btn_btnSave_0'),
+          icon: '/images/save.png',
+        },
+        {
+          key: 'delete',
+          label: this.$t('btn_btnDel_0'),
+          icon: '/images/delete.png',
         },
         {
           key: 'print',
@@ -261,7 +261,7 @@ export default {
         },
         {
           key: 'date',
-          name: this.$t('lbl_RBdate_0'),
+          name: this.$t('lbl_RBDate_0'),
           filter: 'datetime',
           width: 200,
           align: 'left',
@@ -271,7 +271,7 @@ export default {
         },
         {
           key: 'subject',
-          name: this.$t('lbl_RBsubject_0'),
+          name: this.$t('lbl_RBSubject_0'),
           filter: 'select',
           typeInput: 'select',
           width: 150,
@@ -283,7 +283,7 @@ export default {
         },
         {
           key: 'debitAmount',
-          name: this.$t('lbl_RBamount_0'),
+          name: this.$t('lbl_RBAmount_0'),
           filter: 'number',
           width: 150,
           align: 'left',
@@ -292,7 +292,7 @@ export default {
         },
         {
           key: 'opponentSubject',
-          name: this.$t('lbl_RBopponentSubject_0'),
+          name: this.$t('lbl_RBOpponentSubject_0'),
           filter: 'select',
           typeInput: 'select',
           width: 150,
@@ -304,7 +304,7 @@ export default {
         },
         {
           key: 'creditAmount',
-          name: this.$t('lbl_RBamount_0'),
+          name: this.$t('lbl_RBAmount_0'),
           filter: 'number',
           width: 200,
           align: 'left',
@@ -314,7 +314,7 @@ export default {
         },
         {
           key: 'currency',
-          name: this.$t('lbl_RBcurrency_0'),
+          name: this.$t('lbl_RBCurrency_0'),
           filter: 'select',
           typeInput: 'select',
           width: 150,
@@ -327,7 +327,7 @@ export default {
         },
         {
           key: 'companyName',
-          name: this.$t('lbl_RBcompanyName_0'),
+          name: this.$t('lbl_RBCompanyName_0'),
           filter: 'select',
           typeInput: 'select',
           width: 150,
@@ -339,7 +339,7 @@ export default {
         },
         {
           key: 'isInvoice',
-          name: this.$t('lbl_RBisInvoice_0'),
+          name: this.$t('lbl_RBIsInvoice_0'),
           filter: 'checkbox',
           width: 100,
           align: 'center',
@@ -352,7 +352,7 @@ export default {
         },
         {
           key: 'invoiceNumber',
-          name: this.$t('lbl_RBinvoiceNumber_0'),
+          name: this.$t('lbl_RBInvoiceNumber_0'),
           filter: 'number',
           width: 150,
           align: 'right',
@@ -362,7 +362,7 @@ export default {
         },
         {
           key: 'invoiceDate',
-          name: this.$t('lbl_RBinvoiceDate_0'),
+          name: this.$t('lbl_RBInvoiceDate_0'),
           filter: 'datetime',
           width: 200,
           align: 'left',
@@ -372,7 +372,7 @@ export default {
         },
         {
           key: 'invoiceNotes',
-          name: this.$t('lbl_RBinvoiceNotes_0'),
+          name: this.$t('lbl_RBInvoiceNotes_0'),
           filter: 'input',
           width: 300,
           align: 'left',
@@ -383,7 +383,7 @@ export default {
         },
         {
           key: 'employee',
-          name: this.$t('lbl_RBemployee_0'),
+          name: this.$t('lbl_RBEmployee_0'),
           filter: 'input',
           width: 300,
           align: 'left',
@@ -394,7 +394,7 @@ export default {
         },
         {
           key: 'reason',
-          name: this.$t('lbl_RBreason_0'),
+          name: this.$t('lbl_RBReason_0'),
           filter: 'input',
           width: 300,
           align: 'left',
@@ -496,18 +496,18 @@ export default {
           language: this.$i18n.locale
         })
         if (res.status === 200) {
-          this.form.orderNumber = res?.data?.RBorderNumber
+          this.form.orderNumber = res?.data?.RBOrderNumber
           this.form.checker = res?.data?.checker
           this.form.departmentID = res?.data?.departmentID
           this.form.editor = res?.data?.editor
           this.form.margin = res?.data?.margin
           this.form.memo = res?.data?.memo
 
-          this.form.editDate = this.convertDate(res.data.RBeditDate)
-          this.form.entryDate = this.convertDate(res.data.RBentryDate)
+          this.form.editDate = this.convertDate(res.data.RBEditDate)
+          this.form.entryDate = this.convertDate(res.data.RBEntryDate)
           this.form.responsiblePerson = res?.data?.responsiblePerson
-          this.form.totalCreditAmount = formatNumberWithCommas(res?.data.RBtotalCreditAmount)
-          this.form.totalDebitAmount = formatNumberWithCommas(res?.data.RBtotalDebitAmount)
+          this.form.totalCreditAmount = formatNumberWithCommas(res?.data.RBTotalCreditAmount)
+          this.form.totalDebitAmount = formatNumberWithCommas(res?.data.RBTotalDebitAmount)
           
           this.dataDetail = JSON.parse(JSON.stringify(this.form))
 
@@ -515,7 +515,8 @@ export default {
             const newObject = {};
             
             for (const key in item) {
-              const newKey = key.replace(/^RB/, '');
+              let newKey = key.replace(/^RB/, '');
+              newKey = newKey[0].toLowerCase() + newKey.slice(1);
               if(newKey == 'date') {
                 item[key] = this.convertDate(item[key])
               }
@@ -711,12 +712,12 @@ export default {
       };
       
       const requiredTableDetails = {
-        date: 'date',
-        subject: 'subject',
-        creditAmount: 'creditAmount',
-        opponentSubject: 'opponentSubject',
-        debitAmount: 'debitAmount',
-        currency: 'currency',
+        date: 'Date',
+        subject: 'Subject',
+        creditAmount: 'CreditAmount',
+        opponentSubject: 'OpponentSubject',
+        debitAmount: 'DebitAmount',
+        currency: 'Currency',
       };
 
       Object.keys(requiredFields).forEach((field) => {
@@ -737,7 +738,7 @@ export default {
           Object.keys(requiredTableDetails).forEach((field) => {
             if (!item[field]) {
               errors.push({
-                fieldName: `${this.$t('lbl_RBlineID_0')} ${
+                fieldName: `${this.$t('lbl_RBLineID_0')} ${
                   item.lineID
                 } - ${this.$t(`lbl_RB${requiredTableDetails[field]}_0`)}`,
                 text: this.$t('msg_NoInput_0'),
@@ -749,7 +750,7 @@ export default {
 
       if (this.form.margin !== 0) {
           errors.push({
-            fieldName: this.$t(`lbl_RBmargin_0`),
+            fieldName: this.$t(`lbl_RBMargin_0`),
             text: this.$t('msg_MustBeZero_0'),
           })
         }
@@ -777,34 +778,34 @@ export default {
         const { dataTableFilter, payload } = validateInfo
 
         const params = {
-          RBchecker: payload.checker,
-          RBdepartmentID: payload.departmentID,
-          RBeditDate: payload.editDate,
-          RBeditor: payload.editor,
-          RBentryDate: payload.entryDate,
-          RBmargin: payload.margin,
-          RBmemo: payload.memo,
-          RBorderNumber: payload.orderNumber,
-          RBresponsiblePerson: payload.responsiblePerson,
-          RBtotalCreditAmount: payload.totalCreditAmount,
-          RBtotalDebitAmount: payload.totalDebitAmount,
+          RBChecker: payload.checker,
+          RBDepartmentID: payload.departmentID,
+          RBEditDate: payload.editDate,
+          RBEditor: payload.editor,
+          RBEntryDate: payload.entryDate,
+          RBMargin: payload.margin,
+          RBMemo: payload.memo,
+          RBOrderNumber: payload.orderNumber,
+          RBResponsiblePerson: payload.responsiblePerson,
+          RBTotalCreditAmount: payload.totalCreditAmount,
+          RBTotalDebitAmount: payload.totalDebitAmount,
           listDetail: dataTableFilter.map((item) => {
             return {
-              RBcompanyName: item.companyName,
-              RBcreditAmount: item.creditAmount,
-              RBcurrency: item.currency,
-              RBdate: item.date,
-              RBdebitAmount: item.debitAmount,
-              RBemployee: item.employee,
-              RBinvoiceDate: item.invoiceDate,
-              RBinvoiceNotes: item.invoiceNotes,
-              RBinvoiceNumber: item.invoiceNumber,
-              RBisInvoice: item.isInvoice,
-              RBitemID: item.itemID,
-              RBlineID: item.lineID,
-              RBopponentSubject: item.opponentSubject,
-              RBreason: item.reason,
-              RBsubject: item.subject
+              RBCompanyName: item.companyName,
+              RBCreditAmount: item.creditAmount,
+              RBCurrency: item.currency,
+              RBDate: item.date,
+              RBDebitAmount: item.debitAmount,
+              RBEmployee: item.employee,
+              RBInvoiceDate: item.invoiceDate,
+              RBInvoiceNotes: item.invoiceNotes,
+              RBInvoiceNumber: item.invoiceNumber,
+              RBIsInvoice: item.isInvoice,
+              RBItemID: item.itemID,
+              RBLineID: item.lineID,
+              RBOpponentSubject: item.opponentSubject,
+              RBReason: item.reason,
+              RBSubject: item.subject
             }
           }),
         }
