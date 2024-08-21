@@ -22,7 +22,6 @@
           </td>
           <td class="input">
             <datepicker
-              ref="orderDatepickerInput"
               v-only-date="{
                 isAppendToChild: true,
                 childClass: 'input__orderDate',
@@ -30,10 +29,10 @@
               :value="form.orderDate"
               typeable
               format="yyyy-MM-dd"
+              :disabled="isDisabled"
               input-class="input__orderDate"
               :highlighted="highlighted"
               @input="changeOrderDate"
-              @change="changeOrderDateBlur"
             ></datepicker>
           </td>
           <td class="info">*</td>
@@ -399,60 +398,12 @@ export default {
       this.form.salerId = select?.value
     },
 
-    //Update date picker
-    updateDate(field, value) {
-      const convertedDate = this.convertDate(value)
-      this.$set(this.form, field, convertedDate)
-    },
-
-    handleDateBlur(refName, field) {
-      const inputElement = this.$refs[refName].$el.querySelector('input')
-      if (inputElement) {
-        this.updateDate(field, inputElement.value)
-        if (this.form[field] === null) {
-          inputElement.value = ''
-        }
-      }
-    },
-
     changeOrderDate(value) {
-      this.updateDate('orderDate', value)
-    },
-
-    changeOrderDateBlur() {
-      this.handleDateBlur('orderDatepickerInput', 'orderDate')
-    },
-
-    setupFocusOutListener() {
-      this.$nextTick(() => {
-        const orderDateInputElement =
-          this.$refs.orderDatepickerInput.$el.querySelector('input')
-
-        if (orderDateInputElement) {
-          orderDateInputElement.addEventListener(
-            'focusout',
-            this.changeOrderDateBlur
-          )
-        }
-      })
+      this.form.orderDate = this.convertDate(value)
     },
     refresh() {
       ++this.refreshKey
     },
-  },
-  mounted() {
-    this.setupFocusOutListener()
-  },
-  beforeDestroy() {
-    const orderDateInputElement =
-      this.$refs.orderDatepickerInput?.$el?.querySelector('input')
-
-    if (orderDateInputElement) {
-      orderDateInputElement.removeEventListener(
-        'focusout',
-        this.changeOrderDateBlur
-      )
-    }
   },
 }
 </script>

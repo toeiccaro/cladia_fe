@@ -177,10 +177,15 @@ export default {
     dataTableMapping() {
       const alignRightFields = [
         'Quantity',
+        'SIPriceIncludeTax',
         'Amount',
+        'SIAmountIncludeTax',
         'TotalAmount',
+        'SIPriceIncludeDiscount',
         'TotalRtAmount',
+        'SIDiscountRate',
         'Price',
+        'SITaxRate',
       ]
       const data = this.dataTable.map((item, index) => {
         const obj = {
@@ -215,7 +220,10 @@ export default {
             case 'SIPriceIncludeDiscount':
             case 'SIDiscountRate':
             case 'SITaxRate':
-              obj[mappingFieldName].value = obj[mappingFieldName].value == 0 ? 0 : obj[mappingFieldName].value
+              obj[mappingFieldName].value =
+                obj[mappingFieldName].value == 0
+                  ? 0
+                  : obj[mappingFieldName].value
               break
           }
 
@@ -296,7 +304,9 @@ export default {
       ]
 
       this.listDataShow.forEach((item) => {
-        const maxLength = listNumberField.includes(item.fieldName) ? '30' : '256'
+        const maxLength = listNumberField.includes(item.fieldName)
+          ? '30'
+          : '256'
         const headerItem = {
           key: this.mappingProperty(
             this.dataTable[0] || invoiceSchema,

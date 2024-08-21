@@ -21,18 +21,16 @@
           </td>
           <td class="input">
             <datepicker
-              ref="orderDatepickerInput"
+              v-model="form.orderDate"
               v-only-date="{
                 isAppendToChild: true,
                 childClass: 'input__orderDate',
               }"
-              v-model="form.orderDate"
               typeable
               format="yyyy-MM-dd"
+              :disabled="isDisableInput"
               input-class="input__orderDate"
               :highlighted="highlighted"
-              @input="changeOrderDate"
-              @change="changeOrderDateBlur"
             ></datepicker>
           </td>
           <td class="info">*</td>
@@ -88,18 +86,16 @@
           </td>
           <td class="input">
             <datepicker
-              ref="effectiveDatepickerInput"
+              v-model="form.effectiveDate"
               v-only-date="{
                 isAppendToChild: true,
-                childClass: 'input__orderDate',
+                childClass: 'input__effectiveDate',
               }"
-              v-model="form.effectiveDate"
               typeable
               format="yyyy-MM-dd"
-              input-class="input__orderDate"
+              :disabled="isDisableInput"
+              input-class="input__effectiveDate"
               :highlighted="highlighted"
-              @input="changeEffectiveDate"
-              @change="changeEffectiveDateBlur"
             ></datepicker>
           </td>
           <td class="info">*</td>
@@ -363,84 +359,6 @@ export default {
           : null
       this.form.responsibleMan = result?.responsibleMan
     },
-
-    //Update date picker
-    updateDate(field, value) {
-      const convertedDate = this.convertDate(value)
-      this.$set(this.form, field, convertedDate)
-    },
-
-    handleDateBlur(refName, field) {
-      const inputElement = this.$refs[refName].$el.querySelector('input')
-      if (inputElement) {
-        this.updateDate(field, inputElement.value)
-        if (this.form[field] === null) {
-          inputElement.value = ''
-        }
-      }
-    },
-
-    changeOrderDate(value) {
-      this.updateDate('orderDate', value)
-    },
-    changeEffectiveDate(value) {
-      this.updateDate('effectiveDate', value)
-    },
-
-    changeOrderDateBlur() {
-      this.handleDateBlur('orderDatepickerInput', 'orderDate')
-    },
-    changeEffectiveDateBlur() {
-      this.handleDateBlur('effectiveDatepickerInput', 'effectiveDate')
-    },
-
-    setupFocusOutListener() {
-      this.$nextTick(() => {
-        const orderDateInputElement =
-          this.$refs.orderDatepickerInput.$el.querySelector('input')
-
-        const effectiveInputElement =
-          this.$refs.effectiveDatepickerInput.$el.querySelector('input')
-
-        if (orderDateInputElement) {
-          orderDateInputElement.addEventListener(
-            'focusout',
-            this.changeOrderDateBlur
-          )
-        }
-
-        if (effectiveInputElement) {
-          effectiveInputElement.addEventListener(
-            'focusout',
-            this.changeEffectiveDateBlur
-          )
-        }
-      })
-    },
-  },
-  mounted() {
-    this.setupFocusOutListener()
-  },
-  beforeDestroy() {
-    const orderDateInputElement =
-      this.$refs.orderDatepickerInput?.$el?.querySelector('input')
-
-    const effectiveDateInputElement =
-      this.$refs.effectiveDatepickerInput?.$el?.querySelector('input')
-
-    if (orderDateInputElement) {
-      orderDateInputElement.removeEventListener(
-        'focusout',
-        this.changeOrderDateBlur
-      )
-    }
-
-    if (effectiveDateInputElement) {
-      effectiveDateInputElement.removeEventListener(
-        'focusout',
-        this.changeEffectiveDateBlur
-      )
-    }
   },
 }
 </script>

@@ -22,18 +22,16 @@
           </td>
           <td class="input">
             <datepicker
-              ref="orderDatepickerInput"
+              v-model="newInvoiceData.orderDate"
               v-only-date="{
                 isAppendToChild: true,
                 childClass: 'input__orderDate',
               }"
-              :value="newInvoiceData.orderDate"
               typeable
+              class="input-date"
               format="yyyy-MM-dd"
               input-class="input__orderDate"
               :highlighted="highlighted"
-              @input="changeOrderDate"
-              @change="changeOrderDateBlur"
             ></datepicker>
           </td>
           <td class="info">*</td>
@@ -129,18 +127,16 @@
           </td>
           <td class="input">
             <datepicker
-              ref="payDatepickerInput"
+              v-model="newInvoiceData.payDate"
               v-only-date="{
                 isAppendToChild: true,
                 childClass: 'input__payDate',
               }"
-              :value="newInvoiceData.payDate"
               typeable
+              class="input-date"
               format="yyyy-MM-dd"
               input-class="input__payDate"
               :highlighted="highlighted"
-              @input="changePayDate"
-              @change="changePayDateBlur"
             ></datepicker>
           </td>
           <td class="info">*</td>
@@ -163,18 +159,16 @@
           </td>
           <td class="input">
             <datepicker
-              ref="receiveDatepickerInput"
+              v-model="newInvoiceData.receiveDate"
               v-only-date="{
                 isAppendToChild: true,
                 childClass: 'input__receiveDate',
               }"
-              :value="newInvoiceData.receiveDate"
               typeable
+              class="input-date"
               format="yyyy-MM-dd"
-              input-class="input__receiveDate"
               :highlighted="highlighted"
-              @input="changeReceiveDate"
-              @change="changeReceiveDateBlur"
+              input-class="input__receiveDate"
             ></datepicker>
           </td>
           <td class="info">&nbsp;</td>
@@ -399,107 +393,6 @@ export default {
         this.newInvoiceData.payDate = this.convertDate(date)
       }
     },
-
-    //Update date picker
-    updateDate(field, value) {
-      const convertedDate = this.convertDate(value)
-      this.$set(this.newInvoiceData, field, convertedDate)
-    },
-
-    handleDateBlur(refName, field) {
-      const inputElement = this.$refs[refName].$el.querySelector('input')
-      if (inputElement) {
-        this.updateDate(field, inputElement.value)
-        if (this.newInvoiceData[field] === null) {
-          inputElement.value = ''
-        }
-      }
-    },
-
-    changeOrderDate(value) {
-      this.updateDate('orderDate', value)
-    },
-
-    changePayDate(value) {
-      this.updateDate('payDate', value)
-    },
-    changeReceiveDate(value) {
-      this.updateDate('receiveDate', value)
-    },
-
-    changeOrderDateBlur() {
-      this.handleDateBlur('orderDatepickerInput', 'orderDate')
-    },
-    changePayDateBlur() {
-      this.handleDateBlur('payDatepickerInput', 'payDate')
-    },
-    changeReceiveDateBlur() {
-      this.handleDateBlur('receiveDatepickerInput', 'receiveDate')
-    },
-
-    setupFocusOutListener() {
-      this.$nextTick(() => {
-        const orderDateInputElement =
-          this.$refs.orderDatepickerInput.$el.querySelector('input')
-
-        const payDateInputElement =
-          this.$refs.payDatepickerInput.$el.querySelector('input')
-
-        const receiveDateInputElement =
-          this.$refs.receiveDatepickerInput.$el.querySelector('input')
-
-        if (orderDateInputElement) {
-          orderDateInputElement.addEventListener(
-            'focusout',
-            this.changeOrderDateBlur
-          )
-        }
-        if (payDateInputElement) {
-          payDateInputElement.addEventListener(
-            'focusout',
-            this.changePayDateBlur
-          )
-        }
-
-        if (receiveDateInputElement) {
-          receiveDateInputElement.addEventListener(
-            'focusout',
-            this.changeReceiveDateBlur
-          )
-        }
-      })
-    },
-  },
-
-  mounted() {
-    this.setupFocusOutListener()
-  },
-  beforeDestroy() {
-    const orderDateInputElement =
-      this.$refs.orderDatepickerInput?.$el?.querySelector('input')
-    const payDateInputElement =
-      this.$refs.payDatepickerInput?.$el?.querySelector('input')
-    const receiveDateInputElement =
-      this.$refs.receiveDatepickerInput?.$el?.querySelector('input')
-
-    if (orderDateInputElement) {
-      orderDateInputElement.removeEventListener(
-        'focusout',
-        this.changeOrderDateBlur
-      )
-    }
-    if (payDateInputElement) {
-      payDateInputElement.removeEventListener(
-        'focusout',
-        this.changePayDateBlur
-      )
-    }
-    if (receiveDateInputElement) {
-      receiveDateInputElement.removeEventListener(
-        'focusout',
-        this.changeReceiveDateBlur
-      )
-    }
   },
 }
 </script>

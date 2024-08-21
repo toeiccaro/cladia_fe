@@ -5,10 +5,10 @@
       :is-error="true"
       :list-error-message="listErrorMessage"
     ></BaseValidateMessage>
-    <FormInputQuotation 
+    <FormInputQuotation
       :params-quotation="dataAttach"
       @update-table="updateTable"
-      ></FormInputQuotation>
+    ></FormInputQuotation>
     <base-table-item-detail
       class="edit-quotation-table-details"
       :table-content="dataTable"
@@ -20,7 +20,6 @@
       :header-detail="tableHeaders"
       :new-line="newLine"
       :form="form"
-
       @changeTable="changeDataDetailTable"
     ></base-table-item-detail>
     <BaseModalAttach
@@ -276,7 +275,7 @@ export default {
           disabled: this.isCheck,
           fieldRequired: false,
           hidden: false,
-        }, 
+        },
       ]
     },
     listToolBars() {
@@ -387,21 +386,31 @@ export default {
     ...mapActions('base', ['getUnitOptions', 'getItemTypeOptionsFromAPI']),
 
     updateTable(val) {
-      this.dataTable = this.dataTable.map((item) =>{
+      this.dataTable = this.dataTable.map((item) => {
         const quantity = item.quantity
         const price = item.price
         const discountRate = val.discountRate
         const taxRate = val.taxRate
 
-        const { priceIncludeDiscount, amount, priceIncludeTax, amountIncludeTax } = this.parseFloatCalculatePrice({quantity, price, discountRate, taxRate});
+        const {
+          priceIncludeDiscount,
+          amount,
+          priceIncludeTax,
+          amountIncludeTax,
+        } = this.parseFloatCalculatePrice({
+          quantity,
+          price,
+          discountRate,
+          taxRate,
+        })
 
         return Object.assign({}, item, {
           amount,
           priceIncludeDiscount,
           priceIncludeTax,
-          amountIncludeTax
+          amountIncludeTax,
         })
-      });
+      })
     },
 
     async getScolumnHides() {
@@ -783,7 +792,9 @@ export default {
           this.form.editDate = this.convertDate(this.form.editDate)
           this.form.checkDate = this.convertDate(this.form.checkDate)
           this.form.taxRate = formatNumberWithCommas(this.form.taxRate)
-          this.form.discountRate = formatNumberWithCommas(this.form.discountRate)
+          this.form.discountRate = formatNumberWithCommas(
+            this.form.discountRate
+          )
           this.dataAttach = JSON.parse(JSON.stringify(this.form))
           this.joinAttachmentString(this.form.attachments)
         }
