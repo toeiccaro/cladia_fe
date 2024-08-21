@@ -11,7 +11,7 @@ import {
   BIconJoystick,
 } from 'bootstrap-vue'
 import { INVENTORY_ADJUSTMENT_ADD_TYPE } from '@/constants'
-
+import { formatNumberWithCommas } from '@/utils/utils'
 export default {
   computed: {
     path() {
@@ -818,12 +818,17 @@ export default {
       const priceIncludeTax = priceIncludeDiscount * (1 + taxRate)
       const amountIncludeTax = quantity * priceIncludeTax
 
-      // Chỉ làm tròn kết quả cuối cùng
       return {
-        priceIncludeDiscount: this.parseFloatPrice(priceIncludeDiscount),
-        amount: this.parseFloatPrice(amount),
-        priceIncludeTax: this.parseFloatPrice(priceIncludeTax),
-        amountIncludeTax: this.parseFloatPrice(amountIncludeTax),
+        priceIncludeDiscount: formatNumberWithCommas(
+          this.parseFloatPrice(priceIncludeDiscount)
+        ),
+        amount: formatNumberWithCommas(this.parseFloatPrice(amount)),
+        priceIncludeTax: formatNumberWithCommas(
+          this.parseFloatPrice(priceIncludeTax)
+        ),
+        amountIncludeTax: formatNumberWithCommas(
+          this.parseFloatPrice(amountIncludeTax)
+        ),
       }
     },
 

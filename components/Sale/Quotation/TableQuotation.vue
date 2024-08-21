@@ -57,6 +57,7 @@ import BasePagination from '~/components/UI/BasePagination.vue'
 import BaseTableDraggable from '~/components/UI/BaseTableDraggable.vue'
 import dateTime from '~/mixins/dateTime'
 import BaseTableLoader from '~/components/loaders/BaseTableLoader'
+import { formatNumberWithCommas } from '@/utils/utils'
 export default {
   name: 'TableQuotation',
   components: { BasePagination, BaseTableDraggable, BaseTableLoader },
@@ -150,7 +151,10 @@ export default {
             case 'QAmountIncludeTax':
             case 'QPriceIncludeDiscount':
             case 'QDiscountRate':
-              obj[mappingFieldName].value = obj[mappingFieldName].value == 0 ? 0 : obj[mappingFieldName].value
+              obj[mappingFieldName].value =
+                obj[mappingFieldName].value === 0
+                  ? 0
+                  : formatNumberWithCommas(obj[mappingFieldName].value)
               break
           }
 
@@ -221,7 +225,13 @@ export default {
       })
     },
     headerMapping() {
-      const listNumberField = ['Quantity', 'Price', 'Amount', 'TaxRate']
+      const listNumberField = [
+        'Quantity',
+        'Price',
+        'Amount',
+        'TaxRate',
+        'QAmountIncludeTax',
+      ]
       const header = [
         {
           key: 'index',
@@ -235,7 +245,9 @@ export default {
         },
       ]
       this.listDataShow.forEach((item) => {
-        const maxLength = listNumberField.includes(item.fieldName) ? '30' : '256'
+        const maxLength = listNumberField.includes(item.fieldName)
+          ? '30'
+          : '256'
         const headerItem = {
           key: this.mappingProperty(
             this.dataTable[0] || quotationSchema,
@@ -248,7 +260,7 @@ export default {
           fieldOrder: item.fieldOrder,
           maxLength,
         }
-        
+
         if (item.fieldName === 'IsCheck') {
           headerItem.options = this.checkAccountOptions
         }

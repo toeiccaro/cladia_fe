@@ -235,7 +235,7 @@
                 isAppendToChild: true,
                 childClass: 'input__orderDate',
               }"
-              :v-model="form.born === null ? '' : form.born"
+              :value="form.born"
               typeable
               format="yyyy-MM-dd"
               input-class="input__orderDate"
@@ -287,7 +287,7 @@
                 isAppendToChild: true,
                 childClass: 'input__orderDate',
               }"
-              :v-model="form.enterDate === null ? '' : form.enterDate"
+              :value="form.enterDate"
               typeable
               format="yyyy-MM-dd"
               input-class="input__orderDate"
@@ -332,7 +332,7 @@
                 isAppendToChild: true,
                 childClass: 'input__orderDate',
               }"
-              :v-model="form.entryDate === null ? '' : form.entryDate"
+              :value="form.entryDate"
               typeable
               format="yyyy-MM-dd"
               input-class="input__orderDate"
@@ -352,7 +352,7 @@
                 isAppendToChild: true,
                 childClass: 'input__orderDate',
               }"
-              :v-model="form.leaveDate === null ? '' : form.leaveDate"
+              :value="form.leaveDate"
               typeable
               format="yyyy-MM-dd"
               input-class="input__orderDate"
