@@ -125,7 +125,7 @@
           </td>
           <td class="info">&nbsp;</td>
           <td class="label">
-            <span id="otherExpensesAmount">{{ $t('lbl_PBotherExpensesAmount_0') }}</span>
+            <span id="otherExpensesAmount">{{ $t('lbl_PBOtherExpensesAmount_0') }}</span>
           </td>
           <td class="input">
             <b-form-input
