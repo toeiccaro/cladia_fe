@@ -56,6 +56,7 @@ import BaseTableDraggable from '~/components/UI/BaseTableDraggable.vue'
 import dateTime from '~/mixins/dateTime'
 import commonOptions from '~/mixins/commonOptions'
 import BaseTableLoader from '~/components/loaders/BaseTableLoader'
+import { formatNumberWithCommas } from '@/utils/utils'
 export default {
   components: { BaseTableDraggable, BasePagination, BaseTableLoader },
   mixins: [dateTime, commonOptions],
@@ -179,14 +180,19 @@ export default {
               align: 'right',
             }
           }
-          
+
           switch (headerItem.fieldName) {
             case 'OOPriceIncludeTax':
             case 'OOAmountIncludeTax':
             case 'OOPriceIncludeDiscount':
             case 'OODiscountRate':
-              obj[fieldKey].value = obj[fieldKey].value == 0 ? 0 : obj[fieldKey].value
+              obj[fieldKey].value =
+                obj[fieldKey].value === 0
+                  ? 0
+                  : formatNumberWithCommas(obj[fieldKey].value)
               break
+            // obj[fieldKey].value = obj[fieldKey].value == 0 ? 0 : obj[fieldKey].value
+            // break
             case 'IsCheck':
               obj[fieldKey].type = 'slot'
               break
@@ -239,7 +245,9 @@ export default {
         },
       ]
       const getHeaderItem = (item) => {
-        const maxLength = listNumberField.includes(item.fieldName) ? '30' : '256'
+        const maxLength = listNumberField.includes(item.fieldName)
+          ? '30'
+          : '256'
         const headerItem = {
           key: item.fieldKey || '',
           name: this.$t(`lbl_${item.fieldName}_0`),

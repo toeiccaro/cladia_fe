@@ -27,11 +27,7 @@
                 isAppendToChild: true,
                 childClass: 'input__orderDate',
               }"
-              :v-model="
-                newInvoiceData.orderDate === null
-                  ? ''
-                  : newInvoiceData.orderDate
-              "
+              :value="newInvoiceData.orderDate"
               typeable
               format="yyyy-MM-dd"
               input-class="input__orderDate"
@@ -138,9 +134,7 @@
                 isAppendToChild: true,
                 childClass: 'input__payDate',
               }"
-              :v-model="
-                newInvoiceData.payDate === null ? '' : newInvoiceData.payDate
-              "
+              :value="newInvoiceData.payDate"
               typeable
               format="yyyy-MM-dd"
               input-class="input__payDate"
@@ -174,11 +168,7 @@
                 isAppendToChild: true,
                 childClass: 'input__receiveDate',
               }"
-              :v-model="
-                newInvoiceData.receiveDate === null
-                  ? ''
-                  : newInvoiceData.receiveDate
-              "
+              :value="newInvoiceData.receiveDate"
               typeable
               format="yyyy-MM-dd"
               input-class="input__receiveDate"
@@ -414,11 +404,9 @@ export default {
     updateDate(field, value) {
       const convertedDate = this.convertDate(value)
       this.$set(this.newInvoiceData, field, convertedDate)
-      console.log(`${field} updated to`, convertedDate)
     },
 
     handleDateBlur(refName, field) {
-      console.log(`${field} input không focus`)
       const inputElement = this.$refs[refName].$el.querySelector('input')
       if (inputElement) {
         this.updateDate(field, inputElement.value)
@@ -426,8 +414,6 @@ export default {
           inputElement.value = ''
         }
       }
-      console.log('inputElement', inputElement.value)
-      console.log(`${field} updated to`, this.newInvoiceData[field])
     },
 
     changeOrderDate(value) {

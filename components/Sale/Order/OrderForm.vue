@@ -27,7 +27,7 @@
                 isAppendToChild: true,
                 childClass: 'input__orderDate',
               }"
-              :v-model="form.orderDate === null ? '' : form.orderDate"
+              :value="form.orderDate"
               typeable
               format="yyyy-MM-dd"
               input-class="input__orderDate"

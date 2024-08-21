@@ -51,6 +51,7 @@ import BasePagination from '~/components/UI/BasePagination.vue'
 import BaseTableDraggable from '~/components/UI/BaseTableDraggable.vue'
 import dateTime from '~/mixins/dateTime'
 import BaseTableLoader from '~/components/loaders/BaseTableLoader'
+import { formatNumberWithCommas } from '@/utils/utils'
 export default {
   components: { BaseTableDraggable, BasePagination, BaseTableLoader },
   mixins: [dateTime],
@@ -148,7 +149,13 @@ export default {
       })
     },
     dataTableMapping() {
-      const listAlignRightFields = ['Quantity', 'Amount', 'Price', 'StopQty', 'TaxRate']
+      const listAlignRightFields = [
+        'Quantity',
+        'Amount',
+        'Price',
+        'StopQty',
+        'TaxRate',
+      ]
 
       const data = this.dataTable?.map((item, index) => {
         const obj = {
@@ -186,7 +193,10 @@ export default {
             case 'SOAmountIncludeTax':
             case 'SOPriceIncludeDiscount':
             case 'SODiscountRate':
-              obj[mappingFieldName].value = obj[mappingFieldName].value == 0 ? 0 : obj[mappingFieldName].value
+              obj[mappingFieldName].value =
+                obj[mappingFieldName].value === 0
+                  ? 0
+                  : formatNumberWithCommas(obj[mappingFieldName].value)
               break
             case 'IsCheck':
               obj[mappingFieldName].type = 'slot'
@@ -220,7 +230,13 @@ export default {
       return data
     },
     headerMapping() {
-      const listNumberField = ['Quantity', 'Amount', 'Price', 'StopQty', 'TaxRate']
+      const listNumberField = [
+        'Quantity',
+        'Amount',
+        'Price',
+        'StopQty',
+        'TaxRate',
+      ]
       const header = [
         {
           key: 'index',
@@ -234,7 +250,9 @@ export default {
         },
       ]
       const getHeaderItem = (item) => {
-        const maxLength = listNumberField.includes(item.fieldName) ? '30' : '256'
+        const maxLength = listNumberField.includes(item.fieldName)
+          ? '30'
+          : '256'
         const headerItem = {
           key: this.mappingProperty(
             this.dataTable[0] || saleOrderSchema,

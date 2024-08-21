@@ -155,11 +155,7 @@
                 isAppendToChild: true,
                 childClass: 'input__orderDate',
               }"
-              :v-model="
-                paramsEnterprise.btransDate === null
-                  ? ''
-                  : paramsEnterprise.btransDate
-              "
+              :value="paramsEnterprise.btransDate"
               typeable
               format="yyyy-MM-dd"
               input-class="input__orderDate"
@@ -192,11 +188,7 @@
                 isAppendToChild: true,
                 childClass: 'input__orderDate',
               }"
-              :v-model="
-                paramsEnterprise.btransDate === null
-                  ? ''
-                  : paramsEnterprise.btransDate
-              "
+              v-model="paramsEnterprise.btransDate"
               typeable
               format="yyyy-MM-dd"
               input-class="input__orderDate"
