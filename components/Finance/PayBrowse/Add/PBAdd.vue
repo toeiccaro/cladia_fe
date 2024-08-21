@@ -8,8 +8,8 @@
       :is-error="true"
       :list-error-message="listErrorMessage"
     />
-    <RBForm ref="addRBForm" 
-      :key="refreshAddRBFormKey"
+    <PBForm ref="addPBForm" 
+      :key="refreshAddPBFormKey"
       :data="form"
     />
     <BaseTableItemDetail
@@ -51,7 +51,7 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import RBForm from './PBForm.vue'
+import PBForm from './PBForm.vue'
 import systemMixins from '@/mixins/system'
 import api from '@/api/api'
 import dateTime from '@/mixins/dateTime'
@@ -66,7 +66,7 @@ import BaseSetColumnDetail from '@/components/UI/Table/BaseSetColumnDetail.vue'
 export default {
   components: {
     ToolBar,
-    RBForm,
+    PBForm,
     BaseModalAttach,
     BaseValidateMessage,
     BaseTableItemDetail,
@@ -76,23 +76,13 @@ export default {
   data() {
     return {
       lang: this.$i18n.locale,
-      refreshAddRBFormKey: 0,
+      refreshAddPBFormKey: 0,
       listErrorMessage: [],
       listToolBars: [
         {
           key: 'add',
           label: this.$t('btn_btnAdd_0'),
           icon: '/images/add.png',
-        },
-        {
-          key: 'save',
-          label: this.$t('btn_btnSave_0'),
-          icon: '/images/save.png',
-        },
-        {
-          key: 'delete',
-          label: this.$t('btn_btnDel_0'),
-          icon: '/images/delete.png',
         },
         {
           key: 'check',
@@ -103,6 +93,16 @@ export default {
           key: 'unCheck',
           label: this.$t('btn_btnUnCheck_0'),
           icon: '/images/uncheck.png',
+        },
+        {
+          key: 'save',
+          label: this.$t('btn_btnSave_0'),
+          icon: '/images/save.png',
+        },
+        {
+          key: 'delete',
+          label: this.$t('btn_btnDel_0'),
+          icon: '/images/delete.png',
         },
         {
           key: 'print',
@@ -259,7 +259,7 @@ export default {
         },
         {
           key: 'date',
-          name: this.$t('lbl_RBdate_0'),
+          name: this.$t('lbl_PBDate_0'),
           filter: 'datetime',
           width: 200,
           align: 'left',
@@ -269,7 +269,7 @@ export default {
         },
         {
           key: 'subject',
-          name: this.$t('lbl_RBsubject_0'),
+          name: this.$t('lbl_PBSubject_0'),
           filter: 'select',
           typeInput: 'select',
           width: 150,
@@ -281,7 +281,7 @@ export default {
         },
         {
           key: 'debitAmount',
-          name: this.$t('lbl_RBamount_0'),
+          name: this.$t('lbl_PBAmount_0'),
           filter: 'number',
           width: 150,
           align: 'left',
@@ -290,7 +290,7 @@ export default {
         },
         {
           key: 'opponentSubject',
-          name: this.$t('lbl_RBopponentSubject_0'),
+          name: this.$t('lbl_PBOpponentSubject_0'),
           filter: 'select',
           typeInput: 'select',
           width: 150,
@@ -302,7 +302,7 @@ export default {
         },
         {
           key: 'creditAmount',
-          name: this.$t('lbl_RBamount_0'),
+          name: this.$t('lbl_PBAmount_0'),
           filter: 'number',
           width: 200,
           align: 'left',
@@ -312,7 +312,7 @@ export default {
         },
         {
           key: 'currency',
-          name: this.$t('lbl_RBcurrency_0'),
+          name: this.$t('lbl_PBCurrency_0'),
           filter: 'select',
           typeInput: 'select',
           width: 150,
@@ -324,7 +324,7 @@ export default {
         },
         {
           key: 'companyName',
-          name: this.$t('lbl_RBcompanyName_0'),
+          name: this.$t('lbl_PBCompanyName_0'),
           filter: 'select',
           typeInput: 'select',
           width: 150,
@@ -336,7 +336,7 @@ export default {
         },
         {
           key: 'isInvoice',
-          name: this.$t('lbl_RBisInvoice_0'),
+          name: this.$t('lbl_PBIsInvoice_0'),
           filter: 'checkbox',
           width: 100,
           align: 'center',
@@ -349,7 +349,7 @@ export default {
         },
         {
           key: 'invoiceNumber',
-          name: this.$t('lbl_RBinvoiceNumber_0'),
+          name: this.$t('lbl_PBInvoiceNumber_0'),
           filter: 'number',
           width: 150,
           align: 'right',
@@ -359,7 +359,7 @@ export default {
         },
         {
           key: 'invoiceDate',
-          name: this.$t('lbl_RBinvoiceDate_0'),
+          name: this.$t('lbl_PBInvoiceDate_0'),
           filter: 'datetime',
           width: 200,
           align: 'left',
@@ -369,7 +369,7 @@ export default {
         },
         {
           key: 'invoiceNotes',
-          name: this.$t('lbl_RBinvoiceNotes_0'),
+          name: this.$t('lbl_PBInvoiceNotes_0'),
           filter: 'input',
           width: 300,
           align: 'left',
@@ -380,7 +380,7 @@ export default {
         },
         {
           key: 'employee',
-          name: this.$t('lbl_RBemployee_0'),
+          name: this.$t('lbl_PBEmployee_0'),
           filter: 'input',
           width: 300,
           align: 'left',
@@ -391,7 +391,7 @@ export default {
         },
         {
           key: 'reason',
-          name: this.$t('lbl_RBreason_0'),
+          name: this.$t('lbl_PBReason_0'),
           filter: 'input',
           width: 300,
           align: 'left',
@@ -556,12 +556,12 @@ export default {
       this.$refs.tableDetails.activeRow = -1
     },
     refreshFormData() {
-      ++this.refreshAddRBFormKey
+      ++this.refreshAddPBFormKey
     },
     async handleRefresh() {
       this.listErrorMessage = []
       this.resetTableDetailData()
-      await Promise.all([this.$fetch(), this.$refs.addRBForm.$fetch()])
+      await Promise.all([this.$fetch(), this.$refs.addPBForm.$fetch()])
       this.refreshFormData()
       this.addNewLineData()
     },
@@ -589,18 +589,18 @@ export default {
       };
       
       const requiredTableDetails = {
-        date: 'date',
-        subject: 'subject',
-        creditAmount: 'creditAmount',
-        opponentSubject: 'opponentSubject',
-        debitAmount: 'debitAmount',
-        currency: 'currency',
+        date: 'Date',
+        subject: 'Subject',
+        creditAmount: 'CreditAmount',
+        opponentSubject: 'OpponentSubject',
+        debitAmount: 'DebitAmount',
+        currency: 'Currency',
       };
 
       Object.keys(requiredFields).forEach((field) => {
         if (!this.form[field]) {
           errors.push({
-            fieldName: this.$t(`lbl_RB${requiredFields[field]}_0`),
+            fieldName: this.$t(`lbl_PB${requiredFields[field]}_0`),
             text: this.$t('msg_NoInput_0'),
           })
         }
@@ -616,9 +616,9 @@ export default {
           Object.keys(requiredTableDetails).forEach((field) => {
             if (!item[field]) {
               errors.push({
-                fieldName: `${this.$t('lbl_RBlineID_0')} ${
+                fieldName: `${this.$t('lbl_PBLineID_0')} ${
                   item.lineID
-                } - ${this.$t(`lbl_RB${requiredTableDetails[field]}_0`)}`,
+                } - ${this.$t(`lbl_PB${requiredTableDetails[field]}_0`)}`,
                 text: this.$t('msg_NoInput_0'),
               })
             }
@@ -628,7 +628,7 @@ export default {
 
       if (this.form.margin !== 0) {
           errors.push({
-            fieldName: this.$t(`lbl_RBmargin_0`),
+            fieldName: this.$t(`lbl_PBMargin_0`),
             text: this.$t('msg_MustBeZero_0'),
           })
         }
@@ -656,34 +656,34 @@ export default {
         const { dataTableFilter, payload } = validateInfo
 
         const params = {
-          PBchecker: payload.checker,
-          PBdepartmentID: payload.departmentID,
-          PBeditDate: payload.editDate,
-          PBeditor: payload.editor,
-          PBentryDate: payload.entryDate,
-          PBmargin: payload.margin,
-          PBmemo: payload.memo,
-          PBorderNumber: payload.orderNumber,
-          PBresponsiblePerson: payload.responsiblePerson,
-          PBtotalCreditAmount: payload.totalCreditAmount,
-          PBtotalDebitAmount: payload.totalDebitAmount,
+          PBChecker: payload.checker,
+          PBDepartmentID: payload.departmentID,
+          PBEditDate: payload.editDate,
+          PBEditor: payload.editor,
+          PBEntryDate: payload.entryDate,
+          PBMargin: payload.margin,
+          PBMemo: payload.memo,
+          PBOrderNumber: payload.orderNumber,
+          PBResponsiblePerson: payload.responsiblePerson,
+          PBTotalCreditAmount: payload.totalCreditAmount,
+          PBTotalDebitAmount: payload.totalDebitAmount,
           listDetail: dataTableFilter.map((item) => {
             return {
-              PBcompanyName: item.companyName,
-              PBcreditAmount: item.creditAmount,
-              PBcurrency: item.currency,
-              PBdate: item.date,
-              PBdebitAmount: item.debitAmount,
-              PBemployee: item.employee,
-              PBinvoiceDate: item.invoiceDate,
-              PBinvoiceNotes: item.invoiceNotes,
-              PBinvoiceNumber: item.invoiceNumber,
-              PBisInvoice: item.isInvoice,
-              PBitemID: item.itemID,
-              PBlineID: item.lineID,
-              PBopponentSubject: item.opponentSubject,
-              PBreason: item.reason,
-              PBsubject: item.subject
+              PBCompanyName: item.companyName,
+              PBCreditAmount: item.creditAmount,
+              PBCurrency: item.currency,
+              PBDate: item.date,
+              PBDebitAmount: item.debitAmount,
+              PBEmployee: item.employee,
+              PBInvoiceDate: item.invoiceDate,
+              PBInvoiceNotes: item.invoiceNotes,
+              PBInvoiceNumber: item.invoiceNumber,
+              PBIsInvoice: item.isInvoice,
+              PBItemID: item.itemID,
+              PBLineID: item.lineID,
+              PBOpponentSubject: item.opponentSubject,
+              PBReason: item.reason,
+              PBSubject: item.subject
             }
           }),
         }
@@ -693,14 +693,14 @@ export default {
           const response = await api('addAPPB', params)
           const errorCode = response?.data?.response?.status
 
-          if (errorCode === SERVER_RESPONSE_CODE.FORBIDDEN) {
+          if (errorCode === SERVER_RESPONSE_CODE.FOPBIDDEN) {
             window.alert(this.$t(response?.data?.response?.data?.message))
             return
           }
           if (response.status === 200) {
             window.alert(this.$t('msg_IsSaved_0'))
             this.$router.push({
-              path: `/${this.$i18n.locale}/finance/pay-browse/detailAROrAP?sono=${response.data.PBorderNumber}`,
+              path: `/${this.$i18n.locale}/finance/pay-browse/detailAROrAP?sono=${response.data.PBOrderNumber}`,
             })
           }
         } catch (error) {

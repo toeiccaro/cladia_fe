@@ -671,11 +671,11 @@ export default {
               selected: this.path.includes('/finance/receive-browse'),
             },
             {
-              path: '/pay-browse',
+              path: '/finance/pay-browse',
               text: this.$t('lbl_Finance_PayBrowse_0'),
               icon: BIconCaretRight,
               key: 'FM050',
-              selected: this.path.includes('/pay-browse'),
+              selected: this.path.includes('/finance/pay-browse'),
             },
             {
               path: '/finance/transaction-detail',
@@ -842,6 +842,33 @@ export default {
         variant,
         solid: true,
       })
+    },
+
+    languageText(locale) {
+      let language = ''
+      switch (locale) {
+        case 'chinese_simplified':
+          language = 'Chinese_Simplified'
+          break;
+        case 'english':
+          language = 'English'
+          break;
+        case 'japanese':
+          language = 'Japanese'
+          break;
+        case 'chinese_traditional':
+          language = 'Chinese_Traditional'
+          break;
+        case 'korean':
+          language = 'Korean'
+          break;
+        case 'vietnamese':
+          language = 'Vietnamese'
+          break;
+        default:
+          break;
+      }
+      return this.$t(`lan_${language}_0`);
     },
   },
 }

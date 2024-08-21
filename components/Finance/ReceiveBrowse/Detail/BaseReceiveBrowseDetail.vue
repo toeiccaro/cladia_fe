@@ -54,15 +54,15 @@ export default {
       hasError: false,
       listErrorMessage: [],
       dataTable: [],
-      dataTotalTable: [],
+      dataTotalTable: {},
       filteredDataTable: [],
       addDetails: {
-        RBamount: '',
-        RBotherAmount: '',
-        PBexpenseCategory: '',
-        RBdate: '',
-        RBaruser: '',
-        RBmemo: '',
+        RBAmount: '',
+        RBOtherAmount: '',
+        RBExpenseCategory: '',
+        RBDate: '',
+        RBArUser: '',
+        RBMemo: '',
         isUpdate: true,
         isNewLine: true,
       },
@@ -135,7 +135,16 @@ export default {
         if (key === 'add') {
           const confirm = window.confirm(this.$t('msg_ConfirmContinue_0'))
           if (confirm) {
-            this.$router.push(this.localePath({ path: '/sales/invoice/add' }))
+            this.filteredDataTable.data.receiveBrowsDTL.push({
+              RBAmount: '',
+              RBOtherAmount: '',
+              RBExpenseCategory: '',
+              RBDate: '',
+              RBArUser: '',
+              RBMemo: '',
+              isUpdate: true,
+              isNewLine: true,
+            })
           }
         }
         if (key === 'save') {
@@ -209,12 +218,12 @@ export default {
         }
         await this.addOrUpdateItem(this.receiveBrowseData)
         this.addDetails = {
-          RBamount: '',
-          RBotherAmount: '',
-          PBexpenseCategory: '',
-          RBdate: '',
-          RBaruser: '',
-          RBmemo: '',
+          RBAmount: '',
+          RBOtherAmount: '',
+          RBExpenseCategory: '',
+          RBDate: '',
+          RBArUser: '',
+          RBMemo: '',
           isUpdate: true,
           isNewLine: true,
         }
@@ -245,8 +254,6 @@ export default {
           language: this.$i18n.locale,
         })
 
-        console.log('res', res);
-
         const validReceiveResponse =
           res && res.status === SERVER_RESPONSE_CODE.OK
 
@@ -257,24 +264,24 @@ export default {
 
           const totalAmount = this.dataTable.reduce((sum, item) => sum + item.amount, 0);
           this.dataTotalTable = {
-            RBamount: totalAmount,
-            RBotherAmount: "",
-            PBexpenseCategory: "",
-            RBdate: this.convertDate(new Date()),
-            RBapUser: "",
-            RBmemo: "",
+            RBAmount: totalAmount,
+            RBOtherAmount: "",
+            RBExpenseCategory: "",
+            RBDate: this.convertDate(new Date()),
+            RBApUser: "",
+            RBMemo: "",
             isUpdate: true,
             isNewLine: true,
           }
           
-          this.receiveBrowseData.RBbalanceAmount = formatNumberWithCommas(
-            this.receiveBrowseData.RBbalanceAmount
+          this.receiveBrowseData.RBBalanceAmount = formatNumberWithCommas(
+            this.receiveBrowseData.RBBalanceAmount
           )
-          this.receiveBrowseData.RBactualAmount = formatNumberWithCommas(
-            this.receiveBrowseData.RBactualAmount
+          this.receiveBrowseData.RBActualAmount = formatNumberWithCommas(
+            this.receiveBrowseData.RBActualAmount
           )
-          this.receiveBrowseData.RBtotalAmount = formatNumberWithCommas(
-            this.receiveBrowseData.RBtotalAmount
+          this.receiveBrowseData.RBTotalAmount = formatNumberWithCommas(
+            this.receiveBrowseData.RBTotalAmount
           )
         }
       } catch (err) {
@@ -290,6 +297,7 @@ export default {
 
     changeDataTable(data) {
       this.dataTable = data
+      this.receiveBrowseData.receiveBrowsDTL = data;
     },
   },
 }

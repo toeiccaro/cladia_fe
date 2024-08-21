@@ -230,7 +230,7 @@ export default {
           hidden: false,
         },
         {
-          key: 'OOpriceIncludeTax',
+          key: 'OOPriceIncludeTax',
           name: this.$t('lbl_OOPriceIncludeTax_0'),
           filter: 'input',
           width: 150,

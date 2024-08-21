@@ -53,16 +53,16 @@ export default {
       listItemMaster: [],
       hasError: false,
       listErrorMessage: [],
-      dataTotalTable: [],
+      dataTotalTable: {},
       dataTable: [],
       filteredDataTable: [],
       addDetails: {
-        PBamount: '',
-        PBotherAmount: '',
-        PBexpenseCategory:'',
-        PBdate: '',
-        PBapUser: '',
-        PBmemo: '',
+        PBAmount: '',
+        PBOtherAmount: '',
+        PBExpenseCategory:'',
+        PBDate: '',
+        PBApUser: '',
+        PBMemo: '',
         isUpdate: true,
         isNewLine: true,
       },
@@ -135,8 +135,16 @@ export default {
         if (key === 'add') {
           const confirm = window.confirm(this.$t('msg_ConfirmContinue_0'))
           if (confirm) {
-            this.$router.push(this.localePath({ path: '/sales/invoice/add' }))
-          }
+            this.filteredDataTable.data.receiveBrowsDTL.push({
+              PBAmount: '',
+              PBOtherAmount: '',
+              PBExpenseCategory: '',
+              PBDate: '',
+              PBApUser: '',
+              PBMemo: '',
+              isUpdate: true,
+              isNewLine: true,
+            })          }
         }
         if (key === 'save') {
           return await this.save()
@@ -202,19 +210,21 @@ export default {
     async save() {
       try {
         this.loading = true
+        console.log('this.payBrowseData', this.payBrowseData.payBrowsDTL);
+
         const confirm = window.confirm(this.$t('msg_ConfirmSave_0'))
         if (!confirm) {
           return
         }
-
+        
         await this.addOrUpdateItem(this.payBrowseData)
         this.addDetails = {
-          PBamount: '',
-          PBotherAmount: '',
-          PBexpenseCategory: '',
-          PBdate: '',
-          PBapUser: '',
-          PBmemo: '',
+          PBAmount: '',
+          PBOtherAmount: '',
+          PBExpenseCategory: '',
+          PBDate: '',
+          PBApUser: '',
+          PBMemo: '',
           isUpdate: true,
           isNewLine: true,
         }
@@ -256,24 +266,24 @@ export default {
           const totalAmount = this.dataTable.reduce((sum, item) => sum + item.amount, 0);
 
           this.dataTotalTable = {
-            PBamount: totalAmount,
-            PBotherAmount: "",
-            PBexpenseCategory: "",
-            PBdate: this.convertDate(new Date()),
-            PBapUser: "",
-            PBmemo: "",
+            PBAmount: totalAmount,
+            PBOtherAmount: "",
+            PBExpenseCategory: "",
+            PBDate: this.convertDate(new Date()),
+            PBApUser: "",
+            PBMemo: "",
             isUpdate: true,
             isNewLine: true,
           }
           
-          this.payBrowseData.PBbalanceAmount = formatNumberWithCommas(
-            this.payBrowseData.PBbalanceAmount
+          this.payBrowseData.PBBalanceAmount = formatNumberWithCommas(
+            this.payBrowseData.PBBalanceAmount
           )
-          this.payBrowseData.PBactualAmount = formatNumberWithCommas(
-            this.payBrowseData.PBactualAmount
+          this.payBrowseData.PBActualAmount = formatNumberWithCommas(
+            this.payBrowseData.PBActualAmount
           )
-          this.payBrowseData.PBtotalAmount = formatNumberWithCommas(
-            this.payBrowseData.PBtotalAmount
+          this.payBrowseData.PBTotalAmount = formatNumberWithCommas(
+            this.payBrowseData.PBTotalAmount
           )
         }
       } catch (err) {
@@ -289,6 +299,7 @@ export default {
 
     changeDataTable(data) {
       this.dataTable = data
+      this.receiveBrowseData.receiveBrowsDTL = data;
     },
   },
 }

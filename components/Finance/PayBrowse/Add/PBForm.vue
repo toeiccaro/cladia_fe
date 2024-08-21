@@ -5,7 +5,7 @@
         <tr class="tr-1">
           <td class="label">
             <span id="orderNumber">
-              {{ $t("lbl_RBorderNumber_0") }}
+              {{ $t("lbl_PBOrderNumber_0") }}
             </span>
           </td>
           <td class="input">
@@ -20,7 +20,7 @@
           <td class=""></td>
 
           <td class="label">
-            <span id="entryDate">{{ $t("lbl_RBentryDate_0") }}</span>
+            <span id="entryDate">{{ $t("lbl_PBEntryDate_0") }}</span>
           </td>
           <td class="input">
             <datepicker
@@ -40,7 +40,7 @@
           <td class="info">*</td>
           <td class="label">
             <span id="totalDebitAmount">{{
-              $t("lbl_RBtotalDebitAmount_0")
+              $t("lbl_PBTotalDebitAmount_0")
             }}</span>
           </td>
           <td class="input">
@@ -56,7 +56,7 @@
         <tr class="tr-2">
           <td class="label">
             <span id="departmentID">
-              {{ $t("lbl_RBdepartmentID_0")}}
+              {{ $t("lbl_PBDepartmentID_0")}}
             </span>
           </td>
           <td class="input">
@@ -70,7 +70,7 @@
           <td class="info"></td>
           <td class="label">
             <span id="responsiblePerson">
-              {{ $t("lbl_RBresponsiblePerson_0") }}
+              {{ $t("lbl_PBResponsiblePerson_0") }}
             </span>
           </td>
           <td class="input">
@@ -83,7 +83,7 @@
           <td class="info"></td>
           <td class="label">
             <span id="totalCreditAmount">{{
-              $t("lbl_RBtotalCreditAmount_0")
+              $t("lbl_PBTotalCreditAmount_0")
             }}</span>
           </td>
           <td class="input">
@@ -97,14 +97,14 @@
         </tr>
         <tr>
           <td class="label">
-            <span id="editor">{{ $t("lbl_RBeditor_0") }}</span>
+            <span id="editor">{{ $t("lbl_PBEditor_0") }}</span>
           </td>
           <td class="input">
             <input v-model="form.editor" type="text" :disabled="true" />
           </td>
           <td class="info"></td>
           <td class="label">
-            <span id="editDate">{{ $t("lbl_RBeditDate_0") }}</span>
+            <span id="editDate">{{ $t("lbl_PBEditDate_0") }}</span>
           </td>
           <td class="input">
             <input
@@ -115,7 +115,7 @@
           </td>
           <td class="info"></td>
           <td class="label">
-            <span id="margin">{{ $t("lbl_RBmargin_0") }}</span>
+            <span id="margin">{{ $t("lbl_PBMargin_0") }}</span>
           </td>
           <td class="input">
             <input 
@@ -129,7 +129,7 @@
         </tr>
         <tr>
           <td class="label">
-            <span id="memo">{{ $t("lbl_RBmemo_0") }}</span>
+            <span id="memo">{{ $t("lbl_PBMemo_0") }}</span>
           </td>
           <td rows="1" colspan="4" class="input">
             <input
@@ -141,10 +141,10 @@
           </td>
           <td class="info"></td>
           <td class="label">
-            <span id="checker">{{ $t("lbl_RBchecker_0") }}</span>
+            <span id="checker">{{ $t("lbl_PBChecker_0") }}</span>
           </td>
           <td class="input">
-            <input v-model="form.checker" type="text" disabled />
+            <input v-model="form.checker" type="text" :disabled="isDisabled" />
           </td>
           <td class="info">&nbsp;</td>
         </tr>
@@ -215,8 +215,8 @@ export default {
       "getDepartmentOptionsFromAPI",
     ]),
 
-    changeOrderDate(value) {
-      this.form.orderDate = this.convertDate(value);
+    changeEntryDate(value) {
+      this.form.entryDate = this.convertDate(value);
     },
     refresh() {
       ++this.refreshKey;

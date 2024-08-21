@@ -4,11 +4,11 @@
       <tbody>
         <tr class="tr-1">
           <td class="label">
-            <span id="orderNumber">{{ $t('lbl_PBorderNumber_0') }}</span>
+            <span id="orderNumber">{{ $t('lbl_RBOrderNumber_0') }}</span>
           </td>
           <td class="input">
             <b-form-input
-              :value="form.RBorderNumber"
+              :value="form.RBOrderNumber"
               disabled
               name="txtOrderNumber"
               type="text"
@@ -18,24 +18,24 @@
           <td class="info"></td>
 
           <td class="label">
-            <span id="subject">{{ $t('lbl_PBsubject_0') }}</span>
+            <span id="subject">{{ $t('lbl_RBSubject_0') }}</span>
           </td>
           <td class="input">
-            <b-form-select
-              v-model="form.RBsubjectId"
-              :options="listAccountingItems"
+            <b-form-input
+              :value="currentLanguage"
               disabled
-              class="select"
-            ></b-form-select>
+              name="txtSubject"
+              type="text"
+            />
           </td>
           <td class="info"></td>
 
           <td class="label">
-            <span id="opponentSubjectId">{{ $t('lbl_PBopponentSubjectId_0') }}</span>
+            <span id="opponentSubjectId">{{ $t('lbl_PBCustomerName_0') }}</span>
           </td>
           <td class="input">
             <b-form-select
-              v-model="form.RBopponentSubjectId"
+              v-model="form.RBOpponentSubjectId"
               :options="listCurrentAssets"
               class="select"
             ></b-form-select>
@@ -45,11 +45,11 @@
 
         <tr class="tr-2">
           <td class="label">
-            <span id="customerName">{{ $t('lbl_PBCustomerName_0') }}</span>
+            <span id="customerName">{{ $t('lbl_CustomerName_0') }}</span>
           </td>
           <td rows="1" colspan="4" class="input position-relative">
             <b-form-select
-              v-model="form.RBcustomerId"
+              v-model="form.RBCustomerId"
               :options="itemCustomerNameList"
               disabled
               class="select"
@@ -58,11 +58,11 @@
           </td>
           <td class="info"></td>
           <td class="label">
-            <span id="currency">{{ $t('lbl_PBcurrency_0') }}</span>
+            <span id="currency">{{ $t('lbl_RBCurrency_0') }}</span>
           </td>
           <td class="input">
             <b-form-select
-              v-model="form.RBcurrencyId"
+              v-model="form.RBCurrencyId"
               :options="currencyOptions"
               disabled
               class="select"
@@ -73,11 +73,11 @@
 
         <tr class="tr-3">
           <td class="label">
-            <span id="totalAmount">{{ $t('lbl_PBtotalAmount_0') }}</span>
+            <span id="totalAmount">{{ $t('lbl_RBTotalAmount_0') }}</span>
           </td>
           <td class="input">
             <b-form-input
-              :value="form.RBtotalAmount"
+              :value="form.RBTotalAmount"
               name="txtTotalAmount"
               type="text"
               class="number"
@@ -86,11 +86,11 @@
           </td>
           <td class="info"></td>
           <td class="label">
-            <span id="balanceAmount">{{ $t('lbl_PBbalanceAmount_0') }}</span>
+            <span id="balanceAmount">{{ $t('lbl_RBBalanceAmount_0') }}</span>
           </td>
           <td class="input">
             <b-form-input
-              :value="form.RBbalanceAmount"
+              :value="form.RBBalanceAmount"
               name="txtBalanceAmount"
               type="text"
               class="number"
@@ -99,11 +99,11 @@
           </td>
           <td class="info">&nbsp;</td>
           <td class="label">
-            <span id="actualAmount">{{ $t('lbl_PBactualAmount_0') }}</span>
+            <span id="actualAmount">{{ $t('lbl_RBActualAmount_0') }}</span>
           </td>
           <td class="input">
             <b-form-input
-              v-model="form.RBactualAmount"
+              v-model="form.RBActualAmount"
               disabled
               name="txtActualAmount"
               type="text"
@@ -117,7 +117,7 @@
           </td>
           <td rows="1" colspan="4" class="input">
             <b-form-input
-              v-model="form.RBmemo"
+              v-model="form.RBMemo"
               disabled
               name="Memo"
               type="text"
@@ -125,11 +125,11 @@
           </td>
           <td class="info">&nbsp;</td>
           <td class="label">
-            <span id="otherExpensesAmount">{{ $t('lbl_PBotherExpensesAmount_0') }}</span>
+            <span id="otherExpensesAmount">{{ $t('lbl_RBOtherExpensesAmount_0') }}</span>
           </td>
           <td class="input">
             <b-form-input
-              v-model="form.RBotherExpensesAmount"
+              v-model="form.RBOtherExpensesAmount"
               disabled
               name="txtOtherExpensesAmount"
               type="text"
@@ -173,6 +173,10 @@ export default {
         text: item.companyName,
         value: item.id,
       }))
+    },
+
+    currentLanguage() {
+      return this.languageText(this.$i18n.locale);
     },
   },
   watch: {
