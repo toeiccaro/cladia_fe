@@ -10,7 +10,7 @@
     ></PayBrowseDetailForm>
     <PayBrowseDetailTable
       ref="payBrowseDetailForm"
-      :data="[...filteredDataTable, addDetails]"
+      :data="[...filteredDataTable]"
       :list-item-master="listItemMaster"
       :data-total-table="dataTotalTable"
       @calculated-aramount="setArAmount"
@@ -135,7 +135,7 @@ export default {
         if (key === 'add') {
           const confirm = window.confirm(this.$t('msg_ConfirmContinue_0'))
           if (confirm) {
-            this.filteredDataTable.data.receiveBrowsDTL.push({
+            this.payBrowseData.payBrowsDTL.push({
               PBAmount: '',
               PBOtherAmount: '',
               PBExpenseCategory: '',
@@ -144,7 +144,8 @@ export default {
               PBMemo: '',
               isUpdate: true,
               isNewLine: true,
-            })          }
+            })
+          }
         }
         if (key === 'save') {
           return await this.save()
@@ -210,8 +211,6 @@ export default {
     async save() {
       try {
         this.loading = true
-        console.log('this.payBrowseData', this.payBrowseData.payBrowsDTL);
-
         const confirm = window.confirm(this.$t('msg_ConfirmSave_0'))
         if (!confirm) {
           return
@@ -261,7 +260,7 @@ export default {
         if (validPayResponse) {
 
           this.payBrowseData = res?.data
-          this.dataTable = res?.data?.receiveBrowsDTL || []
+          this.dataTable = res?.data?.payBrowsDTL || []
           
           const totalAmount = this.dataTable.reduce((sum, item) => sum + item.amount, 0);
 
@@ -299,7 +298,7 @@ export default {
 
     changeDataTable(data) {
       this.dataTable = data
-      this.receiveBrowseData.receiveBrowsDTL = data;
+      this.payBrowseData.payBrowsDTL = data;
     },
   },
 }

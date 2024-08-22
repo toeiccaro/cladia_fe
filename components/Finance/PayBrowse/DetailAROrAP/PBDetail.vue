@@ -286,7 +286,7 @@ export default {
           name: this.$t('lbl_PBAmount_0'),
           filter: 'number',
           width: 150,
-          align: 'left',
+          align: 'right',
           fieldRequired: true,
           hidden: false,
         },
@@ -307,7 +307,7 @@ export default {
           name: this.$t('lbl_PBAmount_0'),
           filter: 'number',
           width: 200,
-          align: 'left',
+          align: 'right',
           fieldRequired: true,
           hidden: false,
           disabled: this.isCheck,
@@ -543,7 +543,7 @@ export default {
         this.loading = true
 
         const response = await api('getScolumnHides', {
-          gridName: 'ReceiveBrowseManualDetail',
+          gridName: 'PayBrowseManualDetail',
         })
         if (response.status === 200) {
           this.columnHides = response?.data || []

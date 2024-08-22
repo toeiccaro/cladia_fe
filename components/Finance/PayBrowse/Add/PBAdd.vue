@@ -128,7 +128,7 @@ export default {
       defaultFormData: {
         checker: '',
         departmentID: '',
-        editDate: this.convertDate(new Date()),
+        editDate: '',
         editor: '',
         entryDate: this.convertDate(new Date()),
         margin: 0,
@@ -147,7 +147,7 @@ export default {
           date: this.convertDate(new Date()),
           debitAmount: 0,
           employee: "",
-          invoiceDate: this.convertDate(new Date()),
+          invoiceDate: "",
           invoiceNotes: "",
           invoiceNumber: "",
           isInvoice: false,
@@ -284,7 +284,7 @@ export default {
           name: this.$t('lbl_PBAmount_0'),
           filter: 'number',
           width: 150,
-          align: 'left',
+          align: 'right',
           fieldRequired: true,
           hidden: false,
         },
@@ -305,7 +305,7 @@ export default {
           name: this.$t('lbl_PBAmount_0'),
           filter: 'number',
           width: 200,
-          align: 'left',
+          align: 'right',
           fieldRequired: true,
           hidden: false,
           disabled: this.isCheck,
@@ -329,7 +329,7 @@ export default {
           typeInput: 'select',
           width: 150,
           align: 'left',
-          fieldRequired: true,
+          fieldRequired: false,
           hidden: false,
           disabled: this.isCheck,
           options: this.itemCustomerNameList
@@ -492,7 +492,7 @@ export default {
         this.loading = true
 
         const response = await api('getScolumnHides', {
-          gridName: 'ReceiveBrowseManualDetail',
+          gridName: 'PayBrowseManualDetail',
         })
         if (response.status === 200) {
           this.columnHides = response?.data || []
