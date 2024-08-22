@@ -137,8 +137,11 @@
             <span>{{ $t('lbl_QDiscountRate_0') }}</span>
           </td>
           <td class="input">
-            <input v-model="form.discountRate" type="text" class="number" 
-            :disabled="isDisabled"
+            <input
+              v-model="form.discountRate"
+              type="text"
+              class="number"
+              :disabled="isDisabled"
             />
           </td>
           <td class="info">&nbsp;</td>
@@ -195,7 +198,7 @@
 import { mapActions, mapGetters } from 'vuex'
 import api from '@/api/api'
 import dateTime from '@/mixins/dateTime'
-import { formatNumberWithCommas } from '@/utils/utils'
+import { formatNumberWithCommas, parseToNumber } from '@/utils/utils'
 import BaseTypeaheadAutocomplete from '@/components/UI/BaseTypeaheadAutocomplete.vue'
 export default {
   components: { BaseTypeaheadAutocomplete },
@@ -249,11 +252,11 @@ export default {
         value: item.id,
         appendText: `(${item.companyCode})`,
         taxRate: item.taxRate,
-        discountRate: item.discountRate
+        discountRate: item.discountRate,
       }))
     },
     totalAmount() {
-      return formatNumberWithCommas(this.form.totalAmount)
+      return formatNumberWithCommas(parseToNumber(this.form.totalAmount))
     },
   },
   watch: {
@@ -283,10 +286,9 @@ export default {
       }
     },
     changeCustomer(select) {
-      if(select?.taxRate > 0)
-        this.form.taxRate = select?.taxRate
+      if (select?.taxRate > 0) this.form.taxRate = select?.taxRate
 
-      if(select?.discountRate > 0)
+      if (select?.discountRate > 0)
         this.form.discountRate = select?.discountRate
       this.form.supplierID = select?.value
       const result = this.listSupplierName.find(

@@ -155,6 +155,10 @@ export default {
         'Price',
         'StopQty',
         'TaxRate',
+        'SODiscountRate',
+        'SOAmountIncludeTax',
+        'SOPriceIncludeTax',
+        'SOPriceIncludeDiscount',
       ]
 
       const data = this.dataTable?.map((item, index) => {

@@ -54,7 +54,7 @@ import { purchaseOrderSchema } from '@/schemas/purchase/purchase-order'
 import BasePagination from '~/components/UI/BasePagination.vue'
 import BaseTableDraggable from '~/components/UI/BaseTableDraggable.vue'
 import BaseTableLoader from '~/components/loaders/BaseTableLoader'
-
+import { formatNumberWithCommas } from '@/utils/utils'
 export default {
   components: { BaseTableDraggable, BasePagination, BaseTableLoader },
   mixins: [systemMixins, dateTimeMixins],
@@ -173,9 +173,9 @@ export default {
             case 'POPriceIncludeDiscount':
             case 'PODiscountRate':
               obj[mappingFieldName].value =
-                obj[mappingFieldName].value == 0
+                obj[mappingFieldName].value === 0
                   ? 0
-                  : obj[mappingFieldName].value
+                  : formatNumberWithCommas(obj[mappingFieldName].value)
               break
           }
           if (headerItem.fieldName === 'IsCheck') {

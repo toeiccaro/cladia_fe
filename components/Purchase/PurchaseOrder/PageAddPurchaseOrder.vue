@@ -31,7 +31,6 @@
       is-purchase
       :show-quantity="true"
       :form="form"
-
       @changeTable="changeDataTable"
     ></BaseTableItemDetail>
     <ModalImportPurchaseOrder
@@ -298,7 +297,7 @@ export default {
           name: this.$t('lbl_POPriceIncludeDiscount_0'),
           filter: 'input',
           width: 150,
-          align: 'left',
+          align: 'right',
           disabled: true,
           fieldRequired: false,
           hidden: false,
@@ -308,7 +307,7 @@ export default {
           name: this.$t('lbl_POPriceIncludeTax_0'),
           filter: 'input',
           width: 150,
-          align: 'left',
+          align: 'right',
           disabled: true,
           fieldRequired: false,
           hidden: false,
@@ -328,7 +327,7 @@ export default {
           name: this.$t('lbl_POAmountIncludeTax_0'),
           filter: 'input',
           width: 150,
-          align: 'left',
+          align: 'right',
           disabled: true,
           fieldRequired: false,
           hidden: false,
@@ -511,21 +510,31 @@ export default {
     }),
 
     updateTable(val) {
-      this.dataTable = this.dataTable.map((item) =>{
+      this.dataTable = this.dataTable.map((item) => {
         const quantity = item.quantity
         const price = item.price
         const discountRate = val.discountRate
         const taxRate = val.taxRate
 
-        const { priceIncludeDiscount, amount, priceIncludeTax, amountIncludeTax } = this.parseFloatCalculatePrice({quantity, price, discountRate, taxRate});
+        const {
+          priceIncludeDiscount,
+          amount,
+          priceIncludeTax,
+          amountIncludeTax,
+        } = this.parseFloatCalculatePrice({
+          quantity,
+          price,
+          discountRate,
+          taxRate,
+        })
 
         return Object.assign({}, item, {
           amount,
           POPriceIncludeDiscount: priceIncludeDiscount,
           POPriceIncludeTax: priceIncludeTax,
-          POAmountIncludeTax: amountIncludeTax
+          POAmountIncludeTax: amountIncludeTax,
         })
-      });
+      })
     },
 
     async getListItemCode() {

@@ -24,7 +24,6 @@
       :show-quantity="true"
       :new-line="newLine"
       :form="form"
-
       @changeTable="changeDataDetailTable"
     />
     <ModalImport ref="importOrder" @importData="handleImportData"></ModalImport>
@@ -271,7 +270,7 @@ export default {
           name: this.$t('lbl_SODiscountRate_0'),
           filter: 'input',
           width: 150,
-          align: 'left',
+          align: 'right',
           disabled: true,
           fieldRequired: false,
           hidden: false,
@@ -281,7 +280,7 @@ export default {
           name: this.$t('lbl_SOPriceIncludeDiscount_0'),
           filter: 'input',
           width: 150,
-          align: 'left',
+          align: 'right',
           disabled: true,
           fieldRequired: false,
           hidden: false,
@@ -291,7 +290,7 @@ export default {
           name: this.$t('lbl_SOPriceIncludeTax_0'),
           filter: 'input',
           width: 150,
-          align: 'left',
+          align: 'right',
           disabled: true,
           fieldRequired: false,
           hidden: false,
@@ -311,7 +310,7 @@ export default {
           name: this.$t('lbl_SOAmountIncludeTax_0'),
           filter: 'input',
           width: 150,
-          align: 'left',
+          align: 'right',
           disabled: true,
           fieldRequired: false,
           hidden: false,
@@ -428,8 +427,8 @@ export default {
         memoDTL: '',
         isUpdate: true,
         isNewLine: true,
-        amountIncludeTax:0,
-        priceIncludeDiscount:0,
+        amountIncludeTax: 0,
+        priceIncludeDiscount: 0,
         priceIncludeTax: 0,
         discountRate: 0,
       }
@@ -452,22 +451,31 @@ export default {
     ...mapActions('base', ['getItemTypeOptionsFromAPI', 'getUnitOptions']),
 
     updateTable(val) {
-      
-      this.dataTable = this.dataTable.map((item) =>{
+      this.dataTable = this.dataTable.map((item) => {
         const quantity = item.quantity
         const price = item.price
         const discountRate = val.discountRate
         const taxRate = val.taxRate
 
-        const { priceIncludeDiscount, amount, priceIncludeTax, amountIncludeTax } = this.parseFloatCalculatePrice({quantity, price, discountRate, taxRate});
+        const {
+          priceIncludeDiscount,
+          amount,
+          priceIncludeTax,
+          amountIncludeTax,
+        } = this.parseFloatCalculatePrice({
+          quantity,
+          price,
+          discountRate,
+          taxRate,
+        })
 
         return Object.assign({}, item, {
           amount,
           priceIncludeDiscount,
           priceIncludeTax,
-          amountIncludeTax
+          amountIncludeTax,
         })
-      });
+      })
     },
 
     async getScolumnHides() {
