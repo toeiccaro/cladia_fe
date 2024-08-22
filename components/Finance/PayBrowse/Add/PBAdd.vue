@@ -457,8 +457,11 @@ export default {
         let totalDebitAmount = 0;
         let totalCreditAmount = 0;
         let margin = 0;
-        
+
         value.map((item) =>{
+          item.date = this.convertDate(item.date)
+          item.invoiceDate = this.convertDate(item.invoiceDate)
+          
           const debitAmount = item.debitAmount ?? 0;
           const creditAmount = item.creditAmount ?? 0;
 
@@ -471,6 +474,7 @@ export default {
         this.form.totalDebitAmount = totalDebitAmount ?? 0
         this.form.totalCreditAmount = totalCreditAmount ?? 0
         this.form.margin = margin
+        
       },
       deep: true,
       immediate: true,

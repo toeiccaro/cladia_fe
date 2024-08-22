@@ -261,9 +261,6 @@ export default {
 
           this.receiveBrowseData = res?.data
           this.dataTable = res?.data?.receiveBrowsDTL || []
-          console.log(this.receiveBrowseData);
-          console.log('11');
-          console.log(this.dataTable);
 
           const totalAmount = this.dataTable.reduce((sum, item) => sum + item.amount, 0);
           this.dataTotalTable = {

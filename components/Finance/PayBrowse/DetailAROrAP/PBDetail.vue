@@ -332,7 +332,7 @@ export default {
           typeInput: 'select',
           width: 150,
           align: 'left',
-          fieldRequired: true,
+          fieldRequired: false,
           hidden: false,
           disabled: this.isCheck,
           options: this.itemCustomerNameList
@@ -462,6 +462,9 @@ export default {
         let margin = 0;
         
         value.map((item) =>{
+          item.date = this.convertDate(item.date)
+          item.invoiceDate = this.convertDate(item.invoiceDate)
+          
           const debitAmount = item.debitAmount ?? 0;
           const creditAmount = item.creditAmount ?? 0;
 
