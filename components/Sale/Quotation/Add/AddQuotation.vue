@@ -5,7 +5,7 @@
       :is-error="true"
       :list-error-message="listErrorMessage"
     ></BaseValidateMessage>
-    <FormInputQuotation 
+    <FormInputQuotation
       :params-quotation="form"
       @update-table="updateTable"
     ></FormInputQuotation>
@@ -22,7 +22,6 @@
       :type-action="'ADD'"
       :new-line="newLine"
       :form="form"
-
       @changeTable="changeDataDetailTable"
     ></BaseTableItemDetail>
     <BaseModalAttach
@@ -75,7 +74,7 @@ export default {
         orderDate: this.convertDate(new Date()),
         taxRate: 0,
         totalAmount: 0,
-        discountRate: 0
+        discountRate: 0,
       },
       loading: false,
       dataTable: [],
@@ -201,7 +200,7 @@ export default {
           name: this.$t('lbl_QPriceIncludeDiscount_0'),
           filter: 'input',
           width: 150,
-          align: 'left',
+          align: 'right',
           disabled: true,
           fieldRequired: false,
           hidden: false,
@@ -211,7 +210,7 @@ export default {
           name: this.$t('lbl_QPriceIncludeTax_0'),
           filter: 'input',
           width: 150,
-          align: 'left',
+          align: 'right',
           disabled: true,
           fieldRequired: false,
           hidden: false,
@@ -365,25 +364,35 @@ export default {
 
   methods: {
     ...mapActions('base', ['getUnitOptions', 'getItemTypeOptionsFromAPI']),
-    
+
     updateTable(val) {
-      this.dataTable = this.dataTable.map((item) =>{
+      this.dataTable = this.dataTable.map((item) => {
         const quantity = item.quantity
         const price = item.price
         const discountRate = val.discountRate
         const taxRate = val.taxRate
 
-        const { priceIncludeDiscount, amount, priceIncludeTax, amountIncludeTax } = this.parseFloatCalculatePrice({quantity, price, discountRate, taxRate});
+        const {
+          priceIncludeDiscount,
+          amount,
+          priceIncludeTax,
+          amountIncludeTax,
+        } = this.parseFloatCalculatePrice({
+          quantity,
+          price,
+          discountRate,
+          taxRate,
+        })
 
         return Object.assign({}, item, {
           amount,
           priceIncludeDiscount,
           priceIncludeTax,
-          amountIncludeTax
+          amountIncludeTax,
         })
-      });
+      })
     },
-    
+
     async getQuotationDetailColumn() {
       try {
         this.loading = true
