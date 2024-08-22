@@ -22,7 +22,7 @@
           </td>
           <td class="input">
             <b-form-input
-              :value="currentLanguage"
+              :value="currentSubject"
               disabled
               name="txtSubject"
               type="text"
@@ -45,16 +45,16 @@
 
         <tr class="tr-2">
           <td class="label">
-            <span id="customerName">{{ $t('lbl_PBCustomerName_0') }}</span>
+            <span id="supplierId">{{ $t('lbl_SupplierName_0') }}</span>
           </td>
           <td rows="1" colspan="4" class="input position-relative">
-            <b-form-select
-              v-model="form.PBcustomerId"
-              :options="itemCustomerNameList"
+            <b-form-input
+              :value="finalListCustomerNames"
+              name="txtSupplierId"
+              type="text"
+              class="text"
               disabled
-              class="select"
-            ></b-form-select>
-            
+            />
           </td>
           <td class="info"></td>
           <td class="label">
@@ -142,6 +142,7 @@
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import api from '@/api/api'
 import systemMixins from '@/mixins/system'
 import datetimeMixins from '@/mixins/dateTime'
 import { formatNumberWithCommas } from '@/utils/utils'
@@ -156,6 +157,7 @@ export default {
   },
   data() {
     return {
+      listCustomers: [],
       form: {},
       lang: this.$i18n.locale,
     }
@@ -165,18 +167,15 @@ export default {
       currencyOptions: 'getCurrencyOptions',
       listAccountingItems: "getListAccountingItems",
       listCurrentAssets: "getListCurrentAssets",
-      customerNameList: "getCustomerNameList"
     }),
 
-    itemCustomerNameList() {
-      return this.customerNameList.map((item) => ({
-        text: item.companyName,
-        value: item.id,
-      }))
+    finalListCustomerNames() {
+      const listCustomers = this.listCustomers.find((item) => item.id == Number(this.form.PBSupplierId));
+      return listCustomers?.companyName
     },
 
-    currentLanguage() {
-      return this.languageText(this.$i18n.locale);
+    currentSubject() {
+      return this.$t('lbl_PBPurchase_0');
     },
   },
   watch: {
@@ -191,15 +190,19 @@ export default {
     await this.getCurrencyOptions(this.lang),
     await this.getListAccountingItems(this.lang),
     await this.getListCurrentAssets(this.lang)
-    await this.getListCustomerName()
+    await this.getListSupplierNames()
   },
   methods: {
     ...mapActions('base', [
       'getCurrencyOptions',
       'getListAccountingItems',
       'getListCurrentAssets',
-      'getListCustomerName'
     ]),
+
+    async getListSupplierNames() {
+      const response = await api('getSupplierName')
+      this.listCustomers = response.data
+    },
 
     makeFormatNumberWithCommas(number) {
       return formatNumberWithCommas(number)

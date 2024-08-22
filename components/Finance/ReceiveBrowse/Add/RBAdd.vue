@@ -128,7 +128,7 @@ export default {
       defaultFormData: {
         checker: '',
         departmentID: '',
-        editDate: this.convertDate(new Date()),
+        editDate: '',
         editor: '',
         entryDate: this.convertDate(new Date()),
         margin: 0,
@@ -284,7 +284,7 @@ export default {
           name: this.$t('lbl_RBAmount_0'),
           filter: 'number',
           width: 150,
-          align: 'left',
+          align: 'right',
           fieldRequired: true,
           hidden: false,
         },
@@ -305,7 +305,7 @@ export default {
           name: this.$t('lbl_RBAmount_0'),
           filter: 'number',
           width: 200,
-          align: 'left',
+          align: 'right',
           fieldRequired: true,
           hidden: false,
           disabled: this.isCheck,
@@ -330,7 +330,7 @@ export default {
           typeInput: 'select',
           width: 150,
           align: 'left',
-          fieldRequired: true,
+          fieldRequired: false,
           hidden: false,
           disabled: this.isCheck,
           options: this.itemCustomerNameList
@@ -598,7 +598,6 @@ export default {
       };
 
       Object.keys(requiredFields).forEach((field) => {
-        console.log('this.form[field]', this.form[field], field);
         if (!this.form[field]) {
           errors.push({
             fieldName: this.$t(`lbl_RB${requiredFields[field]}_0`),
@@ -606,8 +605,6 @@ export default {
           })
         }
       })
-      console.log(errors);
-
 
       if (dataTable.length === 0) {
         errors.push({

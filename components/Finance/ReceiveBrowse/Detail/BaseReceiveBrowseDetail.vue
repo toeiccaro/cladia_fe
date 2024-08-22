@@ -10,7 +10,7 @@
     ></ReceiveBrowseDetailForm>
     <ReceiveBrowseDetailTable
       ref="receiveBrowseDetailForm"
-      :data="[...filteredDataTable, addDetails]"
+      :data="[...filteredDataTable]"
       :list-item-master="listItemMaster"
       :data-total-table="dataTotalTable"
       @calculated-aramount="setArAmount"
@@ -135,7 +135,7 @@ export default {
         if (key === 'add') {
           const confirm = window.confirm(this.$t('msg_ConfirmContinue_0'))
           if (confirm) {
-            this.filteredDataTable.data.receiveBrowsDTL.push({
+            this.receiveBrowseData.receiveBrowsDTL.push({
               RBAmount: '',
               RBOtherAmount: '',
               RBExpenseCategory: '',
@@ -261,6 +261,9 @@ export default {
 
           this.receiveBrowseData = res?.data
           this.dataTable = res?.data?.receiveBrowsDTL || []
+          console.log(this.receiveBrowseData);
+          console.log('11');
+          console.log(this.dataTable);
 
           const totalAmount = this.dataTable.reduce((sum, item) => sum + item.amount, 0);
           this.dataTotalTable = {

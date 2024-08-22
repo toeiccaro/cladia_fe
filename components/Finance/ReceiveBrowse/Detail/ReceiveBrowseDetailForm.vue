@@ -22,7 +22,7 @@
           </td>
           <td class="input">
             <b-form-input
-              :value="currentLanguage"
+              :value="currentSubject"
               disabled
               name="txtSubject"
               type="text"
@@ -175,8 +175,8 @@ export default {
       }))
     },
 
-    currentLanguage() {
-      return this.languageText(this.$i18n.locale);
+    currentSubject() {
+      return this.$t('lbl_RBRevenue_0');
     },
   },
   watch: {

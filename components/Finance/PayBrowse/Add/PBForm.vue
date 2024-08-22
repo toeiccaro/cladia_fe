@@ -34,7 +34,7 @@
               :disabled="isDisabled"
               input-class="input__orderDate"
               :highlighted="highlighted"
-              @input="changeOrderDate"
+              @input="changeEntryDate"
             ></datepicker>
           </td>
           <td class="info">*</td>

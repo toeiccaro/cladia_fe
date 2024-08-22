@@ -2,9 +2,40 @@
   <div>
     <div class="clear-both"></div>
     <div class="table-container">
+      <div class="tool-bar">
+        <div
+          v-for="tool in toolBar"
+          :key="`tool-${tool.key}`"
+          class="tool-bar--item"
+          @click="handleDelete"
+        >
+          <img :src="tool.icon" alt="" />
+          <span>{{ tool.name }}</span>
+        </div>
+      </div>
+      <div class="table-header font-weight-bold d-flex align-items-center">
+        <div class="text-center table-border" :style="{ width: `5%` }">
+          <b-form-checkbox
+            id="checkAllDetails"
+            @change="(event) => checkAll(event)"
+          ></b-form-checkbox>
+        </div>
+        <div class="text-center table-border" :style="{ width: `5%` }">
+          {{ `ID` }}
+        </div>
+        <div
+          v-for="(item, index) in header"
+          :key="`header-text-${index}`"
+          class="text-center table-border text-overflow"
+          :style="{ width: item.width }"
+        >
+          {{ item.name }}
+        </div>
+      </div>
+
       <div class="table-header-filter d-flex align-items-center">
-        <div class="text-center" :style="{ width: `5%` }"></div>
-        <div class="px-1" :style="{ width: `5%` }">
+        <div class="text-center table-border" :style="{ width: `5%` }"></div>
+        <div class="table-border" :style="{ width: `5%` }">
           <b-form-input
             v-model="filters.lineId"
             disabled
@@ -15,7 +46,7 @@
         <div
           v-for="(item, index) in header"
           :key="`filter-${index}`"
-          class="px-1"
+          class="table-border"
           :style="{ width: item.width }"
         >
           <b-form-input
@@ -70,46 +101,26 @@
           </BaseTypeaheadAutocomplete>
         </div>
       </div>
-      <div class="py-1 table-header font-weight-bold d-flex align-items-center">
-        <div class="text-center" :style="{ width: `5%` }">
-          <b-form-checkbox
-            id="checkAllDetails"
-            @change="(event) => checkAll(event)"
-          ></b-form-checkbox>
-        </div>
-        <div class="px-1" :style="{ width: `5%` }">
-          {{ `ID` }}
-        </div>
-        <div
-          v-for="(item, index) in header"
-          :key="`header-text-${index}`"
-          class="px-1 text-overflow"
-          :style="{ width: item.width }"
-        >
-          {{ item.name }}
-        </div>
-      </div>
       <div class="table-item-wrapper">
         <div
           v-for="(item, index) in listCheckbox"
           :key="`item-${index}`"
-          class="py-1 table-item-container d-flex align-items-center"
+          class="table-item-container d-flex align-items-center"
           :class="{ active: currentIndex === index }"
           @dblclick="handleDoubleClick(index)"
         >
-          <div class="text-center" :style="{ width: `5%` }">
+          <div class="text-center table-border" :style="{ width: `5%` }">
             <b-form-checkbox
-              v-if="!item.isNewLine"
               v-model="listCheckbox[index].value"
             ></b-form-checkbox>
           </div>
-          <div class="px-1" :style="{ width: `5%` }">
+          <div class="text-center  table-border" :style="{ width: `5%` }">
             {{ index + 1 }}
           </div>
           <div
             v-for="(headerItem, headerIndex) in header"
             :key="`data-${headerIndex}`"
-            class="px-1"
+            class="table-border"
             :style="{ width: headerItem.width }"
           >
             <div
@@ -206,45 +217,45 @@
           </div>
         </div>
         <div
-          class="py-1 table-item-container d-flex align-items-center"
+          class="table-item-container d-flex align-items-center"
         >
-          <div class="text-center" :style="{ width: `5%` }">
+          <div class="text-center table-border" :style="{ width: `5%` }">
           </div>
-          <div class="px-1" :style="{ width: `5%` }">
+          <div class="table-border" :style="{ width: `5%` }">
           </div>
-          <div class="px-1" :style="{ width: `12%` }">
+          <div class="table-border" :style="{ width: `12%` }">
             <input
               v-model="dataTotalTable.PBAmount"
               class="w-100 filter-input"
               disabled
             />
           </div>
-          <div class="px-1" :style="{ width: `12%` }">
+          <div class="table-border" :style="{ width: `12%` }">
             <input
               class="w-100 filter-input"
               disabled
             />
           </div>
-          <div class="px-1" :style="{ width: `12%` }">
+          <div class="table-border" :style="{ width: `24%` }">
             <input
               class="w-100 filter-input"
               disabled
             />
           </div>
-          <div class="px-1" :style="{ width: `12%` }">
+          <div class="table-border" :style="{ width: `12%` }">
             <input
               v-model="dataTotalTable.PBDate"
               class="w-100 filter-input"
               disabled
             />
           </div>
-          <div class="px-1" :style="{ width: `12%` }">
+          <div class="table-border" :style="{ width: `12%` }">
             <input
               class="w-100 filter-input"
               disabled
             />
           </div>
-          <div class="px-1" :style="{ width: `18%` }">
+          <div class="table-border" :style="{ width: `18%` }">
             <input
               class="w-100 filter-input"
               disabled
@@ -299,6 +310,13 @@ export default {
       currentIndex: -1,
       filters: {},
       listEmployee: [],
+      toolBar: [
+        {
+          key: 'delete',
+          name: this.$t('btn_btnDelRow_0'),
+          icon: '/images/DelRow.png ',
+        },
+      ],
     }
   },
   async fetch() {
@@ -345,7 +363,7 @@ export default {
           key: 'PBExpenseCategory',
           name: this.$t('lbl_PBExpenseCategory_0'),
           filter: 'autocomplete',
-          width: `12%`,
+          width: `24%`,
           options: this.itemListAccountingItems,
         },
         {
@@ -544,6 +562,12 @@ export default {
       })
     },
 
+    handleDelete() {
+      this.listCheckbox = this.listCheckbox.filter(
+        (item) => item.value === false
+      )
+    },
+
     updateItem(item, index) {
       Object.assign(item, {
         isUpdate: false,
@@ -605,6 +629,7 @@ export default {
   border: 1px solid #aaa;
   width: 100%;
   height: 20px;
+  text-align: end;
 }
 
 .input-date {
@@ -617,12 +642,21 @@ export default {
 
 .table-container {
   font-size: 12px;
-  min-width: max-content;
+  min-width: 100%;
 }
 
 .table-header {
   background-color: #bcdbf3;
   margin-top: 1px;
+  border-left: 1px solid #5180d8;
+}
+
+.table-border {
+  // border-bottom: 1px solid #5180d8;
+  border-right: 1px solid #5180d8;
+  border-top: 1px solid #5180d8; 
+  padding: 0.4rem;
+  height: 32px;
 }
 
 .filter-input {
@@ -641,6 +675,12 @@ export default {
   background-color: #0e76bc;
   padding: 2px 0;
   height: 30px;
+  border-left: 1px solid #5180d8;
+}
+
+.table-item-wrapper {
+  border-left: 1px solid #5180d8;
+  border-bottom: 1px solid #5180d8; 
 }
 
 .table-item-container {
@@ -688,5 +728,28 @@ export default {
   position: absolute;
   top: 0px;
   padding: 2px;
+}
+
+.tool-bar {
+  margin: 0px;
+  text-align: left;
+  margin: 8px 0;
+  display: flex;
+
+  .tool-bar--item {
+    display: flex;
+    align-items: center;
+    margin-right: 12px;
+    cursor: pointer;
+    pointer-events: initial;
+
+    img {
+      margin-right: 4px;
+    }
+  }
+
+  .quantity-value {
+    text-align: right;
+  }
 }
 </style>
