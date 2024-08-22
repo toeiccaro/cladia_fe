@@ -100,7 +100,11 @@ export default {
       return this.dataHeader
         .filter((item) => !item.hidden)
         .sort((a, b) => a.fieldOrder - b.fieldOrder)
-        .map(item => ({...item, fieldName: item.fieldName === 'PaymentID' ? 'Payment' : item.fieldName }))
+        .map((item) => ({
+          ...item,
+          fieldName:
+            item.fieldName === 'PaymentID' ? 'Payment' : item.fieldName,
+        }))
     },
     dataTotalMapping() {
       return this.headerMapping.map((item) => {
@@ -188,6 +192,7 @@ export default {
             'Tariff',
             'OtherCost',
             'ReceiptLineID',
+            'NoTaxAmount',
           ]
           const listAlignCenter = [
             'OrderDate',
@@ -273,13 +278,17 @@ export default {
       ]
 
       this.listDataShow.forEach((item) => {
-        const maxLength = listNumberField.includes(item.fieldName) ? '30' : '256'
+        const maxLength = listNumberField.includes(item.fieldName)
+          ? '30'
+          : '256'
         const headerItem = {
           key: this.mappingProperty(
             this.dataTable[0] || purchaseInvoiceSchema,
             item.fieldName
           ),
-          name: this.labelMapping[item.fieldName === 'Payment' ? 'PaymentID' : item.fieldName ],
+          name: this.labelMapping[
+            item.fieldName === 'Payment' ? 'PaymentID' : item.fieldName
+          ],
           filter:
             item.fieldName === 'IsCheck' || item.fieldName === 'IsStop'
               ? 'select'
