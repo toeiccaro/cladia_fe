@@ -31,7 +31,9 @@
           <td class="info"></td>
 
           <td class="label">
-            <span id="opponentSubjectId">{{ $t('lbl_RBOpponentSubjectId_0') }}</span>
+            <span id="opponentSubjectId">{{
+              $t('lbl_RBOpponentSubjectId_0')
+            }}</span>
           </td>
           <td class="input">
             <b-form-select
@@ -48,13 +50,12 @@
             <span id="customerName">{{ $t('lbl_CustomerName_0') }}</span>
           </td>
           <td rows="1" colspan="4" class="input position-relative">
-            <b-form-select
+            <b-form-input
               v-model="form.RBCustomerId"
               :options="itemCustomerNameList"
               disabled
               class="select"
-            ></b-form-select>
-            
+            ></b-form-input>
           </td>
           <td class="info"></td>
           <td class="label">
@@ -125,7 +126,9 @@
           </td>
           <td class="info">&nbsp;</td>
           <td class="label">
-            <span id="otherExpensesAmount">{{ $t('lbl_RBOtherExpensesAmount_0') }}</span>
+            <span id="otherExpensesAmount">{{
+              $t('lbl_RBOtherExpensesAmount_0')
+            }}</span>
           </td>
           <td class="input">
             <b-form-input
@@ -163,9 +166,9 @@ export default {
   computed: {
     ...mapGetters('base', {
       currencyOptions: 'getCurrencyOptions',
-      listAccountingItems: "getListAccountingItems",
-      listCurrentAssets: "getListCurrentAssets",
-      customerNameList: "getCustomerNameList"
+      listAccountingItems: 'getListAccountingItems',
+      listCurrentAssets: 'getListCurrentAssets',
+      customerNameList: 'getCustomerNameList',
     }),
 
     itemCustomerNameList() {
@@ -176,7 +179,7 @@ export default {
     },
 
     currentSubject() {
-      return this.$t('lbl_RBRevenue_0');
+      return this.$t('lbl_RBRevenue_0')
     },
   },
   watch: {
@@ -189,8 +192,8 @@ export default {
   },
   async created() {
     await this.getCurrencyOptions(this.lang),
-    await this.getListAccountingItems(this.lang),
-    await this.getListCurrentAssets(this.lang)
+      await this.getListAccountingItems(this.lang),
+      await this.getListCurrentAssets(this.lang)
     await this.getListCustomerName()
   },
   methods: {
@@ -198,7 +201,7 @@ export default {
       'getCurrencyOptions',
       'getListAccountingItems',
       'getListCurrentAssets',
-      'getListCustomerName'
+      'getListCustomerName',
     ]),
 
     makeFormatNumberWithCommas(number) {
