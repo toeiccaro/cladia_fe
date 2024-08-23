@@ -220,6 +220,20 @@
                     }"
                   ></b-form-select>
 
+                  <v-select
+                    v-else-if="header.filter === 'select-input'"
+                    v-model="content[header.key]"
+                    :options="header.options"
+                    class="select"
+                    :class="{
+                      'input-disabled': header.disabled,
+                    }"
+                    :disabled="header.disabled"
+                    :style="{
+                      opacity: '1 !important',
+                    }"
+                  ></v-select>
+
                   <base-typeahead-autocomplete
                     v-else-if="header.filter === 'autocomplete'"
                     v-model="content[header.key]"
@@ -299,6 +313,20 @@
                     opacity: '1 !important',
                   }"
                 ></b-form-select>
+
+                <v-select
+                  v-else-if="header.filter === 'select-input'"
+                  v-model="content[header.key]"
+                  :options="header.options"
+                  class="select"
+                  :class="{
+                    'input-disabled': header.disabled,
+                  }"
+                  :disabled="header.disabled"
+                  :style="{
+                    opacity: '1 !important',
+                  }"
+                ></v-select>
 
                 <base-typeahead-autocomplete
                   v-else-if="header.filter === 'autocomplete'"
@@ -997,46 +1025,55 @@ export default {
       let price = 0
       let discountRate = this.form?.discountRate
       let taxRate = this.form?.taxRate
-      if(this.isInvoice) {
-        discountRate = itemRow['SIDiscountRate'];
-        taxRate = itemRow['SITaxRate'];
+      if (this.isInvoice) {
+        discountRate = itemRow['SIDiscountRate']
+        taxRate = itemRow['SITaxRate']
       }
-      
-      
+
       switch (keyChange) {
         case 'quantity':
-          quantity = this.parseStringToFloat(itemRow[keyChange]);
-          price = this.parseStringToFloat(keyGet);
-          break;
+          quantity = this.parseStringToFloat(itemRow[keyChange])
+          price = this.parseStringToFloat(keyGet)
+          break
         case 'price':
-          price = this.parseStringToFloat(itemRow[keyChange]);
-          quantity = this.parseStringToFloat(keyGet);
-          break;
-      
+          price = this.parseStringToFloat(itemRow[keyChange])
+          quantity = this.parseStringToFloat(keyGet)
+          break
+
         default:
-          break;
+          break
       }
-      
-      const { priceIncludeDiscount, amount, priceIncludeTax, amountIncludeTax } = this.parseFloatCalculatePrice({quantity, price, discountRate, taxRate});
+
+      const {
+        priceIncludeDiscount,
+        amount,
+        priceIncludeTax,
+        amountIncludeTax,
+      } = this.parseFloatCalculatePrice({
+        quantity,
+        price,
+        discountRate,
+        taxRate,
+      })
 
       itemRow.amount = amount
       itemRow.priceIncludeDiscount = priceIncludeDiscount
       itemRow.priceIncludeTax = priceIncludeTax
       itemRow.amountIncludeTax = amountIncludeTax
-      
-      if(this.isPurchase) {
+
+      if (this.isPurchase) {
         itemRow.POPriceIncludeDiscount = priceIncludeDiscount
         itemRow.POPriceIncludeTax = priceIncludeTax
         itemRow.POAmountIncludeTax = amountIncludeTax
       }
 
-      if(this.isOutward) {
+      if (this.isOutward) {
         itemRow.OOPriceIncludeDiscount = priceIncludeDiscount
         itemRow.OOPriceIncludeTax = priceIncludeTax
         itemRow.OOAmountIncludeTax = amountIncludeTax
       }
 
-      if(this.isInvoice) {
+      if (this.isInvoice) {
         itemRow.SIPriceIncludeDiscount = priceIncludeDiscount
         itemRow.SIPriceIncludeTax = priceIncludeTax
         itemRow.SIAmountIncludeTax = amountIncludeTax
@@ -1137,7 +1174,11 @@ export default {
             break
           case 'subQuantity':
             this.calculateAmount(itemRow, 'subQuantity', itemRow.price)
-            this.calculateBalanceQty(itemRow, 'subQuantity', itemRow.deliveredQuantity)
+            this.calculateBalanceQty(
+              itemRow,
+              'subQuantity',
+              itemRow.deliveredQuantity
+            )
             break
 
           case 'price':
@@ -1213,19 +1254,18 @@ export default {
         value?.reason ||
         value?.sono ||
         //Receive browse
-        value?.companyName||
-        value?.creditAmount||
-        value?.currency||
-        value?.debitAmount||
-        value?.employee||
-        value?.invoiceDate||
-        value?.invoiceNotes||
-        value?.invoiceNumber||
-        value?.isInvoice||
-        value?.itemID||
-        value?.opponentSubject||
-        value?.subject||
-
+        value?.companyName ||
+        value?.creditAmount ||
+        value?.currency ||
+        value?.debitAmount ||
+        value?.employee ||
+        value?.invoiceDate ||
+        value?.invoiceNotes ||
+        value?.invoiceNumber ||
+        value?.isInvoice ||
+        value?.itemID ||
+        value?.opponentSubject ||
+        value?.subject ||
         checkPromiseDate ||
         checkStartDate ||
         checkEndDate ||
