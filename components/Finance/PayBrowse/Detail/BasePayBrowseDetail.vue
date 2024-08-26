@@ -300,16 +300,15 @@ export default {
         if (key === 'add') {
           const confirm = window.confirm(this.$t('msg_ConfirmContinue_0'))
           if (confirm) {
-            this.payBrowseData.payBrowsDTL.push({
-              PBAmount: '',
-              PBOtherAmount: '',
-              PBExpenseCategory: '',
-              PBDate: '',
-              PBApUser: '',
-              PBMemo: '',
-              isUpdate: true,
-              isNewLine: true,
-            })
+            const lastPB =  this.payBrowseData.payBrowsDTL[this.payBrowseData.payBrowsDTL.length - 1]
+            if(lastPB) {
+              lastPB.amount = '';
+              lastPB.otherAmount = '';
+              lastPB.expenseCategory = '';
+              lastPB.date = '';
+              lastPB.apUser = '';
+              lastPB.memo = '';
+            }
           }
         }
         if (key === 'save') {
