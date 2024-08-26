@@ -107,6 +107,7 @@
               disabled
               name="txtActualAmount"
               type="text"
+              class="number"
             />
           </td>
           <td class="info">&nbsp;</td>
@@ -133,6 +134,7 @@
               disabled
               name="txtOtherExpensesAmount"
               type="text"
+              class="number"
             />
           </td>
         </tr>

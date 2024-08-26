@@ -302,16 +302,15 @@ export default {
         if (key === 'add') {
           const confirm = window.confirm(this.$t('msg_ConfirmContinue_0'))
           if (confirm) {
-            this.receiveBrowseData.receiveBrowsDTL.push({
-              RBAmount: '',
-              RBOtherAmount: '',
-              RBExpenseCategory: '',
-              RBDate: '',
-              RBArUser: '',
-              RBMemo: '',
-              isUpdate: true,
-              isNewLine: true,
-            })
+            const lastRB =  this.receiveBrowseData.receiveBrowsDTL[this.receiveBrowseData.receiveBrowsDTL.length - 1]
+            if(lastRB) {
+              lastRB.amount = '';
+              lastRB.otherAmount = '';
+              lastRB.expenseCategory = '';
+              lastRB.date = '';
+              lastRB.apUser = '';
+              lastRB.memo = '';
+            }
           }
         }
         if (key === 'save') {
