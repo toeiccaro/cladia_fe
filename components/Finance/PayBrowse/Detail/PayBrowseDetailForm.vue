@@ -40,7 +40,7 @@
               class="select"
             ></b-form-select>
           </td>
-          <td class="info"></td>
+          <td class="info">*</td>
         </tr>
 
         <tr class="tr-2">
