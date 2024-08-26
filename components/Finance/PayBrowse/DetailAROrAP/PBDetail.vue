@@ -8,10 +8,7 @@
       :is-error="true"
       :list-error-message="listErrorMessage"
     />
-    <PBForm ref="addPBForm" 
-      :key="refreshAddPBFormKey"
-      :data="form"
-    />
+    <PBForm ref="addPBForm" :key="refreshAddPBFormKey" :data="form" />
     <BaseTableItemDetail
       ref="tableDetails"
       class="add-sale-order-table-details"
@@ -142,20 +139,20 @@ export default {
       dataTable: [
         {
           lineID: 1,
-          companyName: "",
+          companyName: '',
           creditAmount: 0,
           currency: '',
           date: this.convertDate(new Date()),
           debitAmount: 0,
-          employee: "",
-          invoiceDate: "",
-          invoiceNotes: "",
-          invoiceNumber: "",
+          employee: '',
+          invoiceDate: '',
+          invoiceNotes: '',
+          invoiceNumber: '',
           isInvoice: false,
           itemID: 0,
-          opponentSubject: "",
-          reason: "",
-          subject: "",
+          opponentSubject: '',
+          reason: '',
+          subject: '',
 
           isUpdate: true,
           isNewLine: true,
@@ -181,7 +178,7 @@ export default {
         this.getListAccountingItems(this.lang),
         this.getListCurrentAssets(this.lang),
         this.getData(),
-        this.getListCustomerName()
+        this.getListCustomerName(),
       ])
     } catch (err) {
       console.error(err)
@@ -192,10 +189,10 @@ export default {
     ...mapGetters('base', {
       unitOptions: 'getUnitOptions',
       getItemTypeOptions: 'getItemTypeOptions',
-      currencyOptions: "getCurrencyOptions",
-      listAccountingItems: "getListAccountingItems",
-      listCurrentAssets: "getListCurrentAssets",
-      customerNameList: "getCustomerNameList"
+      currencyOptions: 'getCurrencyOptions',
+      listAccountingItems: 'getListAccountingItems',
+      listCurrentAssets: 'getListCurrentAssets',
+      customerNameList: 'getCustomerNameList',
     }),
 
     ...mapGetters('base', ['getActiveButtonToolBar']),
@@ -203,26 +200,26 @@ export default {
     itemCustomerNameList() {
       return this.customerNameList.map((item) => ({
         text: item.companyName,
-        value: item.id,
+        value: item.companyName,
       }))
     },
 
     itemCurrencyOptions() {
       return this.currencyOptions.map((item) => ({
         text: item.text,
-        value: item.value,
+        value: item.text,
       }))
     },
     itemListAccountingItems() {
       return this.listAccountingItems.map((item) => ({
         text: item.text,
-        value: item.value,
+        value: item.text,
       }))
     },
     itemListCurrentAssets() {
       return this.listCurrentAssets.map((item) => ({
         text: item.text,
-        value: item.value,
+        value: item.text,
       }))
     },
 
@@ -279,7 +276,7 @@ export default {
           disabled: this.isCheck,
           fieldRequired: true,
           hidden: false,
-          options: this.itemListAccountingItems
+          options: this.itemListAccountingItems,
         },
         {
           key: 'debitAmount',
@@ -300,7 +297,7 @@ export default {
           disabled: this.isCheck,
           fieldRequired: true,
           hidden: false,
-          options: this.itemListCurrentAssets
+          options: this.itemListCurrentAssets,
         },
         {
           key: 'creditAmount',
@@ -322,8 +319,7 @@ export default {
           fieldRequired: true,
           hidden: false,
           disabled: this.isCheck,
-          options: this.itemCurrencyOptions
-          
+          options: this.itemCurrencyOptions,
         },
         {
           key: 'companyName',
@@ -335,7 +331,7 @@ export default {
           fieldRequired: false,
           hidden: false,
           disabled: this.isCheck,
-          options: this.itemCustomerNameList
+          options: this.itemCustomerNameList,
         },
         {
           key: 'isInvoice',
@@ -409,20 +405,20 @@ export default {
     newLine() {
       return {
         lineID: 1,
-        companyName: "",
+        companyName: '',
         creditAmount: 0,
         currency: '',
         date: this.convertDate(new Date()),
         debitAmount: 0,
-        employee: "",
-        invoiceDate: "",
-        invoiceNotes: "",
-        invoiceNumber: "",
+        employee: '',
+        invoiceDate: '',
+        invoiceNotes: '',
+        invoiceNumber: '',
         isInvoice: false,
         itemID: 0,
-        opponentSubject: "",
-        reason: "",
-        subject: "",
+        opponentSubject: '',
+        reason: '',
+        subject: '',
 
         isUpdate: true,
         isNewLine: true,
@@ -470,7 +466,7 @@ export default {
 
           totalDebitAmount = totalDebitAmount + Number(debitAmount)
           totalCreditAmount = totalCreditAmount + Number(creditAmount)
-        });
+        })
 
         margin = totalCreditAmount - totalDebitAmount
 
@@ -489,14 +485,14 @@ export default {
       'getCurrencyOptions',
       'getListAccountingItems',
       'getListCurrentAssets',
-      'getListCustomerName'
+      'getListCustomerName',
     ]),
 
     async getData() {
       try {
         const res = await api('getDetailPB', {
           orderNo: this.$route.query?.sono,
-          language: this.$i18n.locale          
+          language: this.$i18n.locale,
         })
         if (res.status === 200) {
           // this.form = res.data
@@ -510,22 +506,52 @@ export default {
           this.form.editDate = this.convertDate(res.data.PBEditDate)
           this.form.entryDate = this.convertDate(res.data.PBEntryDate)
           this.form.responsiblePerson = res?.data?.responsiblePerson
-          this.form.totalCreditAmount = formatNumberWithCommas(res?.data.PBTotalCreditAmount)
-          this.form.totalDebitAmount = formatNumberWithCommas(res?.data.PBTotalDebitAmount)
-          
+          this.form.totalCreditAmount = formatNumberWithCommas(
+            res?.data.PBTotalCreditAmount
+          )
+          this.form.totalDebitAmount = formatNumberWithCommas(
+            res?.data.PBTotalDebitAmount
+          )
+
           this.dataDetail = JSON.parse(JSON.stringify(this.form))
 
           this.dataTable = res?.data.listDetail.map((item, index) => {
-            const newObject = {};
+            const newObject = {}
 
             for (const key in item) {
-              let newKey = key.replace(/^PB/, '');
-              newKey = newKey[0].toLowerCase() + newKey.slice(1);
-              if(newKey == 'date') {
+              let newKey = key.replace(/^PB/, '')
+              newKey = newKey[0].toLowerCase() + newKey.slice(1)
+              if (newKey == 'date') {
                 item[key] = this.convertDate(item[key])
               }
-              newObject[newKey] = item[key];
+              newObject[newKey] = item[key]
             }
+
+            const matchedItemCompanyName = this.customerNameList.find(
+              (item) => item.id == newObject.companyName
+            )
+
+            if (matchedItemCompanyName) {
+              newObject.companyName = matchedItemCompanyName.companyName
+            }
+            const matchAndReplace = (
+              list,
+              objectKey,
+              targetKey = 'value',
+              replaceKey = 'text'
+            ) => {
+              const matchedItem = list.find(
+                (listItem) => listItem[targetKey] === newObject[objectKey]
+              )
+              if (matchedItem) {
+                newObject[objectKey] = matchedItem[replaceKey]
+              }
+            }
+
+            matchAndReplace(this.listAccountingItems, 'subject')
+            matchAndReplace(this.currencyOptions, 'currency')
+            matchAndReplace(this.listCurrentAssets, 'opponentSubject')
+
             return newObject
           })
 
@@ -581,7 +607,9 @@ export default {
           break
 
         case 'backAdd':
-          this.$router.push(this.localePath({ path: '/finance/receive-browse' }))
+          this.$router.push(
+            this.localePath({ path: '/finance/receive-browse' })
+          )
           break
 
         case 'close':
@@ -591,7 +619,7 @@ export default {
         case 'check':
           this.handleButtonCheck()
           break
-        
+
         case 'unCheck':
           this.handleButtonUnCheck()
           break
@@ -622,8 +650,8 @@ export default {
     async handleButtonCheck() {
       const confirm = window.confirm(this.$t('msg_ConfirmCheck_0'))
       const params = {
-        orderNo: this.form?.orderNumber
-      }      
+        orderNo: this.form?.orderNumber,
+      }
       if (!confirm) {
         return
       }
@@ -658,7 +686,7 @@ export default {
     async handleButtonUnCheck() {
       const confirm = window.confirm(this.$t('msg_ConfirmUncheck_0'))
       const params = {
-        orderNo: this.form?.orderNumber
+        orderNo: this.form?.orderNumber,
       }
       if (!confirm) {
         return
@@ -709,11 +737,11 @@ export default {
     validateForm() {
       const errors = []
       const dataTable = this.availableListDetails
-      
+
       const requiredFields = {
         entryDate: 'entryDate',
-      };
-      
+      }
+
       const requiredTableDetails = {
         date: 'date',
         subject: 'subject',
@@ -721,7 +749,7 @@ export default {
         opponentSubject: 'opponentSubject',
         debitAmount: 'debitAmount',
         currency: 'currency',
-      };
+      }
 
       Object.keys(requiredFields).forEach((field) => {
         if (!this.form[field]) {
@@ -752,11 +780,11 @@ export default {
       }
 
       if (this.form.margin !== 0) {
-          errors.push({
-            fieldName: this.$t(`lbl_PBMargin_0`),
-            text: this.$t('msg_MustBeZero_0'),
-          })
-        }
+        errors.push({
+          fieldName: this.$t(`lbl_PBMargin_0`),
+          text: this.$t('msg_MustBeZero_0'),
+        })
+      }
 
       this.listErrorMessage = getUnique(errors, 'fieldName')
       if (this.listErrorMessage.length > 0) {
@@ -793,10 +821,42 @@ export default {
           PBTotalCreditAmount: payload.totalCreditAmount,
           PBTotalDebitAmount: payload.totalDebitAmount,
           listDetail: dataTableFilter.map((item) => {
+            function findValueByText(list, key, fallback) {
+              const matchedItem = list.find((item) => item.text === key)
+              return matchedItem ? matchedItem.value : fallback
+            }
+
+            function findCompanyIdByName(list, companyName, fallback) {
+              const matchedItem = list.find(
+                (item) => item.companyName === companyName
+              )
+              return matchedItem ? matchedItem.id : fallback
+            }
+
+            const PBSubject = findValueByText(
+              this.listAccountingItems,
+              item.subject,
+              item.subject
+            )
+            const PBCurrency = findValueByText(
+              this.currencyOptions,
+              item.currency,
+              item.currency
+            )
+            const PBOppentSubject = findValueByText(
+              this.listCurrentAssets,
+              item.opponentSubject,
+              item.opponentSubject
+            )
+            const PBCompanyname = findCompanyIdByName(
+              this.customerNameList,
+              item.companyName,
+              item.companyName
+            )
             return {
-              PBCompanyName: item.companyName,
+              PBCompanyName: PBCompanyname,
               PBCreditAmount: item.creditAmount,
-              PBCurrency: item.currency,
+              PBCurrency: PBCurrency,
               PBDate: item.date,
               PBDebitAmount: item.debitAmount,
               PBEmployee: item.employee,
@@ -806,13 +866,12 @@ export default {
               PBIsInvoice: item.isInvoice,
               PBItemID: item.itemID,
               PBLineID: item.lineID,
-              PBOpponentSubject: item.opponentSubject,
+              PBOpponentSubject: PBOppentSubject,
               PBReason: item.reason,
-              PBSubject: item.subject
+              PBSubject: PBSubject,
             }
           }),
         }
-
 
         try {
           this.loading = true
@@ -856,7 +915,9 @@ export default {
           }
           if (response.status === SERVER_RESPONSE_CODE.OK) {
             window.alert(this.$t('msg_IsDeleted_0'))
-            this.$router.push(this.localePath({ path: '/finance/receive-browse' }))
+            this.$router.push(
+              this.localePath({ path: '/finance/receive-browse' })
+            )
           } else {
             window.alert(`${response?.message}`)
           }

@@ -256,7 +256,7 @@ export default {
       }))
     },
     totalAmount() {
-      return formatNumberWithCommas(parseToNumber(this.form.totalAmount))
+      return formatNumberWithCommas(this.form.totalAmount)
     },
   },
   watch: {
