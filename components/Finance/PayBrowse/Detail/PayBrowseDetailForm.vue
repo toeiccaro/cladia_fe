@@ -40,7 +40,7 @@
               class="select"
             ></b-form-select>
           </td>
-          <td class="info"></td>
+          <td class="info">*</td>
         </tr>
 
         <tr class="tr-2">
@@ -107,6 +107,7 @@
               disabled
               name="txtActualAmount"
               type="text"
+              class="number"
             />
           </td>
           <td class="info">&nbsp;</td>
@@ -133,6 +134,7 @@
               disabled
               name="txtOtherExpensesAmount"
               type="text"
+              class="number"
             />
           </td>
         </tr>

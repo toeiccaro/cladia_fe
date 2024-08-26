@@ -24,7 +24,7 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import { searchDetails, formatNumberWithCommas } from '@/utils/utils'
 import { SERVER_RESPONSE_CODE } from '@/constants'
 import systemMixins from '@/mixins/system'
@@ -60,6 +60,7 @@ export default {
       dataTotalTable: {},
       filteredDataTable: [],
       columnHides: [],
+      listEmployee: [],
       listFieldCheck: [
         {
           key: 'RBBalanceAmount',
@@ -70,9 +71,20 @@ export default {
           fieldName: this.$t('lbl_RBActualAmount_0'),
         },
       ],
+      listFieldRequired: [
+        {
+          key: 'RBOpponentSubjectId',
+          fieldName: this.$t('lbl_RBOpponentSubjectId_0'),
+        },
+      ],
     }
   },
   async fetch() {
+    const res = await api('getEmployeeList')
+    if (res && res.status === SERVER_RESPONSE_CODE.OK) {
+      this.listEmployee = res.data || {}
+    }
+
     await Promise.all([
       this.getListItemMaster(),
       this.getData(),
@@ -81,6 +93,39 @@ export default {
   },
   computed: {
     ...mapGetters('base', ['getActiveButtonToolBar']),
+
+
+    ...mapGetters('base', {
+      listAccountingItems: "getListAccountingItems",
+    }),
+
+    listEmployeeName() {
+      const result = []
+      for (const key in this.listEmployee) {
+        const employeeValue = this.listEmployee[key] || ''
+        const lastIndexOfOpenParenthese = employeeValue.lastIndexOf('(') || 0
+
+        const appendText = employeeValue.substring(lastIndexOfOpenParenthese)
+        const responsibleManValue = employeeValue.substring(
+          0,
+          lastIndexOfOpenParenthese
+        )
+
+        result.push({
+          text: responsibleManValue,
+          value: responsibleManValue,
+          appendText,
+        })
+      }
+      return result
+    },
+
+    itemListAccountingItems() {
+      return this.listAccountingItems.map((item) => ({
+        text: item.text,
+        value: item.text,
+      }))
+    },
 
     isCheck() {
       return !!(this.receiveBrowseData?.checker && this.receiveBrowseData.checkDate)
@@ -137,7 +182,7 @@ export default {
         {
           key: 'expenseCategory',
           name: this.$t('lbl_RBExpenseCategory_0'),
-          filter: 'autocomplete',
+          filter: 'select',
           width: `24%`,
           options: this.itemListAccountingItems,
         },
@@ -150,7 +195,7 @@ export default {
         {
           key: 'arUser',
           name: this.$t('lbl_RBArUser_0'),
-          filter: 'autocomplete',
+          filter: 'select',
           width: `12%`,
           options: this.listEmployeeName,
         },
@@ -204,6 +249,10 @@ export default {
     },
   },
   methods: {
+    ...mapActions('base', [
+      'getListAccountingItems',
+    ]),
+
     async getScolumnHides() {
       const response = await api('getScolumnHides', {
         gridName: 'ReceiveBrowseInvoiceDetail',
@@ -254,16 +303,15 @@ export default {
         if (key === 'add') {
           const confirm = window.confirm(this.$t('msg_ConfirmContinue_0'))
           if (confirm) {
-            this.receiveBrowseData.receiveBrowsDTL.push({
-              RBAmount: '',
-              RBOtherAmount: '',
-              RBExpenseCategory: '',
-              RBDate: '',
-              RBArUser: '',
-              RBMemo: '',
-              isUpdate: true,
-              isNewLine: true,
-            })
+            const lastRB =  this.receiveBrowseData.receiveBrowsDTL[this.receiveBrowseData.receiveBrowsDTL.length - 1]
+            if(lastRB) {
+              lastRB.amount = '';
+              lastRB.otherAmount = '';
+              lastRB.expenseCategory = '';
+              lastRB.date = '';
+              lastRB.apUser = '';
+              lastRB.memo = '';
+            }
           }
         }
         if (key === 'save') {
@@ -308,9 +356,37 @@ export default {
           }
         })
 
-        if(this.receiveBrowseData.payBrowsDTL > 0){
-          this.receiveBrowseData.payBrowsDTL = this.receiveBrowseData.payBrowsDTL.splice(-1)
-        }
+        this.listFieldRequired.forEach((item) => {
+          if (!this.receiveBrowseData[item.key]){
+            this.listErrorMessage.push({
+              fieldName: item.fieldName,
+              text: this.$t('msg_NoInput_0'),
+            })
+          }
+        })
+
+        this.receiveBrowseData.receiveBrowsDTL.map((item) => {
+          const requiredFields = {
+            otherAmount: 'RBOtherAmount',
+            expenseCategory: 'RBExpenseCategory',
+          };
+
+          let otherAmount = !!item['otherAmount'];
+          let expenseCategory = !!item['expenseCategory'];
+
+          if (!(otherAmount && expenseCategory) && (otherAmount || expenseCategory)) {
+            for (const key in requiredFields) {
+              if (!item[key]) {
+                this.listErrorMessage.push({
+                  fieldName: `${this.$t('lbl_LineID_0')} ${
+                  item.lineID
+                } - ${this.$t(`lbl_${requiredFields[key]}_0`)}`,
+                text: this.$t('msg_NoInput_0'),
+                });
+              }
+            }
+          }
+        })
 
         if(this.listErrorMessage.length > 0){
           return
@@ -348,8 +424,45 @@ export default {
         }
       }
     },
-    async addOrUpdateItem(payload) {
+    async addOrUpdateItem(data) {
+      data.receiveBrowsDTL.pop();
       try {
+        const payload = {
+          RBMstId: data.RBMstId,
+          RBOrderNumber: data.RBOrderNumber,
+          RBCustomerId: data.RBCustomerId,
+          RBTotalAmount: parseToNumber(data.RBTotalAmount),
+          RBMemo: data.RBMemo,
+          RBSubjectId: data.RBSubjectId,
+          RBOpponentSubjectId: data.RBOpponentSubjectId,
+          RBCurrencyId: data.RBCurrencyId,
+          RBBalanceAmount: parseToNumber(data.RBBalanceAmount),
+          RBActualAmount: parseToNumber(data.RBActualAmount),
+          RBOtherExpensesAmount: parseToNumber(data.RBOtherExpensesAmount),
+          receiveBrowsDTL: data.receiveBrowsDTL.map((item) => {
+
+            const RBExpenseCategory = this.findValueByText(
+              this.itemListAccountingItems,
+              item.expenseCategory,
+            )
+
+            const RBApUser = this.findValueByText(
+              this.listEmployeeName,
+              item.apUser,
+            )
+
+            return {
+              RBLineID: item.lineID,
+              RBAmount: parseToNumber(item.amount),
+              RBOtherAmount: parseToNumber(item.otherAmount),
+              RBExpenseCategory: RBExpenseCategory,
+              RBDate: item.date,
+              RBApUser: RBApUser,
+              RBMemo: item.memo,
+            }
+          })
+        }
+        // return console.log('payload', payload);
         const res = await api('editInvoiceRB', payload)
         const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK
         if (validResponse) {
@@ -381,7 +494,7 @@ export default {
 
           this.dataTable.push({
             lineID: 1,
-            amount: res?.data?.RBTotalAmount - totalAmount,
+            amount: formatNumberWithCommas(res?.data?.RBTotalAmount - totalAmount),
             otherAmount: '',
             expenseCategory:'',
             date: '',

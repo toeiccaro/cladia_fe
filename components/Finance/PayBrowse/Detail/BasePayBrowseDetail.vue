@@ -24,7 +24,7 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import { searchDetails, formatNumberWithCommas } from '@/utils/utils'
 import { SERVER_RESPONSE_CODE } from '@/constants'
 import systemMixins from '@/mixins/system'
@@ -60,6 +60,7 @@ export default {
       dataTable: [],
       filteredDataTable: [],
       columnHides: [],
+      listEmployee: [],
       listFieldCheck: [
         {
           key: 'PBBalanceAmount',
@@ -70,9 +71,20 @@ export default {
           fieldName: this.$t('lbl_PBActualAmount_0'),
         },
       ],
+      listFieldRequired: [
+        {
+          key: 'PBOpponentSubjectId',
+          fieldName: this.$t('lbl_PBOpponentSubjectId_0'),
+        },
+      ],
     }
   },
   async fetch() {
+    const res = await api('getEmployeeList')
+    if (res && res.status === SERVER_RESPONSE_CODE.OK) {
+      this.listEmployee = res.data || {}
+    }
+
     await Promise.all([
       this.getListItemMaster(),
       this.getData(),
@@ -81,6 +93,38 @@ export default {
   },
   computed: {
     ...mapGetters('base', ['getActiveButtonToolBar']),
+
+    ...mapGetters('base', {
+      listAccountingItems: "getListAccountingItems",
+    }),
+
+    listEmployeeName() {
+      const result = []
+      for (const key in this.listEmployee) {
+        const employeeValue = this.listEmployee[key] || ''
+        const lastIndexOfOpenParenthese = employeeValue.lastIndexOf('(') || 0
+
+        const appendText = employeeValue.substring(lastIndexOfOpenParenthese)
+        const responsibleManValue = employeeValue.substring(
+          0,
+          lastIndexOfOpenParenthese
+        )
+
+        result.push({
+          text: responsibleManValue,
+          value: responsibleManValue,
+          appendText,
+        })
+      }
+      return result
+    },
+
+    itemListAccountingItems() {
+      return this.listAccountingItems.map((item) => ({
+        text: item.text,
+        value: item.text,
+      }))
+    },
 
     isCheck() {
       return !!(this.payBrowseData?.checker && this.payBrowseData.checkDate)
@@ -137,7 +181,7 @@ export default {
         {
           key: 'expenseCategory',
           name: this.$t('lbl_PBExpenseCategory_0'),
-          filter: 'autocomplete',
+          filter: 'select',
           width: `24%`,
           options: this.itemListAccountingItems,
         },
@@ -150,7 +194,7 @@ export default {
         {
           key: 'apUser',
           name: this.$t('lbl_PBApUser_0'),
-          filter: 'autocomplete',
+          filter: 'select',
           width: `12%`,
           options: this.listEmployeeName,
         },
@@ -204,6 +248,10 @@ export default {
     },
   },
   methods: {
+    ...mapActions('base', [
+      'getListAccountingItems',
+    ]),
+
     async getScolumnHides() {
       const response = await api('getScolumnHides', {
         gridName: 'ReceiveBrowseInvoiceDetail',
@@ -252,16 +300,15 @@ export default {
         if (key === 'add') {
           const confirm = window.confirm(this.$t('msg_ConfirmContinue_0'))
           if (confirm) {
-            this.payBrowseData.payBrowsDTL.push({
-              PBAmount: '',
-              PBOtherAmount: '',
-              PBExpenseCategory: '',
-              PBDate: '',
-              PBApUser: '',
-              PBMemo: '',
-              isUpdate: true,
-              isNewLine: true,
-            })
+            const lastPB =  this.payBrowseData.payBrowsDTL[this.payBrowseData.payBrowsDTL.length - 1]
+            if(lastPB) {
+              lastPB.amount = '';
+              lastPB.otherAmount = '';
+              lastPB.expenseCategory = '';
+              lastPB.date = '';
+              lastPB.apUser = '';
+              lastPB.memo = '';
+            }
           }
         }
         if (key === 'save') {
@@ -304,10 +351,39 @@ export default {
           }
         })
 
-        if(this.payBrowseData.payBrowsDTL > 0){
-          this.payBrowseData.payBrowsDTL = this.payBrowseData.payBrowsDTL.splice(-1)
-        }
+        this.listFieldRequired.forEach((item) => {
+          console.log('this.payBrowseData[item.key]', this.payBrowseData[item.key], this.payBrowseData);
+          if (!this.payBrowseData[item.key]){
+            this.listErrorMessage.push({
+              fieldName: item.fieldName,
+              text: this.$t('msg_NoInput_0'),
+            })
+          }
+        })
 
+        this.payBrowseData.payBrowsDTL.map((item) => {
+          const requiredFields = {
+            otherAmount: 'PBOtherAmount',
+            expenseCategory: 'PBExpenseCategory',
+          };
+
+          let otherAmount = !!item['otherAmount'];
+          let expenseCategory = !!item['expenseCategory'];
+
+          if (!(otherAmount && expenseCategory) && (otherAmount || expenseCategory)) {
+            for (const key in requiredFields) {
+              if (!item[key]) {
+                this.listErrorMessage.push({
+                  fieldName: `${this.$t('lbl_LineID_0')} ${
+                  item.lineID
+                } - ${this.$t(`lbl_${requiredFields[key]}_0`)}`,
+                text: this.$t('msg_NoInput_0'),
+                });
+              }
+            }
+          }
+        })
+        
         if(this.listErrorMessage.length > 0){
           return
         }
@@ -319,8 +395,47 @@ export default {
         this.loading = false
       }
     },
-    async addOrUpdateItem(payload) {
+
+    async addOrUpdateItem(data) {
+      console.log('data', data);
+      data.payBrowsDTL.pop();
       try {
+        const payload = {
+          PBMstId: data.PBMstId,
+          PBOrderNumber: data.PBOrderNumber,
+          PBCustomerId: data.PBCustomerId,
+          PBTotalAmount: parseToNumber(data.PBTotalAmount),
+          PBMemo: data.PBMemo,
+          PBSubjectId: data.PBSubjectId,
+          PBOpponentSubjectId: data.PBOpponentSubjectId,
+          PBCurrencyId: data.PBCurrencyId,
+          PBBalanceAmount: parseToNumber(data.PBBalanceAmount),
+          PBActualAmount: parseToNumber(data.PBActualAmount),
+          PBOtherExpensesAmount: parseToNumber(data.PBOtherExpensesAmount),
+          payBrowsDTL: data.payBrowsDTL.map((item) => {
+
+            const PBExpenseCategory = this.findValueByText(
+              this.itemListAccountingItems,
+              item.expenseCategory,
+            )
+
+            const PBApUser = this.findValueByText(
+              this.listEmployeeName,
+              item.apUser,
+            )
+
+            return {
+              PBLineID: item.lineID,
+              PBAmount: parseToNumber(item.amount),
+              PBOtherAmount: parseToNumber(item.otherAmount),
+              PBExpenseCategory: PBExpenseCategory,
+              PBDate: item.date,
+              PBApUser: PBApUser,
+              PBMemo: item.memo,
+            }
+          })
+        }
+        // return console.log('payload', payload);
         const res = await api('editInvoicePB', payload)
         const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK
         if (validResponse) {
@@ -378,7 +493,7 @@ export default {
 
           this.dataTable.push({
             lineID: 1,
-            amount: res?.data?.PBTotalAmount - totalAmount,
+            amount: formatNumberWithCommas(res?.data?.PBTotalAmount - totalAmount),
             otherAmount: '',
             expenseCategory:'',
             date: '',
