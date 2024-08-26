@@ -8,18 +8,18 @@
     <PayBrowseDetailForm
       :data="payBrowseData"
     ></PayBrowseDetailForm>
-    <PayBrowseDetailTable
-      ref="payBrowseDetailForm"
-      :data="[...filteredDataTable]"
-      :list-item-master="listItemMaster"
-      :data-total-table="dataTotalTable"
-      @calculated-aramount="setArAmount"
-      @add-detail="(data) => (addDetails = data)"
-      @changeTable="changeDataTable"
-      @validation-errors="(data) => (listErrorMessage = data)"
-      @refresh-data="refresh"
-      @filter="(data) => filterDetails(data)"
-    ></PayBrowseDetailTable>
+    <base-table-item-detail
+      ref="PBFormTableItems"
+      class="pb-table-details"
+      :table-content="dataTable"
+      :table-type="'PB'"
+      :column-hides="columnHides"
+      :disable-input="isCheck"
+      :header-detail="tableHeaders"
+      :new-line="newLine"
+      :form="payBrowseData"
+      @changeTable="changeDataDetailTable"
+    />
     <BaseTableLoader v-if="loading" />
   </div>
 </template>
@@ -35,6 +35,8 @@ import BaseValidateMessage from '@/components/UI/BaseValidateMessage'
 import PayBrowseDetailTable from '@/components/Finance/PayBrowse/PayBrowseDetailTable'
 import PayBrowseDetailForm from '@/components/Finance/PayBrowse/Detail/PayBrowseDetailForm.vue'
 import BaseTableLoader from '~/components/loaders/BaseTableLoader'
+import BaseTableItemDetail from '@/components/UI/Table/BaseTableItemDetail.vue'
+import { parseToNumber } from '@/utils/utils'
 
 export default {
   components: {
@@ -43,6 +45,7 @@ export default {
     PayBrowseDetailTable,
     BaseValidateMessage,
     BaseTableLoader,
+    BaseTableItemDetail,
   },
   mixins: [dateTime, systemMixins],
   data() {
@@ -56,23 +59,109 @@ export default {
       dataTotalTable: {},
       dataTable: [],
       filteredDataTable: [],
-      addDetails: {
-        PBAmount: '',
-        PBOtherAmount: '',
-        PBExpenseCategory:'',
-        PBDate: '',
-        PBApUser: '',
-        PBMemo: '',
-        isUpdate: true,
-        isNewLine: true,
-      },
+      columnHides: [],
+      listFieldCheck: [
+        {
+          key: 'PBBalanceAmount',
+          fieldName: this.$t('lbl_PBBalanceAmount_0'),
+        },
+        {
+          key: 'PBActualAmount',
+          fieldName: this.$t('lbl_PBActualAmount_0'),
+        },
+      ],
     }
   },
   async fetch() {
-    await Promise.all([this.getListItemMaster(), this.getData()])
+    await Promise.all([
+      this.getListItemMaster(),
+      this.getData(),
+      this.getScolumnHides(),
+    ])
   },
   computed: {
     ...mapGetters('base', ['getActiveButtonToolBar']),
+
+    isCheck() {
+      return !!(this.payBrowseData?.checker && this.payBrowseData.checkDate)
+    },
+
+    newLine() {
+      return {
+        amount: 0,
+        otherAmount: '',
+        expenseCategory:'',
+        date: '',
+        apUser: '',
+        memo: '',
+        isUpdate: true,
+        isNewLine: true,
+      }
+    },
+
+    tableHeaders() {
+      return [
+        {
+          key: 'checkbox',
+          name: '',
+          width: 30,
+          align: 'left',
+          disabled: this.isCheck,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
+          key: 'lineID',
+          name: 'ID',
+          width: 30,
+          align: 'center',
+          filter: '',
+          disabled: this.isCheck,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
+          key: 'amount',
+          name: this.$t('lbl_PBAmount_0'),
+          filter: 'number',
+          width: `12%`,
+          align: 'right',
+        },
+        {
+          key: 'otherAmount',
+          name: this.$t('lbl_PBOtherAmount_0'),
+          filter: 'number',
+          width: `12%`,
+          align: 'right',
+        },
+        {
+          key: 'expenseCategory',
+          name: this.$t('lbl_PBExpenseCategory_0'),
+          filter: 'autocomplete',
+          width: `24%`,
+          options: this.itemListAccountingItems,
+        },
+        {
+          key: 'date',
+          name: this.$t('lbl_PBDate_0'),
+          filter: 'datetime',
+          width: `12%`,
+        },
+        {
+          key: 'apUser',
+          name: this.$t('lbl_PBApUser_0'),
+          filter: 'autocomplete',
+          width: `12%`,
+          options: this.listEmployeeName,
+        },
+        {
+          key: 'memo',
+          name: this.$t('lbl_PBMemo_0'),
+          filter: 'input',
+          width: `18%`,
+        },
+      ]
+    },
 
     listToolBars() {
       return [
@@ -109,11 +198,21 @@ export default {
     dataTable: {
       deep: true,
       handler(data) {
+        this.handleAmountTable(data)
         this.filterDetails()
       },
     },
   },
   methods: {
+    async getScolumnHides() {
+      const response = await api('getScolumnHides', {
+        gridName: 'ReceiveBrowseInvoiceDetail',
+      })
+      if (response.status === 200) {
+        this.columnHides = response?.data || []
+      }
+    },
+    
     setArAmount(data) {
       this.payBrowseData.amount = formatNumberWithCommas(data) || 0
     },
@@ -128,6 +227,24 @@ export default {
         data: this.dataTable,
         filterData: JSON.parse(JSON.stringify(filterData)),
       })
+    },
+
+    handleAmountTable(data = []) {
+      //amount
+      const totalAmount = data.reduce((sum, item) => sum + Number(item.amount), 0);
+      this.payBrowseData.PBBalanceAmount = formatNumberWithCommas(parseToNumber(this.payBrowseData.PBTotalAmount) - totalAmount);
+
+      //orther Amount
+      const totalOrtherAmount = data.reduce((sum, item) => sum + Number(item.otherAmount), 0);
+      this.payBrowseData.PBOtherExpensesAmount = formatNumberWithCommas(totalOrtherAmount);
+
+      //actual Amount
+      this.payBrowseData.PBActualAmount = formatNumberWithCommas(parseToNumber(this.payBrowseData.PBTotalAmount) - totalOrtherAmount);
+
+    },
+
+    changeDataDetailTable(data) {
+      this.dataTable = data
     },
 
     async handleAction(key) {
@@ -215,18 +332,26 @@ export default {
         if (!confirm) {
           return
         }
-        
-        await this.addOrUpdateItem(this.payBrowseData)
-        this.addDetails = {
-          PBAmount: '',
-          PBOtherAmount: '',
-          PBExpenseCategory: '',
-          PBDate: '',
-          PBApUser: '',
-          PBMemo: '',
-          isUpdate: true,
-          isNewLine: true,
+        this.listErrorMessage = []
+
+        this.listFieldCheck.forEach((item) => {
+          if (parseToNumber(this.payBrowseData[item.key]) < 0) {
+            this.listErrorMessage.push({
+              fieldName: item.fieldName,
+              text: this.$t('msg_MustNotLessZero_0'),
+            })
+          }
+        })
+
+        if(this.payBrowseData.payBrowsDTL > 0){
+          this.payBrowseData.payBrowsDTL = this.payBrowseData.payBrowsDTL.splice(-1)
         }
+
+        if(this.listErrorMessage.length > 0){
+          return
+        }
+
+        await this.addOrUpdateItem(this.payBrowseData)
       } catch (err) {
         console.error(err)
       } finally {
@@ -264,16 +389,17 @@ export default {
           
           const totalAmount = this.dataTable.reduce((sum, item) => sum + item.amount, 0);
 
-          this.dataTotalTable = {
-            PBAmount: totalAmount,
-            PBOtherAmount: "",
-            PBExpenseCategory: "",
-            PBDate: this.convertDate(new Date()),
-            PBApUser: "",
-            PBMemo: "",
+          this.dataTable.push({
+            lineID: 1,
+            amount: res?.data?.PBTotalAmount - totalAmount,
+            otherAmount: '',
+            expenseCategory:'',
+            date: '',
+            apUser: '',
+            memo: '',
             isUpdate: true,
             isNewLine: true,
-          }
+          })
           
           this.payBrowseData.PBBalanceAmount = formatNumberWithCommas(
             this.payBrowseData.PBBalanceAmount

@@ -451,13 +451,16 @@ export default {
   watch: {
     dataTable: {
       handler(value) {
-        let totalDebitAmount = 0
-        let totalCreditAmount = 0
-        let margin = 0
+        let totalDebitAmount = 0;
+        let totalCreditAmount = 0;
+        let margin = 0;
 
-        value.map((item) => {
-          const debitAmount = item.debitAmount ?? 0
-          const creditAmount = item.creditAmount ?? 0
+        value.map((item) =>{
+          item.date = this.convertDate(item.date)
+          item.invoiceDate = this.convertDate(item.invoiceDate)
+          
+          const debitAmount = item.debitAmount ?? 0;
+          const creditAmount = item.creditAmount ?? 0;
 
           totalDebitAmount = totalDebitAmount + Number(debitAmount)
           totalCreditAmount = totalCreditAmount + Number(creditAmount)
@@ -468,6 +471,7 @@ export default {
         this.form.totalDebitAmount = totalDebitAmount ?? 0
         this.form.totalCreditAmount = totalCreditAmount ?? 0
         this.form.margin = margin
+        
       },
       deep: true,
       immediate: true,

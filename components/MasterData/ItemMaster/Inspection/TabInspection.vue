@@ -125,7 +125,6 @@ export default {
       await this.$fetch()
     },
     async handleSaveInspectionInformation() {
-      console.log(this.$refs.formInspection.form);
       try {
         const confirm = window.confirm(this.$t('msg_ConfirmSave_0'))
         if (!confirm) {
