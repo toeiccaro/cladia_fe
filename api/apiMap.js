@@ -315,6 +315,13 @@ const api = (config) => ({
     );
   },
 
+  deleteReceiveBrowsedDeleteAR: (params) =>
+    config('delete', `receive-browse/deleteAR?orderNo=${params.orderNo}`),
+
+  deleteReceiveBrowsedDetailDeleteAR: (params) =>
+    config('delete', `receive-browse/detail/deleteAR?orderNo=${params.orderNo}&ID=${params.ID}`),
+
+
   // Pay Browse
   payBrowseBatchCollection: (payload) =>
     config('post', 'pay-browse/batchCollection', payload),
@@ -378,6 +385,11 @@ const api = (config) => ({
     return config('delete', `pay-browse/delete-detail?${urlQuery}`, payload);
   },
 
+  deletePayBrowsedDeleteAR: (params) =>
+    config('delete', `pay-browse/deleteAP?orderNo=${params.orderNo}`),
+
+  deletePayBrowsedDetailDeleteAR: (params) =>
+    config('delete', `pay-browse/detail/deleteAP?orderNo=${params.orderNo}&ID=${params.ID}`),
   // Stock Detail
   getListStockDetail: (payload) => config('post', 'stock_detail', payload),
   exportExcelStock: (payload) => config('post', 'stock_detail/excel', payload),

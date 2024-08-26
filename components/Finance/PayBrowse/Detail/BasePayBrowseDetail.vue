@@ -314,48 +314,9 @@ export default {
         if (key === 'save') {
           return await this.save()
         }
+
         if (key === 'delete') {
-          try {
-            const selectedDetailItems =
-              this.$refs.payBrowseDetailForm.itemDetailAvailable
-
-            const hasNoSelectedDetailItems = selectedDetailItems.every(
-              (item) => !item.value
-            )
-
-            if (hasNoSelectedDetailItems) {
-              return window.alert(this.$t('msg_NoSelected_0'))
-            }
-
-            const confirm = window.confirm(this.$t('msg_ConfirmDelDetail_0'))
-            if (!confirm) {
-              return
-            }
-
-            this.loading = true
-
-            const deletePayBrowsePromises = selectedDetailItems.map(
-              async (item) => {
-                if (item.value) {
-                  return await api('deletePayBrowseDetail', {
-                    idDTL: item.id,
-                  })
-                }
-              }
-            )
-
-            await Promise.all(deletePayBrowsePromises)
-
-            await this.getData()
-
-            this.$refs.payBrowseDetailForm.selectedItem = {}
-
-            window.alert(this.$t('msg_IsDeleted_0'))
-          } catch (err) {
-            console.error(err)
-          }
-
-          return
+          return await this.handleButtonDeleteOrder()
         }
         if (key === 'close') {
           return this.$router.push(this.localePath({ path: '/' }))
@@ -485,6 +446,31 @@ export default {
         console.error(err)
       }
     },
+
+    async handleButtonDeleteOrder() {
+      const params = {
+        orderNo: this.payBrowseData?.PBOrderNumber,
+      }
+      const confirm = window.confirm(this.$t('msg_ConfirmDel_0'))
+      if (confirm) {
+        if (params.orderNo) {
+          const response = await api('deletePayBrowsedDeleteAR', params)
+          const errorCode = response?.data?.response?.status
+
+          if (errorCode === SERVER_RESPONSE_CODE.FORBIDDEN) {
+            window.alert(this.$t(response?.data?.response?.data?.message))
+            return
+          }
+          if (response.status === SERVER_RESPONSE_CODE.OK) {
+            window.alert(this.$t('msg_IsDeleted_0'))
+            return this.$router.push(
+              this.localePath({ path: '/finance/pay-browse' })
+            )
+          }
+          window.alert(`${response?.message}`)
+        }
+      }
+    },
     async getData() {
       try {
         this.loading = true
@@ -494,15 +480,16 @@ export default {
           language: this.$i18n.locale,
         })
 
-        const validPayResponse =
-          res && res.status === SERVER_RESPONSE_CODE.OK
+        const validPayResponse = res && res.status === SERVER_RESPONSE_CODE.OK
 
         if (validPayResponse) {
-
           this.payBrowseData = res?.data
           this.dataTable = res?.data?.payBrowsDTL || []
-          
-          const totalAmount = this.dataTable.reduce((sum, item) => sum + item.amount, 0);
+
+          const totalAmount = this.dataTable.reduce(
+            (sum, item) => sum + item.amount,
+            0
+          )
 
           this.dataTable.push({
             lineID: 1,
@@ -539,7 +526,7 @@ export default {
 
     changeDataTable(data) {
       this.dataTable = data
-      this.payBrowseData.payBrowsDTL = data;
+      this.payBrowseData.payBrowsDTL = data
     },
   },
 }
