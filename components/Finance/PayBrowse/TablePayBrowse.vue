@@ -92,6 +92,7 @@ export default {
       isCheckAll: false,
       listIgnoreFieldName: ['Blance'],
       dataHeader: [],
+      selectedRows: [], // Lưu trữ các hàng được chọn
     }
   },
   async fetch() {
@@ -350,6 +351,7 @@ export default {
         }
 
         this.isCheckAll = false
+        this.updateSelectedRows()
       },
     },
   },
@@ -377,12 +379,26 @@ export default {
 
     onChangeCheckbox(event, index) {
       this.listCheckbox[index].value = !this.listCheckbox[index].value
+
+      this.updateSelectedRows()
     },
     checkAll(value) {
       this.listCheckbox = this.listCheckbox.map((item) =>
         Object.assign({}, item, { value })
       )
+
+      this.updateSelectedRows()
     },
+    updateSelectedRows() {
+      const newSelectedRows = this.listCheckbox
+        .map((checkbox, index) =>
+          checkbox.value ? this.dataTable[index] : null
+        )
+        .filter((item) => item !== null)
+
+      this.$emit('update:selectedRows', newSelectedRows)
+    },
+
     changePerPage(value) {
       const filterPayload = {
         pageSize: Number(value),

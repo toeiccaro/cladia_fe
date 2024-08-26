@@ -8,6 +8,8 @@
       ref="tableReceiveBrowse"
       @handleDetailId="handleDetailId"
       @changeLayout="changeLayout"
+      :selectedRows="selectedRows"
+      @update:selectedRows="handleSelectedRowsUpdate"
     />
     <BaseSetColumn
       ref="modalSetColumn"
@@ -38,9 +40,10 @@ export default {
     ToolBar,
     BaseModalDetails,
     BaseModalComposite,
-    BaseSetColumn
+    BaseSetColumn,
   },
   middleware: ['authenticated'],
+
   data() {
     return {
       listToolBars: [
@@ -104,23 +107,28 @@ export default {
       listDataColumn: [],
       listColumnChange: [],
       selectedItems: [],
+      selectedRows: [],
     }
   },
+
   computed: {
     ...mapGetters({
       activeButtonToolBar: 'base/getActiveButtonToolBar',
     }),
     listToolBarsCheckAuthority() {
+      const hasStopTrue = this.selectedRows.some((item) => item.isStop === true)
+      const hasStopNull = this.selectedRows.some((item) => item.isStop !== true)
+
       return this.listToolBars.map((item) => {
         switch (item.key) {
           case 'add':
             item.disabled = !this.activeButtonToolBar?.isEdit
             break
           case 'check':
-            item.disabled = !this.activeButtonToolBar?.isCheck
+            item.disabled = !this.activeButtonToolBar?.isCheck || hasStopTrue
             break
           case 'unCheck':
-            item.disabled = !this.activeButtonToolBar?.isCheck
+            item.disabled = !this.activeButtonToolBar?.isCheck || hasStopNull
             break
           case 'export':
             item.disabled = !this.activeButtonToolBar?.isExport
@@ -213,7 +221,9 @@ export default {
     },
     async changeActiveToolBar(key) {
       if (key === 'add') {
-        this.$router.push(this.localePath({ path: '/finance/receive-browse/add' }))
+        this.$router.push(
+          this.localePath({ path: '/finance/receive-browse/add' })
+        )
       }
       if (key === 'refresh') {
         return location.reload()
@@ -283,6 +293,9 @@ export default {
     changeLayout(data, listDataColumn) {
       this.dataLayout = data
       this.listDataColumn = listDataColumn
+    },
+    handleSelectedRowsUpdate(newSelectedRows) {
+      this.selectedRows = newSelectedRows
     },
   },
 }

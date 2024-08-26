@@ -465,6 +465,7 @@ export default {
       type: Object,
       default: () => {},
     },
+    onDelete: Function,
   },
 
   data() {
@@ -1254,24 +1255,23 @@ export default {
         value?.reason ||
         value?.sono ||
         //Receive browse
-        value?.companyName||
-        value?.creditAmount||
-        value?.currency||
-        value?.debitAmount||
-        value?.employee||
-        value?.invoiceDate||
-        value?.invoiceNotes||
-        value?.invoiceNumber||
-        value?.isInvoice||
-        value?.itemID||
-        value?.opponentSubject||
-        value?.subject||
+        value?.companyName ||
+        value?.creditAmount ||
+        value?.currency ||
+        value?.debitAmount ||
+        value?.employee ||
+        value?.invoiceDate ||
+        value?.invoiceNotes ||
+        value?.invoiceNumber ||
+        value?.isInvoice ||
+        value?.itemID ||
+        value?.opponentSubject ||
+        value?.subject ||
         value?.memo ||
         value?.otherAmount ||
         value?.expenseCategory ||
         value?.apUser ||
         value?.arUser ||
-        
         checkPromiseDate ||
         checkStartDate ||
         checkEndDate ||
@@ -1340,6 +1340,17 @@ export default {
 
       this.tableDataTempt = [...tableDataFilter]
       this.emitData()
+      if (this.onDelete) {
+        const selectedRows = this.listCheckbox
+          .filter((item) => item.value)
+          .map((item) =>
+            this.tableContent.find((row) => row.lineID === item.lineID)
+          )
+        this.onDelete(selectedRows)
+      }
+      // if (this.onDelete) {
+      //   this.onDelete();  // Thực thi hàm callback từ component cha
+      // }
     },
 
     emitData() {
