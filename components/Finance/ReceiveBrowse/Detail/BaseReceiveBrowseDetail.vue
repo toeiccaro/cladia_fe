@@ -8,18 +8,18 @@
     <ReceiveBrowseDetailForm
       :data="receiveBrowseData"
     ></ReceiveBrowseDetailForm>
-    <ReceiveBrowseDetailTable
-      ref="receiveBrowseDetailForm"
-      :data="[...filteredDataTable]"
-      :list-item-master="listItemMaster"
-      :data-total-table="dataTotalTable"
-      @calculated-aramount="setArAmount"
-      @add-detail="(data) => (addDetails = data)"
-      @changeTable="changeDataTable"
-      @validation-errors="(data) => (listErrorMessage = data)"
-      @refresh-data="refresh"
-      @filter="(data) => filterDetails(data)"
-    ></ReceiveBrowseDetailTable>
+    <base-table-item-detail
+      ref="RBFormTableItems"
+      class="rb-table-details"
+      :table-content="dataTable"
+      :table-type="'RB'"
+      :column-hides="columnHides"
+      :disable-input="isCheck"
+      :header-detail="tableHeaders"
+      :new-line="newLine"
+      :form="receiveBrowseData"
+      @changeTable="changeDataDetailTable"
+    />
     <BaseTableLoader v-if="loading" />
   </div>
 </template>
@@ -35,6 +35,8 @@ import BaseValidateMessage from '@/components/UI/BaseValidateMessage'
 import ReceiveBrowseDetailTable from '@/components/Finance/ReceiveBrowse/ReceiveBrowseDetailTable'
 import ReceiveBrowseDetailForm from '@/components/Finance/ReceiveBrowse/Detail/ReceiveBrowseDetailForm.vue'
 import BaseTableLoader from '~/components/loaders/BaseTableLoader'
+import BaseTableItemDetail from '@/components/UI/Table/BaseTableItemDetail.vue'
+import { parseToNumber } from '@/utils/utils'
 
 export default {
   components: {
@@ -43,6 +45,7 @@ export default {
     ReceiveBrowseDetailTable,
     BaseValidateMessage,
     BaseTableLoader,
+    BaseTableItemDetail,
   },
   mixins: [dateTime, systemMixins],
   data() {
@@ -56,23 +59,109 @@ export default {
       dataTable: [],
       dataTotalTable: {},
       filteredDataTable: [],
-      addDetails: {
-        RBAmount: '',
-        RBOtherAmount: '',
-        RBExpenseCategory: '',
-        RBDate: '',
-        RBArUser: '',
-        RBMemo: '',
-        isUpdate: true,
-        isNewLine: true,
-      },
+      columnHides: [],
+      listFieldCheck: [
+        {
+          key: 'RBBalanceAmount',
+          fieldName: this.$t('lbl_RBBalanceAmount_0'),
+        },
+        {
+          key: 'RBActualAmount',
+          fieldName: this.$t('lbl_RBActualAmount_0'),
+        },
+      ],
     }
   },
   async fetch() {
-    await Promise.all([this.getListItemMaster(), this.getData()])
+    await Promise.all([
+      this.getListItemMaster(),
+      this.getData(),
+      this.getScolumnHides(),
+    ])
   },
   computed: {
     ...mapGetters('base', ['getActiveButtonToolBar']),
+
+    isCheck() {
+      return !!(this.receiveBrowseData?.checker && this.receiveBrowseData.checkDate)
+    },
+
+    newLine() {
+      return {
+        amount: 0,
+        otherAmount: '',
+        expenseCategory:'',
+        date: '',
+        apUser: '',
+        memo: '',
+        isUpdate: true,
+        isNewLine: true,
+      }
+    },
+
+    tableHeaders() {
+      return [
+        {
+          key: 'checkbox',
+          name: '',
+          width: 30,
+          align: 'left',
+          disabled: this.isCheck,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
+          key: 'lineID',
+          name: 'ID',
+          width: 30,
+          align: 'center',
+          filter: '',
+          disabled: this.isCheck,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
+          key: 'amount',
+          name: this.$t('lbl_RBAmount_0'),
+          filter: 'number',
+          width: `12%`,
+          align: 'right',
+        },
+        {
+          key: 'otherAmount',
+          name: this.$t('lbl_RBOtherAmount_0'),
+          filter: 'number',
+          width: `12%`,
+          align: 'right',
+        },
+        {
+          key: 'expenseCategory',
+          name: this.$t('lbl_RBExpenseCategory_0'),
+          filter: 'autocomplete',
+          width: `24%`,
+          options: this.itemListAccountingItems,
+        },
+        {
+          key: 'date',
+          name: this.$t('lbl_RBDate_0'),
+          filter: 'datetime',
+          width: `12%`,
+        },
+        {
+          key: 'arUser',
+          name: this.$t('lbl_RBArUser_0'),
+          filter: 'autocomplete',
+          width: `12%`,
+          options: this.listEmployeeName,
+        },
+        {
+          key: 'memo',
+          name: this.$t('lbl_RBMemo_0'),
+          filter: 'input',
+          width: `18%`,
+        },
+      ]
+    },
 
     listToolBars() {
       return [
@@ -109,11 +198,21 @@ export default {
     dataTable: {
       deep: true,
       handler(data) {
+        this.handleAmountTable(data)
         this.filterDetails()
       },
     },
   },
   methods: {
+    async getScolumnHides() {
+      const response = await api('getScolumnHides', {
+        gridName: 'ReceiveBrowseInvoiceDetail',
+      })
+      if (response.status === 200) {
+        this.columnHides = response?.data || []
+      }
+    },
+
     setArAmount(data) {
       this.receiveBrowseData.amount = formatNumberWithCommas(data) || 0
     },
@@ -128,6 +227,25 @@ export default {
         data: this.dataTable,
         filterData: JSON.parse(JSON.stringify(filterData)),
       })
+    },
+
+
+    handleAmountTable(data = []) {
+      //amount
+      const totalAmount = data.reduce((sum, item) => sum + Number(item.amount), 0);
+      this.receiveBrowseData.RBBalanceAmount = formatNumberWithCommas(parseToNumber(this.receiveBrowseData.RBTotalAmount) - totalAmount);
+
+      //orther Amount
+      const totalOrtherAmount = data.reduce((sum, item) => sum + Number(item.otherAmount), 0);
+      this.receiveBrowseData.RBOtherExpensesAmount = formatNumberWithCommas(totalOrtherAmount);
+
+      //actual Amount
+      this.receiveBrowseData.RBActualAmount = formatNumberWithCommas(parseToNumber(this.receiveBrowseData.RBTotalAmount) - totalOrtherAmount);
+
+    },
+
+    changeDataDetailTable(data) {
+      this.dataTable = data
     },
 
     async handleAction(key) {
@@ -216,17 +334,25 @@ export default {
         if (!confirm) {
           return
         }
-        await this.addOrUpdateItem(this.receiveBrowseData)
-        this.addDetails = {
-          RBAmount: '',
-          RBOtherAmount: '',
-          RBExpenseCategory: '',
-          RBDate: '',
-          RBArUser: '',
-          RBMemo: '',
-          isUpdate: true,
-          isNewLine: true,
+        this.listErrorMessage = []
+
+        this.listFieldCheck.forEach((item) => {
+          if (parseToNumber(this.receiveBrowseData[item.key]) < 0) {
+            this.listErrorMessage.push({
+              fieldName: item.fieldName,
+              text: this.$t('msg_MustNotLessZero_0'),
+            })
+          }
+        })
+
+        if(this.receiveBrowseData.payBrowsDTL > 0){
+          this.receiveBrowseData.payBrowsDTL = this.receiveBrowseData.payBrowsDTL.splice(-1)
         }
+
+        if(this.listErrorMessage.length > 0){
+          return
+        }
+        await this.addOrUpdateItem(this.receiveBrowseData)
       } catch (err) {
         console.error(err)
       } finally {
@@ -263,16 +389,18 @@ export default {
           this.dataTable = res?.data?.receiveBrowsDTL || []
 
           const totalAmount = this.dataTable.reduce((sum, item) => sum + item.amount, 0);
-          this.dataTotalTable = {
-            RBAmount: totalAmount,
-            RBOtherAmount: "",
-            RBExpenseCategory: "",
-            RBDate: this.convertDate(new Date()),
-            RBApUser: "",
-            RBMemo: "",
+
+          this.dataTable.push({
+            lineID: 1,
+            amount: res?.data?.RBTotalAmount - totalAmount,
+            otherAmount: '',
+            expenseCategory:'',
+            date: '',
+            apUser: '',
+            memo: '',
             isUpdate: true,
             isNewLine: true,
-          }
+          })
           
           this.receiveBrowseData.RBBalanceAmount = formatNumberWithCommas(
             this.receiveBrowseData.RBBalanceAmount

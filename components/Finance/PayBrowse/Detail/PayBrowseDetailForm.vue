@@ -129,7 +129,7 @@
           </td>
           <td class="input">
             <b-form-input
-              v-model="form.PBotherExpensesAmount"
+              v-model="form.PBOtherExpensesAmount"
               disabled
               name="txtOtherExpensesAmount"
               type="text"

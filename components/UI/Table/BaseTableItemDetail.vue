@@ -1225,7 +1225,12 @@ export default {
         value?.itemID||
         value?.opponentSubject||
         value?.subject||
-
+        value?.memo ||
+        value?.otherAmount ||
+        value?.expenseCategory ||
+        value?.apUser ||
+        value?.arUser ||
+        
         checkPromiseDate ||
         checkStartDate ||
         checkEndDate ||
