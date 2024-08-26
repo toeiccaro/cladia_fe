@@ -870,5 +870,10 @@ export default {
       }
       return this.$t(`lan_${language}_0`);
     },
+
+    findValueByText(list, key) {
+      const matchedItem = list.find((item) => item.text === key)
+      return matchedItem ? matchedItem.value : key
+    }
   },
 }
