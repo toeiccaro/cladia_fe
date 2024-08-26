@@ -349,7 +349,7 @@ export default {
         {
           key: 'invoiceNumber',
           name: this.$t('lbl_RBInvoiceNumber_0'),
-          filter: 'number',
+          filter: 'input',
           width: 150,
           align: 'right',
           fieldRequired: false,

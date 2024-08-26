@@ -73,8 +73,8 @@ export default {
       ],
       listFieldRequired: [
         {
-          key: 'RBOpponentSubjectId',
-          fieldName: this.$t('lbl_RBOpponentSubjectId_0'),
+          key: 'PBOpponentSubjectId',
+          fieldName: this.$t('lbl_PBOpponentSubjectId_0'),
         },
       ],
     }
@@ -392,6 +392,7 @@ export default {
         })
 
         this.listFieldRequired.forEach((item) => {
+          console.log('this.payBrowseData[item.key]', this.payBrowseData[item.key], this.payBrowseData);
           if (!this.payBrowseData[item.key]){
             this.listErrorMessage.push({
               fieldName: item.fieldName,
