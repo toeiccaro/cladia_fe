@@ -96,7 +96,7 @@ export default {
       selectedRows: [], // Lưu trữ các hàng được chọn
     }
   },
- 
+
   async fetch() {
     try {
       this.loading = true
@@ -208,18 +208,30 @@ export default {
               type: 'amount',
             }
           }
-        
 
-          if (headerItem.fieldName === 'OrderNO' ) {
+          if (headerItem.fieldName === 'OrderNO') {
             obj[mappingFieldName].type = this.getActiveButtonToolBar?.isEdit
               ? 'link'
               : ''
+
             obj[mappingFieldName].link =
               obj[mappingFieldName].value.slice(0, 2) == 'IV'
                 ? `/${this.$i18n.locale}/finance/receive-browse/detail?sono=${obj[mappingFieldName].value}`
                 : `/${this.$i18n.locale}/finance/receive-browse/detailAROrAP?sono=${obj[mappingFieldName].value}`
           }
-       
+
+          if (headerItem.fieldName === 'RBStatement') {
+            obj[mappingFieldName].type = this.getActiveButtonToolBar?.isEdit
+              ? 'link'
+              : ''
+
+            obj[mappingFieldName].link =
+              obj['orderNO'].value.slice(0, 2) == 'IV'
+                ? `/${this.$i18n.locale}/finance/receive-browse/detail?sono=${obj['orderNO'].value}`
+                : `/${this.$i18n.locale}/finance/receive-browse/detailAROrAP?sono=${obj['orderNO'].value}`
+          }
+
+         
 
           if (headerItem.fieldName === 'Date') {
             obj[mappingFieldName].value = this.convertDate(item.Date)
@@ -340,7 +352,7 @@ export default {
         }
 
         this.isCheckAll = false
-        this.updateSelectedRows();
+        this.updateSelectedRows()
       },
     },
   },
@@ -366,28 +378,28 @@ export default {
       SET_DATA_COLUMN_HIDE: 'SET_DATA_COLUMN_HIDE',
     }),
 
-    
     onChangeCheckbox(event, index) {
-      this.listCheckbox[index].value = !this.listCheckbox[index].value;
+      this.listCheckbox[index].value = !this.listCheckbox[index].value
 
-      this.updateSelectedRows();
+      this.updateSelectedRows()
     },
     checkAll(value) {
       this.listCheckbox = this.listCheckbox.map((item) =>
         Object.assign({}, item, { value })
-      );
+      )
 
-      this.updateSelectedRows();
+      this.updateSelectedRows()
     },
     updateSelectedRows() {
       const newSelectedRows = this.listCheckbox
-        .map((checkbox, index) => (checkbox.value ? this.dataTable[index] : null))
-        .filter((item) => item !== null);
+        .map((checkbox, index) =>
+          checkbox.value ? this.dataTable[index] : null
+        )
+        .filter((item) => item !== null)
 
-      this.$emit('update:selectedRows', newSelectedRows);
-    
+      this.$emit('update:selectedRows', newSelectedRows)
     },
-   
+
     changePerPage(value) {
       const filterPayload = {
         pageSize: Number(value),
