@@ -255,7 +255,7 @@ export default {
 
     async getScolumnHides() {
       const response = await api('getScolumnHides', {
-        gridName: 'ReceiveBrowseInvoiceDetail',
+        gridName: 'PayBrowsePurchaseInvoiceDetail',
       })
       if (response.status === 200) {
         this.columnHides = response?.data || []
@@ -364,6 +364,8 @@ export default {
           }
         })
 
+        this.payBrowseData.payBrowsDTL = this.dataTable;
+
         this.payBrowseData.payBrowsDTL.map((item) => {
           const requiredFields = {
             otherAmount: 'PBOtherAmount',
@@ -400,7 +402,6 @@ export default {
     },
 
     async addOrUpdateItem(data) {
-      console.log('data', data);
       data.payBrowsDTL.pop();
       try {
         const payload = {
@@ -430,7 +431,7 @@ export default {
               PBDate: item.date,
               PBApUser: item.apUser,
               PBMemo: item.memo,
-              RBItemID: null
+              RBItemID: item.itemID ? item.itemID : null
             }
           })
         }
@@ -483,14 +484,27 @@ export default {
 
         if (validPayResponse) {
           this.payBrowseData = res?.data
+
           this.dataTable = res?.data?.payBrowsDTL.map((item) => {
-            return Object.fromEntries(
-              Object.entries(item).map(([key, value]) => [
-                key.replace('PB', '').toLowerCase(),
-                value,
-              ])
-            );
+            const newObject = {}
+            for (const key in item) {
+              let newKey = key.replace(/^PB/, '')
+              newKey = newKey[0].toLowerCase() + newKey.slice(1)
+              newObject[newKey] = item[key]
+
+              let expenseCategoryID = 0
+              setTimeout(() => {
+                if(newKey == 'expenseCategory' && this.listAccountingItems) {
+                expenseCategoryID = this.listAccountingItems.find(
+                  (item) => item.value == newObject.expenseCategory
+                )
+                newObject.expenseCategory = expenseCategoryID.text
+              }
+              }, 100);
+            }
+            return newObject
           }) || [];
+
 
           const totalAmount = this.dataTable.reduce(
             (sum, item) => sum + item.amount,

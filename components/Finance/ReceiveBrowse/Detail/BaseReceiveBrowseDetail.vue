@@ -300,6 +300,7 @@ export default {
     },
 
     changeDataDetailTable(data) {
+      console.log('data', data);
       this.dataTable = data
     },
 
@@ -344,6 +345,7 @@ export default {
     // eslint-disable-next-line require-await
     async save() {
       try {
+        console.log('this.receiveBrowseData', this.receiveBrowseData, this.dataTable);
         this.loading = true
 
         const confirm = window.confirm(this.$t('msg_ConfirmSave_0'))
@@ -369,6 +371,8 @@ export default {
             })
           }
         })
+        
+        this.receiveBrowseData.receiveBrowsDTL = this.dataTable;
 
         this.receiveBrowseData.receiveBrowsDTL.map((item) => {
           const requiredFields = {
@@ -458,7 +462,7 @@ export default {
               RBDate: item.date,
               RBApUser: item.arUser,
               RBMemo: item.memo,
-              RBItemID: null
+              RBItemID: item.itemID ? item.itemID : null
             }
           })
         }
@@ -487,15 +491,26 @@ export default {
 
         if (validReceiveResponse) {
           this.receiveBrowseData = res?.data
-          this.dataTable = res?.data?.receiveBrowsDTL.map((item) => {
-            return Object.fromEntries(
-              Object.entries(item).map(([key, value]) => [
-                key.replace('RB', '').toLowerCase(),
-                value,
-              ])
-            );
-          }) || [];
 
+          this.dataTable = res?.data?.receiveBrowsDTL.map((item) => {
+            const newObject = {}
+            for (const key in item) {
+              let newKey = key.replace(/^RB/, '')
+              newKey = newKey[0].toLowerCase() + newKey.slice(1)
+              newObject[newKey] = item[key]
+
+              let expenseCategoryID = 0
+              setTimeout(() => {
+                if(newKey == 'expenseCategory' && this.listAccountingItems) {
+                expenseCategoryID = this.listAccountingItems.find(
+                  (item) => item.value == newObject.expenseCategory
+                )
+                newObject.expenseCategory = expenseCategoryID.text
+              }
+              }, 100);
+            }
+            return newObject
+          }) || [];
           const totalAmount = this.dataTable.reduce((sum, item) => sum + item.amount, 0);
 
           this.dataTable.push({
