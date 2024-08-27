@@ -514,7 +514,7 @@ export default {
           const totalAmount = this.dataTable.reduce((sum, item) => sum + item.amount, 0);
 
           this.dataTable.push({
-            lineID: 1,
+            lineID: this.dataTable.length + 1,
             amount: formatNumberWithCommas(res?.data?.RBTotalAmount - totalAmount),
             otherAmount: '',
             expenseCategory:'',

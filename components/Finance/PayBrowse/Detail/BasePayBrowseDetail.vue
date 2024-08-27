@@ -512,7 +512,7 @@ export default {
           )
 
           this.dataTable.push({
-            lineID: 1,
+            lineID: this.dataTable.length + 1,
             amount: formatNumberWithCommas(res?.data?.PBTotalAmount - totalAmount),
             otherAmount: '',
             expenseCategory:'',
