@@ -5,7 +5,8 @@
         v-if="
           item.filter === 'input' ||
           item.filter === 'autocomplete' ||
-          item.filter === 'datetime'
+          item.filter === 'datetime' ||
+          item.filter === 'select-input'
         "
         v-model="searchFormTemp[item.key]"
         :maxLength="item?.maxLength || '256'"

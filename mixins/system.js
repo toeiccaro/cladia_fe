@@ -873,6 +873,7 @@ export default {
 
     findValueByText(list, key) {
       const matchedItem = list.find((item) => item.text === key)
+      console.log('matchedItem', matchedItem);
       return matchedItem ? matchedItem.value : key
     }
   },

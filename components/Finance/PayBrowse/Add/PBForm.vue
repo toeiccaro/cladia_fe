@@ -144,7 +144,7 @@
             <span id="checker">{{ $t("lbl_PBChecker_0") }}</span>
           </td>
           <td class="input">
-            <input v-model="form.checker" type="text" :disabled="isDisabled" />
+            <input v-model="form.checker" type="text" disabled />
           </td>
           <td class="info">&nbsp;</td>
         </tr>

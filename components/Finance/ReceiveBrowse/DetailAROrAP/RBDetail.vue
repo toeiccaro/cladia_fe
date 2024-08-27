@@ -325,7 +325,7 @@ export default {
         {
           key: 'companyName',
           name: this.$t('lbl_RBCompanyName_0'),
-          filter: 'select',
+          filter: 'select-input',
           typeInput: 'select',
           width: 150,
           align: 'left',
