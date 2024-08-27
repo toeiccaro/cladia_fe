@@ -277,6 +277,7 @@ export default {
         data: this.dataTable,
         filterData: JSON.parse(JSON.stringify(filterData)),
       })
+      
     },
 
 
@@ -321,49 +322,11 @@ export default {
         if (key === 'save') {
           return await this.save()
         }
-        if (key === 'delete') {
-          try {
-            const selectedDetailItems =
-              this.$refs.receiveBrowseDetailForm.itemDetailAvailable
 
-            const hasNoSelectedDetailItems = selectedDetailItems.every(
-              (item) => !item.value
-            )
-
-            if (hasNoSelectedDetailItems) {
-              return window.alert(this.$t('msg_NoSelected_0'))
-            }
-
-            const confirm = window.confirm(this.$t('msg_ConfirmDelDetail_0'))
-            if (!confirm) {
-              return
-            }
-
-            this.loading = true
-
-            const deleteReceiveBrowsePromises = selectedDetailItems.map(
-              async (item) => {
-                if (item.value) {
-                  return await api('deleteReceiveBrowseDetail', {
-                    idDTL: item.id,
-                  })
-                }
-              }
-            )
-
-            await Promise.all(deleteReceiveBrowsePromises)
-
-            await this.getData()
-
-            this.$refs.receiveBrowseDetailForm.selectedItem = {}
-
-            window.alert(this.$t('msg_IsDeleted_0'))
-          } catch (err) {
-            console.error(err)
-          }
-
-          return
+        if(key === "delete"){
+          return await  this.handleButtonDeleteOrder()
         }
+       
         if (key === 'close') {
           return this.$router.push(this.localePath({ path: '/' }))
         }
@@ -438,6 +401,32 @@ export default {
         console.error(err)
       } finally {
         this.loading = false
+      }
+    },
+
+    async handleButtonDeleteOrder() {
+
+      const params = {
+        orderNo: this.receiveBrowseData?.RBOrderNumber,
+      }
+      const confirm = window.confirm(this.$t('msg_ConfirmDel_0'))
+      if (confirm) {
+        if (params.orderNo) {
+          const response = await api('deleteReceiveBrowsedDeleteAR', params)
+          const errorCode = response?.data?.response?.status
+
+          if (errorCode === SERVER_RESPONSE_CODE.FORBIDDEN) {
+            window.alert(this.$t(response?.data?.response?.data?.message))
+            return
+          }
+          if (response.status === SERVER_RESPONSE_CODE.OK) {
+            window.alert(this.$t('msg_IsDeleted_0'))
+            return this.$router.push(
+              this.localePath({ path: '/finance/receive-browse' })
+            )
+          }
+          window.alert(`${response?.message}`)
+        }
       }
     },
     async addOrUpdateItem(data) {

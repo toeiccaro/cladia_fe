@@ -79,6 +79,7 @@ import { formatNumberWithCommas } from '~/utils/utils'
 export default {
   components: { BaseTableDraggable, BasePagination, BaseTableLoader },
   mixins: [dateTimeMixins, commonOptionsMixins, receiveBrowseMixins],
+
   data() {
     return {
       loading: false,
@@ -92,8 +93,10 @@ export default {
       isCheckAll: false,
       listIgnoreFieldName: ['Blance'],
       dataHeader: [],
+      selectedRows: [], // Lưu trữ các hàng được chọn
     }
   },
+ 
   async fetch() {
     try {
       this.loading = true
@@ -205,8 +208,9 @@ export default {
               type: 'amount',
             }
           }
+        
 
-          if (headerItem.fieldName === 'OrderNO') {
+          if (headerItem.fieldName === 'OrderNO' ) {
             obj[mappingFieldName].type = this.getActiveButtonToolBar?.isEdit
               ? 'link'
               : ''
@@ -215,6 +219,7 @@ export default {
                 ? `/${this.$i18n.locale}/finance/receive-browse/detail?sono=${obj[mappingFieldName].value}`
                 : `/${this.$i18n.locale}/finance/receive-browse/detailAROrAP?sono=${obj[mappingFieldName].value}`
           }
+       
 
           if (headerItem.fieldName === 'Date') {
             obj[mappingFieldName].value = this.convertDate(item.Date)
@@ -335,6 +340,7 @@ export default {
         }
 
         this.isCheckAll = false
+        this.updateSelectedRows();
       },
     },
   },
@@ -360,14 +366,28 @@ export default {
       SET_DATA_COLUMN_HIDE: 'SET_DATA_COLUMN_HIDE',
     }),
 
+    
     onChangeCheckbox(event, index) {
-      this.listCheckbox[index].value = !this.listCheckbox[index].value
+      this.listCheckbox[index].value = !this.listCheckbox[index].value;
+
+      this.updateSelectedRows();
     },
     checkAll(value) {
       this.listCheckbox = this.listCheckbox.map((item) =>
         Object.assign({}, item, { value })
-      )
+      );
+
+      this.updateSelectedRows();
     },
+    updateSelectedRows() {
+      const newSelectedRows = this.listCheckbox
+        .map((checkbox, index) => (checkbox.value ? this.dataTable[index] : null))
+        .filter((item) => item !== null);
+
+      this.$emit('update:selectedRows', newSelectedRows);
+    
+    },
+   
     changePerPage(value) {
       const filterPayload = {
         pageSize: Number(value),
@@ -384,6 +404,7 @@ export default {
     },
     handleRow(payload) {
       const { index } = payload
+
       this.listCheckbox[index].value = !this.listCheckbox[index].value
 
       this.$emit('handleDetailId', { ...payload?.item })

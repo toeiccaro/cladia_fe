@@ -22,6 +22,7 @@
       :type-action="'ADD'"
       :new-line="newLine"
       @changeTable="changeDataDetailTable"
+      :onDelete="handleDelete"
     ></BaseTableItemDetail>
     <BaseModalAttach
       ref="attachments"
@@ -429,16 +430,20 @@ export default {
       return this.dataTable.filter((item) => !item.isNewLine)
     },
     listToolBarsCheckAuthority() {
+      const checker = this.form?.checker
+
       return this.listToolBars.map((item) => {
         switch (item.key) {
           case 'delete':
             item.disabled = !this.getActiveButtonToolBar?.isDelete
             break
           case 'check':
-            item.disabled = !this.getActiveButtonToolBar?.isCheck
+            item.disabled =
+              !this.getActiveButtonToolBar?.isCheck || checker === true
             break
           case 'unCheck':
-            item.disabled = !this.getActiveButtonToolBar?.isCheck
+            item.disabled =
+              !this.getActiveButtonToolBar?.isCheck || checker === null
             break
           case 'print':
             item.disabled = !this.getActiveButtonToolBar?.isPrint
@@ -453,16 +458,16 @@ export default {
   watch: {
     dataTable: {
       handler(value) {
-        let totalDebitAmount = 0;
-        let totalCreditAmount = 0;
-        let margin = 0;
-        
-        value.map((item) =>{
+        let totalDebitAmount = 0
+        let totalCreditAmount = 0
+        let margin = 0
+
+        value.map((item) => {
           item.date = this.convertDate(item.date)
           item.invoiceDate = this.convertDate(item.invoiceDate)
-          
-          const debitAmount = item.debitAmount ?? 0;
-          const creditAmount = item.creditAmount ?? 0;
+
+          const debitAmount = item.debitAmount ?? 0
+          const creditAmount = item.creditAmount ?? 0
 
           totalDebitAmount = totalDebitAmount + Number(debitAmount)
           totalCreditAmount = totalCreditAmount + Number(creditAmount)
@@ -903,12 +908,12 @@ export default {
 
     async handleButtonDeleteOrder() {
       const params = {
-        idDTL: this.form?.orderNumber,
+        orderNo: this.form?.orderNumber,
       }
       const confirm = window.confirm(this.$t('msg_ConfirmDel_0'))
       if (confirm) {
-        if (params.soNo) {
-          const response = await api('deleteRB', params)
+        if (params.orderNo) {
+          const response = await api('deleteReceiveBrowsedDeleteAR', params)
           const errorCode = response?.data?.response?.status
 
           if (errorCode === SERVER_RESPONSE_CODE.FORBIDDEN) {
@@ -917,12 +922,11 @@ export default {
           }
           if (response.status === SERVER_RESPONSE_CODE.OK) {
             window.alert(this.$t('msg_IsDeleted_0'))
-            this.$router.push(
+            return this.$router.push(
               this.localePath({ path: '/finance/receive-browse' })
             )
-          } else {
-            window.alert(`${response?.message}`)
           }
+          window.alert(`${response?.message}`)
         }
       }
     },
@@ -954,6 +958,39 @@ export default {
         ...this.newLine,
         lineID: this.availableListDetails.length + 1,
       })
+    },
+    async handleDelete(selectedRows) {
+      const itemIDs = selectedRows.map((row) => row.itemID)
+
+      const queryString = itemIDs.map((id) => `IDs=${id}`).join('&')
+
+      const params = {
+        orderNo: this.form?.orderNumber,
+        ID: queryString,
+      }
+
+      const confirm = window.confirm(this.$t('msg_ConfirmDel_0'))
+      if (confirm) {
+        if (params.orderNo) {
+          const response = await api(
+            'deleteReceiveBrowsedDetailDeleteAR',
+            params
+          )
+          const errorCode = response?.data?.response?.status
+
+          if (errorCode === SERVER_RESPONSE_CODE.FORBIDDEN) {
+            window.alert(this.$t(response?.data?.response?.data?.message))
+            return
+          }
+          if (response.status === SERVER_RESPONSE_CODE.OK) {
+            window.alert(this.$t('msg_IsDeleted_0'))
+            return this.$router.push(
+              this.localePath({ path: '/finance/receive-browse' })
+            )
+          }
+          window.alert(`${response?.message}`)
+        }
+      }
     },
   },
 }
