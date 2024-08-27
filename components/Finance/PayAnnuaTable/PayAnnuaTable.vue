@@ -1,6 +1,20 @@
 <template>
   <div class="table-order d-flex flex-column position-relative">
-    
+    <tr class="tr-2">
+      <td class="label">
+        <span id="departmentID">
+          {{ $t('lbl_APYear_0') }}
+        </span>
+      </td>
+      <td class="input">
+        <b-form-select
+          v-model="selectedYear"
+          :options="yearOptions"
+          class="select"
+          :disabled="isDisabled"
+        ></b-form-select>
+      </td>
+    </tr>
     <BaseTableDraggable
       v-if="!isLoadingTable"
       :header="headerMapping"
@@ -56,6 +70,7 @@ import { formatNumberWithCommas } from '@/utils/utils'
 export default {
   components: { BaseTableDraggable, BasePagination, BaseTableLoader },
   mixins: [dateTime],
+
   data() {
     return {
       loading: false,
@@ -70,7 +85,7 @@ export default {
       isDisabled: false,
     }
   },
-  
+
   async fetch() {
     try {
       this.loading = true
@@ -84,7 +99,7 @@ export default {
       this.loading = false
     }
   },
- 
+
   computed: {
     ...mapGetters({
       unitOptions: 'base/getUnitOptions',
@@ -307,8 +322,9 @@ export default {
     },
   },
   created() {
-    const isCheck = this.$route.query?.isCheck
+    this.generateYearOptions()
 
+    const isCheck = this.$route.query?.isCheck
     const payload = {
       language: this.lang,
       pageNo: 1,
@@ -347,6 +363,11 @@ export default {
     async getData() {
       try {
         this.isLoadingTable = true
+        this.UPDATE_PAYLOAD_PAYABLE_ANNUAL_QUERY({
+          ...this.payloadPayableQuery,
+          year: this.selectedYear,
+        })
+
         const res = await api('querySearchPayTable', this.payloadPayableQuery)
 
         const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK
@@ -369,7 +390,10 @@ export default {
     async filterAndSort() {
       try {
         this.loading = true
-
+        this.UPDATE_PAYLOAD_PAYABLE_ANNUAL_QUERY({
+          ...this.payloadPayableQuery,
+          year: this.selectedYear,
+        })
         const res = await api('querySearchPayTable', this.payloadPayableQuery)
         this.loading = false
 
@@ -409,7 +433,19 @@ export default {
           ?.text || ''
       )
     },
-   
+    generateYearOptions() {
+      const currentYear = ''
+      const secondYear = new Date().getFullYear()
+      const startYear = secondYear - 5
+      const endYear = secondYear + 5
+
+      this.yearOptions = []
+      for (let year = startYear; year <= endYear; year++) {
+        this.yearOptions.push({ value: year, text: year.toString() })
+      }
+
+      this.selectedYear = currentYear
+    },
   },
 }
 </script>

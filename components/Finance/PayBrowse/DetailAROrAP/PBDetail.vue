@@ -701,7 +701,7 @@ export default {
         const response = await api('uncheckPB', params)
         const errorCode = response?.data?.response?.status
 
-        if (errorCode === SERVER_RESPONSE_CODE.FOPBIDDEN) {
+        if (errorCode === SERVER_RESPONSE_CODE.FORBIDDEN) {
           window.alert(this.$t(response?.message))
           return
         }
