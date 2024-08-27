@@ -137,7 +137,7 @@ export default {
         otherAmount: '',
         expenseCategory:'',
         date: '',
-        apUser: '',
+        arUser: '',
         memo: '',
         isUpdate: true,
         isNewLine: true,
@@ -243,6 +243,7 @@ export default {
     dataTable: {
       deep: true,
       handler(data) {
+        this.handleDate(data)
         this.handleAmountTable(data)
         this.filterDetails()
       },
@@ -293,6 +294,10 @@ export default {
 
     },
 
+    handleDate(data = []) {
+      data.forEach(item => {item.date = this.convertDate(item.date) });  
+    },
+
     changeDataDetailTable(data) {
       this.dataTable = data
     },
@@ -308,7 +313,7 @@ export default {
               lastRB.otherAmount = '';
               lastRB.expenseCategory = '';
               lastRB.date = '';
-              lastRB.apUser = '';
+              lastRB.arUser = '';
               lastRB.memo = '';
             }
           }
@@ -451,25 +456,20 @@ export default {
           RBActualAmount: parseToNumber(data.RBActualAmount),
           RBOtherExpensesAmount: parseToNumber(data.RBOtherExpensesAmount),
           receiveBrowsDTL: data.receiveBrowsDTL.map((item) => {
-
             const RBExpenseCategory = this.findValueByText(
-              this.itemListAccountingItems,
+              this.listAccountingItems,
               item.expenseCategory,
-            )
-
-            const RBApUser = this.findValueByText(
-              this.listEmployeeName,
-              item.apUser,
             )
 
             return {
               RBLineID: item.lineID,
               RBAmount: parseToNumber(item.amount),
               RBOtherAmount: parseToNumber(item.otherAmount),
-              RBExpenseCategory: RBExpenseCategory,
+              RBExpenseCategory: Number(RBExpenseCategory),
               RBDate: item.date,
-              RBApUser: RBApUser,
+              RBApUser: item.arUser,
               RBMemo: item.memo,
+              RBItemID: null
             }
           })
         }
@@ -497,9 +497,15 @@ export default {
           res && res.status === SERVER_RESPONSE_CODE.OK
 
         if (validReceiveResponse) {
-
           this.receiveBrowseData = res?.data
-          this.dataTable = res?.data?.receiveBrowsDTL || []
+          this.dataTable = res?.data?.receiveBrowsDTL.map((item) => {
+            return Object.fromEntries(
+              Object.entries(item).map(([key, value]) => [
+                key.replace('RB', '').toLowerCase(),
+                value,
+              ])
+            );
+          }) || [];
 
           const totalAmount = this.dataTable.reduce((sum, item) => sum + item.amount, 0);
 
@@ -509,7 +515,7 @@ export default {
             otherAmount: '',
             expenseCategory:'',
             date: '',
-            apUser: '',
+            arUser: '',
             memo: '',
             isUpdate: true,
             isNewLine: true,

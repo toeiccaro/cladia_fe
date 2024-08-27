@@ -145,6 +145,8 @@ export default {
         BTransDate: this.$t('lbl_BTransDate_0'),
         ETransDate: this.$t('lbl_ETransDate_0'),
         Fax: this.$t('lbl_Fax_0'),
+        TaxRate: this.$t('lbl_TaxRate_0'),
+        DiscountRate: this.$t('lbl_DiscountRate_0'),
       }
     },
   },

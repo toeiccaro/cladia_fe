@@ -220,8 +220,25 @@
                     }"
                   ></b-form-select>
 
-                  <v-select
-                    v-else-if="header.filter === 'select-input'"
+                  <div
+                  v-else-if="header.filter === 'select-input'"
+                  :style="{
+                    display: 'flex'
+                  }"
+                >
+                  <b-form-input
+                    v-model="content[header.key]"
+                    type="text"
+                    :class="{
+                      'input-disabled': header.disabled,
+                    }"
+                    :style="{
+                      opacity: '1 !important',
+                      width: '70%'
+                    }"
+                    :disabled="header.disabled"
+                  />
+                  <b-form-select
                     v-model="content[header.key]"
                     :options="header.options"
                     class="select"
@@ -231,8 +248,11 @@
                     :disabled="header.disabled"
                     :style="{
                       opacity: '1 !important',
+                      width: '20%'
                     }"
-                  ></v-select>
+                  >
+                  </b-form-select>
+                </div>
 
                   <base-typeahead-autocomplete
                     v-else-if="header.filter === 'autocomplete'"
@@ -314,19 +334,40 @@
                   }"
                 ></b-form-select>
 
-                <v-select
+                <div
                   v-else-if="header.filter === 'select-input'"
-                  v-model="content[header.key]"
-                  :options="header.options"
-                  class="select"
-                  :class="{
-                    'input-disabled': header.disabled,
-                  }"
-                  :disabled="header.disabled"
                   :style="{
-                    opacity: '1 !important',
+                    display: 'flex'
                   }"
-                ></v-select>
+                >
+                  <b-form-input
+                    v-model="content[header.key]"
+                    type="text"
+                    :class="{
+                      'input-disabled': header.disabled,
+                    }"
+                    :style="{
+                      opacity: '1 !important',
+                      width: '70%'
+                    }"
+                    :disabled="header.disabled"
+                  />
+                  <b-form-select
+                    v-model="content[header.key]"
+                    :options="header.options"
+                    class="select"
+                    :class="{
+                      'input-disabled': header.disabled,
+                    }"
+                    :disabled="header.disabled"
+                    :style="{
+                      opacity: '1 !important',
+                      width: '20%'
+                    }"
+                  >
+                  </b-form-select>
+                </div>
+                
 
                 <base-typeahead-autocomplete
                   v-else-if="header.filter === 'autocomplete'"

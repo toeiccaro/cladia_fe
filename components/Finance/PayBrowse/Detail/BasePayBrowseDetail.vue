@@ -242,6 +242,7 @@ export default {
     dataTable: {
       deep: true,
       handler(data) {
+        this.handleDate(data)
         this.handleAmountTable(data)
         this.filterDetails()
       },
@@ -288,7 +289,10 @@ export default {
 
       //actual Amount
       this.payBrowseData.PBActualAmount = formatNumberWithCommas(parseToNumber(this.payBrowseData.PBTotalAmount) - totalOrtherAmount);
+    },
 
+    handleDate(data = []) {
+      data.forEach(item => {item.date = this.convertDate(item.date) });  
     },
 
     changeDataDetailTable(data) {
@@ -391,7 +395,6 @@ export default {
         })
 
         this.listFieldRequired.forEach((item) => {
-          console.log('this.payBrowseData[item.key]', this.payBrowseData[item.key], this.payBrowseData);
           if (!this.payBrowseData[item.key]){
             this.listErrorMessage.push({
               fieldName: item.fieldName,
@@ -454,23 +457,19 @@ export default {
           payBrowsDTL: data.payBrowsDTL.map((item) => {
 
             const PBExpenseCategory = this.findValueByText(
-              this.itemListAccountingItems,
+              this.listAccountingItems,
               item.expenseCategory,
-            )
-
-            const PBApUser = this.findValueByText(
-              this.listEmployeeName,
-              item.apUser,
             )
 
             return {
               PBLineID: item.lineID,
               PBAmount: parseToNumber(item.amount),
               PBOtherAmount: parseToNumber(item.otherAmount),
-              PBExpenseCategory: PBExpenseCategory,
+              PBExpenseCategory: Number(PBExpenseCategory),
               PBDate: item.date,
-              PBApUser: PBApUser,
+              PBApUser: item.apUser,
               PBMemo: item.memo,
+              RBItemID: null
             }
           })
         }
@@ -498,10 +497,16 @@ export default {
           res && res.status === SERVER_RESPONSE_CODE.OK
 
         if (validPayResponse) {
-
           this.payBrowseData = res?.data
-          this.dataTable = res?.data?.payBrowsDTL || []
-          
+          this.dataTable = res?.data?.payBrowsDTL.map((item) => {
+            return Object.fromEntries(
+              Object.entries(item).map(([key, value]) => [
+                key.replace('PB', '').toLowerCase(),
+                value,
+              ])
+            );
+          }) || [];
+
           const totalAmount = this.dataTable.reduce((sum, item) => sum + item.amount, 0);
 
           this.dataTable.push({

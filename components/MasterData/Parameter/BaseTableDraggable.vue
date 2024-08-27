@@ -90,6 +90,7 @@
                   :maxLength="item.maxLength || '256'"
                   class="w-100 border border-dark"
                   @keyup.enter="filterData()"
+                  autocomplete="off"
                 />
                 <b-form-select
                   v-else-if="item.filter === 'select'"
