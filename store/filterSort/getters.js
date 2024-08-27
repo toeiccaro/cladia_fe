@@ -72,4 +72,8 @@ export default {
   getPayloadProductPlan: (state) => state.payloadProductPlan,
   getPayloadOutwardPlan: (state) => state.payloadOutwardPlan,
   getPayloadPurchaseRNBrowse: (state) => state.payloadPurchaseRNBrowse,
+
+  //Finance
+
+  getPayloadPayableQuery: (state) => state.payloadPayableQuery,
 };

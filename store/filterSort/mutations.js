@@ -65,6 +65,22 @@ export default {
     state.payloadPayBrowse = data;
   },
 
+  SET_PAYLOAD_PAYABLE_ANNUAL_QUERY(state, data) {
+    state.payloadPayableQuery = data;
+  },
+
+  UPDATE_PAYLOAD_PAYABLE_ANNUAL_QUERY(state, data) {
+    state.payloadPayableQuery = {
+      ...state.payloadPayableQuery,
+      ...data,
+    };
+
+    for (const prop in state.payloadPayableQuery) {
+      isEmptyValue(state.payloadPayableQuery[prop]) &&
+        delete state.payloadPayableQuery[prop];
+    }
+  },
+
   UPDATE_PAYLOAD_SALE_DN_BROWSE(state, data) {
     state.payloadSaleDNBrowse = {
       ...state.payloadSaleDNBrowse,

@@ -8,7 +8,7 @@
       :is-error="true"
       :list-error-message="listErrorMessage"
     />
-    <RBForm ref="addRBForm" :key="refreshAddRBFormKey" :data="form" />
+    <RBForm ref="addRBForm" :key="refreshAddRBFormKey" :data="form" :isDisabled="isCheck" />
     <BaseTableItemDetail
       ref="tableDetails"
       class="add-sale-order-table-details"
@@ -233,7 +233,9 @@ export default {
     },
 
     isCheck() {
-      return !!(this.form?.checker && this.form.checkDate)
+      console.log("this.form?.checker ",this.form?.checker , this.form);
+      
+      return !!(this.form?.checker )
     },
 
     tableHeaders() {
@@ -438,8 +440,7 @@ export default {
             item.disabled = !this.getActiveButtonToolBar?.isDelete
             break
           case 'check':
-            item.disabled =
-              !this.getActiveButtonToolBar?.isCheck || checker === true
+            item.disabled = !this.getActiveButtonToolBar?.isCheck || checker
             break
           case 'unCheck':
             item.disabled =
@@ -501,7 +502,7 @@ export default {
         })
         if (res.status === 200) {
           this.form.orderNumber = res?.data?.RBOrderNumber
-          this.form.checker = res?.data?.checker
+          this.form.checker = res?.data?.RBChecker
           this.form.departmentID = res?.data?.departmentID
           this.form.editor = res?.data?.editor
           this.form.margin = res?.data?.margin
