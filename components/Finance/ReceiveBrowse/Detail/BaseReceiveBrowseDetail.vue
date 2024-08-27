@@ -283,7 +283,9 @@ export default {
 
     handleAmountTable(data = []) {
       //amount
-      const totalAmount = data.reduce((sum, item) => sum + Number(item.amount), 0);
+      const totalAmount = data.reduce((sum, item, index) => {
+        return index < data.length - 1 ? sum + Number(item.amount) : sum;
+      }, 0);
       this.receiveBrowseData.RBBalanceAmount = formatNumberWithCommas(parseToNumber(this.receiveBrowseData.RBTotalAmount) - totalAmount);
 
       //orther Amount
