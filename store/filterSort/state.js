@@ -53,6 +53,10 @@ export default {
     pageNo: 1,
     pageSize: 30,
   },
+  payloadPayableQuery: {
+    pageNo: 1,
+    pageSize: 30,
+  },
   payloadSaleQuotation: {
     pageNo: 1,
     pageSize: 30,

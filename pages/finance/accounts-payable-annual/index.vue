@@ -4,23 +4,9 @@
       :list-tools="listToolBarsCheckAuthority"
       @changeActiveToolBar="changeActiveToolBar"
     ></ToolBar>
-    <tr class="tr-2">
-      <td class="label">
-        <span id="departmentID">
-          {{ $t('lbl_APYear_0') }}
-        </span>
-      </td>
-      <td class="input">
-        <b-form-select
-          v-model="selectedYear"
-          :options="yearOptions"
-          class="select"
-          :disabled="isDisabled"
-        ></b-form-select>
-      </td>
-    </tr>
+
     <Table
-      ref="tableSaleOrder"
+      ref="tablePayableAnnual"
       @handleDetailId="handleDetailId"
       @changeLayout="changeLayout"
     />
@@ -56,7 +42,7 @@ export default {
     return {
       listToolBars: [
         {
-          key: 'queryInventory',
+          key: 'queryTablePayableAnnual',
           label: this.$t('btn_btnSearch_0'),
           icon: '/images/search.png',
         },
@@ -94,14 +80,9 @@ export default {
       dataLayout: {},
       listDataColumn: [],
       listColumnChange: [],
-      selectedYear: null,
-      yearOptions: [],
-      isDisabled: false,
     }
   },
-  created() {
-    this.generateYearOptions()
-  },
+
   computed: {
     ...mapGetters({
       payloadSaleOrder: 'filterSort/getPayloadSaleOrder',
@@ -153,7 +134,7 @@ export default {
   methods: {
     functionReload() {
       this.$bus.$emit('refresh-filter-data')
-      return this.$refs.tableSaleOrder.refresh()
+      return this.$refs.tablePayableAnnual.refresh()
     },
     exportByPage() {
       const confirm = window.confirm(this.$t('msg_ConfirmExport_0'))
@@ -182,17 +163,12 @@ export default {
       this.handleExportExcel(sortFormOptional)
     },
     changeActiveToolBar(key) {
-      if (key === 'addOrder') {
-        this.$router.push(this.localePath({ path: '/sales/order/add' }))
-      } else if (key === 'editOrder') {
-        this.currentId &&
-          this.$router.push({
-            path: `/${this.$i18n.locale}/sales/order/detail?sono=${this.currentId}`,
-          })
+      if (key === 'queryTablePayableAnnual') {
+        console.log('acctionn')
+
+        this.functionReload()
       } else if (key === 'setOrder') {
         this.$refs.modalSetColumn.showModal = true
-      } else if (key === 'refreshOrder') {
-        return location.reload()
       } else if (key === 'closeOrder') {
         this.$router.push(this.localePath({ path: '/' }))
       } else if (key === 'saveLayout') {
@@ -211,7 +187,7 @@ export default {
       if (confirm) {
         this.loading = true
         await api('updateColumn', this.listColumnChange)
-        this.$refs.tableSaleOrder.refresh()
+        this.$refs.tablePayableAnnual.refresh()
         this.loading = false
       }
     },
@@ -222,19 +198,6 @@ export default {
       if (response?.status === SERVER_RESPONSE_CODE.OK && response?.data) {
         downloadFileExcel(response.data)
       }
-    },
-
-    generateYearOptions() {
-      const currentYear = new Date().getFullYear()
-      const startYear = currentYear - 5
-      const endYear = currentYear + 5
-
-      this.yearOptions = []
-      for (let year = startYear; year <= endYear; year++) {
-        this.yearOptions.push({ value: year, text: year.toString() })
-      }
-
-      this.selectedYear = currentYear
     },
   },
 }
