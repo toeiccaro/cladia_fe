@@ -390,6 +390,9 @@ const api = (config) => ({
 
   deletePayBrowsedDetailDeleteAR: (params) =>
     config('delete', `pay-browse/detail/deleteAP?orderNo=${params.orderNo}&ID=${params.ID}`),
+
+  querySearchPayTable: (payload) => config('post', 'account-pay-annual-table/query', payload),
+  exportPayableAnnuaTable: (payload) => config('post', `account-pay-annual-table/export`, payload),
   // Stock Detail
   getListStockDetail: (payload) => config('post', 'stock_detail', payload),
   exportExcelStock: (payload) => config('post', 'stock_detail/excel', payload),

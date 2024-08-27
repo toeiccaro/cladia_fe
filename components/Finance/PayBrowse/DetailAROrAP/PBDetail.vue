@@ -8,7 +8,7 @@
       :is-error="true"
       :list-error-message="listErrorMessage"
     />
-    <PBForm ref="addPBForm" :key="refreshAddPBFormKey" :data="form" />
+    <PBForm ref="addPBForm" :key="refreshAddPBFormKey" :data="form"  :isDisabled="isCheck"/>
     <BaseTableItemDetail
       ref="tableDetails"
       class="add-sale-order-table-details"
@@ -233,7 +233,7 @@ export default {
     },
 
     isCheck() {
-      return !!(this.form?.checker && this.form.checkDate)
+      return !!(this.form?.checker )
     },
 
     tableHeaders() {
@@ -438,12 +438,11 @@ export default {
             item.disabled = !this.getActiveButtonToolBar?.isDelete
             break
           case 'check':
-            item.disabled =
-              !this.getActiveButtonToolBar?.isCheck || checker === true
+            item.disabled = !this.getActiveButtonToolBar?.isCheck || checker
             break
           case 'unCheck':
             item.disabled =
-              !this.getActiveButtonToolBar?.isCheck || checker !== true
+              !this.getActiveButtonToolBar?.isCheck || checker === null
             break
           case 'print':
             item.disabled = !this.getActiveButtonToolBar?.isPrint
@@ -502,7 +501,7 @@ export default {
         if (res.status === 200) {
           // this.form = res.data
           this.form.orderNumber = res?.data?.PBOrderNumber
-          this.form.checker = res?.data?.checker
+          this.form.checker = res?.data?.PBChecker
           this.form.departmentID = res?.data?.departmentID
           this.form.editor = res?.data?.editor
           this.form.margin = res?.data?.margin
