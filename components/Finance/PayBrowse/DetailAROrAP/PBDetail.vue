@@ -701,7 +701,7 @@ export default {
         const response = await api('uncheckPB', params)
         const errorCode = response?.data?.response?.status
 
-        if (errorCode === SERVER_RESPONSE_CODE.FORBIDDEN) {
+        if (errorCode === SERVER_RESPONSE_CODE.FOPBIDDEN) {
           window.alert(this.$t(response?.message))
           return
         }
@@ -780,15 +780,23 @@ export default {
               })
             }
           })
+          if(item.creditAmount !== item.debitAmount) {
+            errors.push({
+              fieldName: `${this.$t('lbl_PBLineID_0')} ${
+                item.lineID
+              } - ${this.$t(`lbl_PBAmount_0`)}`,
+              text: this.$t('msg_SubjectIsSimilarToCountersubject_0'),
+            })
+          }
         })
       }
 
-      if (this.form.margin !== 0) {
-        errors.push({
-          fieldName: this.$t(`lbl_PBMargin_0`),
-          text: this.$t('msg_MustBeZero_0'),
-        })
-      }
+      // if (this.form.margin !== 0) {
+      //   errors.push({
+      //     fieldName: this.$t(`lbl_PBMargin_0`),
+      //     text: this.$t('msg_MustBeZero_0'),
+      //   })
+      // }
 
       this.listErrorMessage = getUnique(errors, 'fieldName')
       if (this.listErrorMessage.length > 0) {
@@ -913,7 +921,7 @@ export default {
           const response = await api('deletePayBrowsedDeleteAR', params)
           const errorCode = response?.data?.response?.status
 
-          if (errorCode === SERVER_RESPONSE_CODE.FORBIDDEN) {
+          if (errorCode === SERVER_RESPONSE_CODE.FOPBIDDEN) {
             window.alert(this.$t(response?.data?.response?.data?.message))
             return
           }
@@ -973,7 +981,7 @@ export default {
           const response = await api('deletePayBrowsedDetailDeleteAR', params)
           const errorCode = response?.data?.response?.status
 
-          if (errorCode === SERVER_RESPONSE_CODE.FORBIDDEN) {
+          if (errorCode === SERVER_RESPONSE_CODE.FOPBIDDEN) {
             window.alert(this.$t(response?.data?.response?.data?.message))
             return
           }
