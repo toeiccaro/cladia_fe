@@ -187,7 +187,7 @@ export default {
         },
         {
           key: 'date',
-          name: this.$t('lbl_PBDate_0'),
+          name: this.$t('lbl_PBPaymentDate_0'),
           filter: 'datetime',
           width: `12%`,
         },
@@ -419,7 +419,7 @@ export default {
           PBActualAmount: parseToNumber(data.PBActualAmount),
           PBOtherExpensesAmount: parseToNumber(data.PBOtherExpensesAmount),
           payBrowsDTL: data.payBrowsDTL.map((item) => {
-
+            console.log('item', item);
             const PBExpenseCategory = this.findValueByText(
               this.listAccountingItems,
               item.expenseCategory,
@@ -427,13 +427,13 @@ export default {
 
             return {
               PBLineID: item.lineID,
-              PBAmount: parseToNumber(item.amount),
-              PBOtherAmount: parseToNumber(item.otherAmount),
+              PBAmount: typeof item.amount === "string" ? parseToNumber(item.amount) : item.amount,
+              PBOtherAmount: typeof item.otherAmount === "string" ? parseToNumber(item.otherAmount) : item.otherAmount,
               PBExpenseCategory: Number(PBExpenseCategory),
               PBDate: item.date,
               PBApUser: item.apUser,
               PBMemo: item.memo,
-              RBItemID: item.itemID ? item.itemID : null
+              PBItemID: item.itemID ? item.itemID : null
             }
           })
         }
