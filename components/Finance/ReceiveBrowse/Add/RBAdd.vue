@@ -625,15 +625,23 @@ export default {
               })
             }
           })
+          if(item.creditAmount !== item.debitAmount) {
+            errors.push({
+              fieldName: `${this.$t('lbl_RBLineID_0')} ${
+                item.lineID
+              } - ${this.$t(`lbl_RBAmount_0`)}`,
+              text: this.$t('msg_SubjectIsSimilarToCountersubject_0'),
+            })
+          }
         })
       }
 
-      if (this.form.margin !== 0) {
-        errors.push({
-          fieldName: this.$t(`lbl_RBMargin_0`),
-          text: this.$t('msg_MustBeZero_0'),
-        })
-      }
+      // if (this.form.margin !== 0) {
+      //   errors.push({
+      //     fieldName: this.$t(`lbl_RBMargin_0`),
+      //     text: this.$t('msg_MustBeZero_0'),
+      //   })
+      // }
 
       this.listErrorMessage = getUnique(errors, 'fieldName')
       if (this.listErrorMessage.length > 0) {

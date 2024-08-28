@@ -51,10 +51,11 @@
           </td>
           <td rows="1" colspan="4" class="input position-relative">
             <b-form-input
-              v-model="form.RBCustomerId"
-              :options="itemCustomerNameList"
+              :value="finalListCustomerNames"
+              name="txtCustomerNames"
+              type="text"
+              class="text"
               disabled
-              class="select"
             ></b-form-input>
           </td>
           <td class="info"></td>
@@ -178,6 +179,11 @@ export default {
         text: item.companyName,
         value: item.id,
       }))
+    },
+
+    finalListCustomerNames() {
+      const listCustomers = this.customerNameList.find((item) => item.id == Number(this.form.RBCustomerId));
+      return listCustomers?.companyName
     },
 
     currentSubject() {
