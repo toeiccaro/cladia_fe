@@ -136,7 +136,7 @@ export default {
         amount: 0,
         otherAmount: '',
         expenseCategory:'',
-        date: '',
+        paymentDate: '',
         arUser: '',
         memo: '',
         isUpdate: true,
@@ -187,8 +187,8 @@ export default {
           options: this.itemListAccountingItems,
         },
         {
-          key: 'date',
-          name: this.$t('lbl_RBDate_0'),
+          key: 'paymentDate',
+          name: this.$t('lbl_RBPaymentDate_0'),
           filter: 'datetime',
           width: `12%`,
         },
@@ -298,7 +298,7 @@ export default {
     },
 
     handleDate(data = []) {
-      data.forEach(item => {item.date = this.convertDate(item.date) });  
+      data.forEach(item => {item.paymentDate = this.convertDate(item.paymentDate) });  
     },
 
     changeDataDetailTable(data) {
@@ -316,7 +316,7 @@ export default {
               lastRB.amount = '';
               lastRB.otherAmount = '';
               lastRB.expenseCategory = '';
-              lastRB.date = '';
+              lastRB.paymentDate = '';
               lastRB.arUser = '';
               lastRB.memo = '';
             }
@@ -458,11 +458,11 @@ export default {
 
             return {
               RBLineID: item.lineID,
-              RBAmount: parseToNumber(item.amount),
-              RBOtherAmount: parseToNumber(item.otherAmount),
+              RBAmount: typeof item.amount === "string" ? parseToNumber(item.amount) : item.amount,
+              RBOtherAmount: typeof item.otherAmount === "string" ? parseToNumber(item.otherAmount) : item.otherAmount,
               RBExpenseCategory: Number(RBExpenseCategory),
-              RBDate: item.date,
-              RBApUser: item.arUser,
+              RBPaymentDate: item.paymentDate,
+              RBArUser: item.arUser,
               RBMemo: item.memo,
               RBItemID: item.itemID ? item.itemID : null
             }
@@ -520,7 +520,7 @@ export default {
             amount: formatNumberWithCommas(res?.data?.RBTotalAmount - totalAmount),
             otherAmount: '',
             expenseCategory:'',
-            date: '',
+            paymentDate: '',
             arUser: '',
             memo: '',
             isUpdate: true,
