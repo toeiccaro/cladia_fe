@@ -17,6 +17,7 @@ export default {
   getPayloadSaleDNBrowse: (state) => state.payloadSaleDNBrowse,
   getPayloadSaleQuotation: (state) => state.payloadSaleQuotation,
   getPayloadSaleOrder: (state) => state.payloadSaleOrder,
+  getPayloadReceivableQuery: (state) => state.payloadReceivableQuery,
   getPayloadSaleInvoice: (state) => state.payloadSaleInvoice,
   getPayloadReceiveBrowse: (state) => state.payloadReceiveBrowse,
   getPayloadPayBrowse: (state) => state.payloadPayBrowse,

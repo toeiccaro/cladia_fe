@@ -126,6 +126,22 @@ export default {
     state.payloadSaleOrder = data;
   },
 
+  UPDATE_PAYLOAD_RECEIVABLE_ANNUAL_QUERY(state, data) {
+    state.payloadReceivableQuery = {
+      ...state.payloadReceivableQuery,
+      ...data,
+    };
+
+    for (const prop in state.payloadReceivableQuery) {
+      isEmptyValue(state.payloadReceivableQuery[prop]) &&
+        delete state.payloadReceivableQuery[prop];
+    }
+  },
+
+  SET_PAYLOAD_RECEIVABLE_ANNUAL_QUERY(state, data) {
+    state.payloadReceivableQuery = data;
+  },
+
   UPDATE_PAYLOAD_SALE_STATEMENT(state, data) {
     state.payloadSaleStatement = {
       ...state.payloadSaleStatement,

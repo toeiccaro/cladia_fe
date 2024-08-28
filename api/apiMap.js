@@ -239,6 +239,13 @@ const api = (config) => ({
   getOrderType: () => config('get', 'inventory/getOrderType'),
   exportInventoryQuery: (payload) =>
     config('post', 'inventory/export', payload),
+
+  //Receivable annual table
+  querySearchReceiveTable: (payload) => config('post', 'account-receive-annual-table/query', payload),
+
+  exportReceiveQuery: (payload) =>
+    config('post', 'account-receive-annual-table/export', payload),
+
   // Inventory Import
   getFileDefaultExcel: (lang) =>
     config('get', `inventory/downLoadExcel?lang=${lang}`),
