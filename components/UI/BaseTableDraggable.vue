@@ -144,7 +144,6 @@
                   minWidth: headerItem.width + 'px',
                   width: headerItem.width + 'px',
                   maxWidth: headerItem.width + 'px',
-                  color: isLineSetColor? (index % 3 === 1) ? 'blue' : (index % 3 === 2) ? 'red' : '' : '',
                 }"
                 class="table-item position-relative hide-text"
                 :class="{
@@ -341,10 +340,6 @@ export default {
     updateFiltersFunction: {
       type: Function,
       default: () => null,
-    },
-    isLineSetColor: {
-      type: Boolean,
-      default: false,
     },
   },
   data() {
