@@ -612,7 +612,7 @@ export default {
 
         case 'backAdd':
           this.$router.push(
-            this.localePath({ path: '/finance/receive-browse' })
+            this.localePath({ path: '/finance/pay-browse' })
           )
           break
 
@@ -665,7 +665,7 @@ export default {
         const response = await api('checkPB', params)
         const errorCode = response?.data?.response?.status
 
-        if (errorCode === SERVER_RESPONSE_CODE.FOPBIDDEN) {
+        if (errorCode === SERVER_RESPONSE_CODE.FORBIDDEN) {
           window.alert(this.$t(response?.message))
           return
         }

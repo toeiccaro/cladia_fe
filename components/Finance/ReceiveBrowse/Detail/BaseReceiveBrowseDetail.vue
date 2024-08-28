@@ -8,7 +8,7 @@
     <ReceiveBrowseDetailForm
       :data="receiveBrowseData"
     ></ReceiveBrowseDetailForm>
-    <base-table-item-detail
+    <BaseTableItemDetail
       ref="RBFormTableItems"
       class="rb-table-details"
       :table-content="dataTable"
@@ -19,7 +19,8 @@
       :new-line="newLine"
       :form="receiveBrowseData"
       @changeTable="changeDataDetailTable"
-    />
+      :onDelete="handleDelete"
+    ></BaseTableItemDetail>
     <BaseTableLoader v-if="loading" />
   </div>
 </template>
@@ -94,9 +95,8 @@ export default {
   computed: {
     ...mapGetters('base', ['getActiveButtonToolBar']),
 
-
     ...mapGetters('base', {
-      listAccountingItems: "getListAccountingItems",
+      listAccountingItems: 'getListAccountingItems',
     }),
 
     listEmployeeName() {
@@ -128,7 +128,7 @@ export default {
     },
 
     isCheck() {
-      return !!(this.receiveBrowseData?.checker && this.receiveBrowseData.checkDate)
+      return !!this.receiveBrowseData?.checker
     },
 
     newLine() {
@@ -224,7 +224,7 @@ export default {
           key: 'delete',
           label: this.$t('btn_btnDel_0'),
           icon: '/images/delete.png',
-          disabled: !this.getActiveButtonToolBar.isDelete,
+          disabled: !this.getActiveButtonToolBar.isDelete || this.isCheck,
         },
         {
           key: 'back',
@@ -250,9 +250,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('base', [
-      'getListAccountingItems',
-    ]),
+    ...mapActions('base', ['getListAccountingItems']),
 
     async getScolumnHides() {
       const response = await api('getScolumnHides', {
@@ -277,24 +275,29 @@ export default {
         data: this.dataTable,
         filterData: JSON.parse(JSON.stringify(filterData)),
       })
-      
     },
-
 
     handleAmountTable(data = []) {
       //amount
       const totalAmount = data.reduce((sum, item, index) => {
-        return index < data.length - 1 ? sum + Number(item.amount) : sum;
-      }, 0);
-      this.receiveBrowseData.RBBalanceAmount = formatNumberWithCommas(parseToNumber(this.receiveBrowseData.RBTotalAmount) - totalAmount);
+        return index < data.length - 1 ? sum + Number(item.amount) : sum
+      }, 0)
+      this.receiveBrowseData.RBBalanceAmount = formatNumberWithCommas(
+        parseToNumber(this.receiveBrowseData.RBTotalAmount) - totalAmount
+      )
 
       //orther Amount
-      const totalOrtherAmount = data.reduce((sum, item) => sum + Number(item.otherAmount), 0);
-      this.receiveBrowseData.RBOtherExpensesAmount = formatNumberWithCommas(totalOrtherAmount);
+      const totalOrtherAmount = data.reduce(
+        (sum, item) => sum + Number(item.otherAmount),
+        0
+      )
+      this.receiveBrowseData.RBOtherExpensesAmount =
+        formatNumberWithCommas(totalOrtherAmount)
 
       //actual Amount
-      this.receiveBrowseData.RBActualAmount = formatNumberWithCommas(parseToNumber(this.receiveBrowseData.RBTotalAmount) - totalOrtherAmount);
-
+      this.receiveBrowseData.RBActualAmount = formatNumberWithCommas(
+        parseToNumber(this.receiveBrowseData.RBTotalAmount) - totalOrtherAmount
+      )
     },
 
     handleDate(data = []) {
@@ -302,7 +305,6 @@ export default {
     },
 
     changeDataDetailTable(data) {
-      console.log('data', data);
       this.dataTable = data
     },
 
@@ -326,10 +328,10 @@ export default {
           return await this.save()
         }
 
-        if(key === "delete"){
-          return await  this.handleButtonDeleteOrder()
+        if (key === 'delete') {
+          return await this.handleButtonDeleteOrder()
         }
-       
+
         if (key === 'close') {
           return this.$router.push(this.localePath({ path: '/' }))
         }
@@ -347,7 +349,6 @@ export default {
     // eslint-disable-next-line require-await
     async save() {
       try {
-        console.log('this.receiveBrowseData', this.receiveBrowseData, this.dataTable);
         this.loading = true
 
         const confirm = window.confirm(this.$t('msg_ConfirmSave_0'))
@@ -366,40 +367,43 @@ export default {
         })
 
         this.listFieldRequired.forEach((item) => {
-          if (!this.receiveBrowseData[item.key]){
+          if (!this.receiveBrowseData[item.key]) {
             this.listErrorMessage.push({
               fieldName: item.fieldName,
               text: this.$t('msg_NoInput_0'),
             })
           }
         })
-        
-        this.receiveBrowseData.receiveBrowsDTL = this.dataTable;
+
+        this.receiveBrowseData.receiveBrowsDTL = this.dataTable
 
         this.receiveBrowseData.receiveBrowsDTL.map((item) => {
           const requiredFields = {
             otherAmount: 'RBOtherAmount',
             expenseCategory: 'RBExpenseCategory',
-          };
+          }
 
-          let otherAmount = !!item['otherAmount'];
-          let expenseCategory = !!item['expenseCategory'];
+          let otherAmount = !!item['otherAmount']
+          let expenseCategory = !!item['expenseCategory']
 
-          if (!(otherAmount && expenseCategory) && (otherAmount || expenseCategory)) {
+          if (
+            !(otherAmount && expenseCategory) &&
+            (otherAmount || expenseCategory)
+          ) {
             for (const key in requiredFields) {
               if (!item[key]) {
                 this.listErrorMessage.push({
                   fieldName: `${this.$t('lbl_LineID_0')} ${
-                  item.lineID
-                } - ${this.$t(`lbl_${requiredFields[key]}_0`)}`,
-                text: this.$t('msg_NoInput_0'),
-                });
+                    item.lineID
+                  } - ${this.$t(`lbl_${requiredFields[key]}_0`)}`,
+                  text: this.$t('msg_NoInput_0'),
+                })
               }
             }
           }
         })
 
-        if(this.listErrorMessage.length > 0){
+        if (this.listErrorMessage.length > 0) {
           return
         }
         await this.addOrUpdateItem(this.receiveBrowseData)
@@ -411,7 +415,6 @@ export default {
     },
 
     async handleButtonDeleteOrder() {
-
       const params = {
         orderNo: this.receiveBrowseData?.RBOrderNumber,
       }
@@ -436,7 +439,7 @@ export default {
       }
     },
     async addOrUpdateItem(data) {
-      data.receiveBrowsDTL.pop();
+      data.receiveBrowsDTL.pop()
       try {
         const payload = {
           RBMstId: data.RBMstId,
@@ -453,7 +456,7 @@ export default {
           receiveBrowsDTL: data.receiveBrowsDTL.map((item) => {
             const RBExpenseCategory = this.findValueByText(
               this.listAccountingItems,
-              item.expenseCategory,
+              item.expenseCategory
             )
 
             return {
@@ -464,9 +467,9 @@ export default {
               RBPaymentDate: item.paymentDate,
               RBArUser: item.arUser,
               RBMemo: item.memo,
-              RBItemID: item.itemID ? item.itemID : null
+              RBItemID: item.itemID ? item.itemID : null,
             }
-          })
+          }),
         }
         // return console.log('payload', payload);
         const res = await api('editInvoiceRB', payload)
@@ -494,30 +497,36 @@ export default {
         if (validReceiveResponse) {
           this.receiveBrowseData = res?.data
 
-          this.dataTable = res?.data?.receiveBrowsDTL.map((item) => {
-            const newObject = {}
-            for (const key in item) {
-              let newKey = key.replace(/^RB/, '')
-              newKey = newKey[0].toLowerCase() + newKey.slice(1)
-              newObject[newKey] = item[key]
+          this.dataTable =
+            res?.data?.receiveBrowsDTL.map((item) => {
+              const newObject = {}
+              for (const key in item) {
+                let newKey = key.replace(/^RB/, '')
+                newKey = newKey[0].toLowerCase() + newKey.slice(1)
+                newObject[newKey] = item[key]
 
-              let expenseCategoryID = 0
-              setTimeout(() => {
-                if(newKey == 'expenseCategory' && this.listAccountingItems) {
-                expenseCategoryID = this.listAccountingItems.find(
-                  (item) => item.value == newObject.expenseCategory
-                )
-                newObject.expenseCategory = expenseCategoryID.text
+                let expenseCategoryID = 0
+                setTimeout(() => {
+                  if (newKey == 'expenseCategory' && this.listAccountingItems) {
+                    expenseCategoryID = this.listAccountingItems.find(
+                      (item) => item.value == newObject.expenseCategory
+                    )
+                    newObject.expenseCategory = expenseCategoryID.text
+                  }
+                }, 100)
               }
-              }, 100);
-            }
-            return newObject
-          }) || [];
-          const totalAmount = this.dataTable.reduce((sum, item) => sum + item.amount, 0);
+              return newObject
+            }) || []
+          const totalAmount = this.dataTable.reduce(
+            (sum, item) => sum + item.amount,
+            0
+          )
 
           this.dataTable.push({
             lineID: this.dataTable.length + 1,
-            amount: formatNumberWithCommas(res?.data?.RBTotalAmount - totalAmount),
+            amount: formatNumberWithCommas(
+              res?.data?.RBTotalAmount - totalAmount
+            ),
             otherAmount: '',
             expenseCategory:'',
             paymentDate: '',
@@ -526,7 +535,7 @@ export default {
             isUpdate: true,
             isNewLine: true,
           })
-          
+
           this.receiveBrowseData.RBBalanceAmount = formatNumberWithCommas(
             this.receiveBrowseData.RBBalanceAmount
           )
@@ -544,13 +553,46 @@ export default {
       }
     },
 
+    async handleDelete(selectedRows) {
+      const itemIDs = selectedRows.map((row) => row.itemID)
+
+      const queryString = itemIDs.map((id) => `RBItemIDs=${id}`).join('&')
+      const params = {
+        RBMstId: this.receiveBrowseData?.RBMstId,
+        ID: queryString,
+      }
+      const confirm = window.confirm(this.$t('msg_ConfirmDel_0'))
+
+      if (confirm) {
+        if (params.RBMstId) {
+          const response = await api(
+            'deleteReceiveBrowsedDetailDeleteInvoice',
+            params
+          )
+          const errorCode = response?.data?.response?.status
+
+          if (errorCode === SERVER_RESPONSE_CODE.FORBIDDEN) {
+            window.alert(this.$t(response?.data?.response?.data?.message))
+            return
+          }
+          if (response.status === SERVER_RESPONSE_CODE.OK) {
+            window.alert(this.$t('msg_IsDeleted_0'))
+            return this.$router.push(
+              this.localePath({ path: '/finance/receive-browse' })
+            )
+          }
+          window.alert(`${response?.message}`)
+        }
+      }
+    },
+
     async refresh() {
       await this.getData()
     },
 
     changeDataTable(data) {
       this.dataTable = data
-      this.receiveBrowseData.receiveBrowsDTL = data;
+      this.receiveBrowseData.receiveBrowsDTL = data
     },
   },
 }

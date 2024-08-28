@@ -77,4 +77,7 @@ export default {
   //Finance
 
   getPayloadPayableQuery: (state) => state.payloadPayableQuery,
+
+  getPayloadDepositWithdrawQuery: (state) => state.payloadDepositWithdrawQuery,
+
 };

@@ -8,7 +8,12 @@
       :is-error="true"
       :list-error-message="listErrorMessage"
     />
-    <RBForm ref="addRBForm" :key="refreshAddRBFormKey" :data="form" :isDisabled="isCheck" />
+    <RBForm
+      ref="addRBForm"
+      :key="refreshAddRBFormKey"
+      :data="form"
+      :isDisabled="isCheck"
+    />
     <BaseTableItemDetail
       ref="tableDetails"
       class="add-sale-order-table-details"
@@ -233,9 +238,7 @@ export default {
     },
 
     isCheck() {
-      console.log("this.form?.checker ",this.form?.checker , this.form);
-      
-      return !!(this.form?.checker )
+      return !!this.form?.checker
     },
 
     tableHeaders() {
@@ -437,7 +440,7 @@ export default {
       return this.listToolBars.map((item) => {
         switch (item.key) {
           case 'delete':
-            item.disabled = !this.getActiveButtonToolBar?.isDelete
+            item.disabled = !this.getActiveButtonToolBar?.isDelete || checker
             break
           case 'check':
             item.disabled = !this.getActiveButtonToolBar?.isCheck || checker

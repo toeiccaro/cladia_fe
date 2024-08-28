@@ -57,6 +57,10 @@ export default {
     pageNo: 1,
     pageSize: 30,
   },
+  payloadDepositWithdrawQuery:{
+    pageNo: 1,
+    pageSize: 30,
+  },
   payloadReceivableQuery: {
     pageNo: 1,
     pageSize: 30,

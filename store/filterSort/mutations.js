@@ -81,6 +81,22 @@ export default {
     }
   },
 
+  SET_PAYLOAD_DEPOSIT_WITHDRAW_QUERY(state, data) {
+    state.payloadDepositWithdrawQuery = data;
+  },
+
+  UPDATE_PAYLOAD_DEPOSIT_WITHDRAW_QUERY(state, data) {
+    state.payloadDepositWithdrawQuery = {
+      ...state.payloadDepositWithdrawQuery,
+      ...data,
+    };
+
+    for (const prop in state.payloadDepositWithdrawQuery) {
+      isEmptyValue(state.payloadDepositWithdrawQuery[prop]) &&
+        delete state.payloadDepositWithdrawQuery[prop];
+    }
+  },
+
   UPDATE_PAYLOAD_SALE_DN_BROWSE(state, data) {
     state.payloadSaleDNBrowse = {
       ...state.payloadSaleDNBrowse,
