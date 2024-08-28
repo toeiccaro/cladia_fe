@@ -1,0 +1,23 @@
+const receivableAnnualTableSchema = {
+  ARCompanyName: 'string',
+  ARCurrency: 'string',
+  ARSubject: 'string',
+  ARType: 'string',
+  ARYear: 'string',
+  AREndingBalance: 'string',
+  ARJan: 'string',
+  ARFeb: 'string',
+  ARMar: 'string',
+  ARApr: 'string',
+  ARMay: 'string',
+  ARJune: 'string',
+  ARJuly: 'string',
+  ARAug: 'string',
+  ARSep: 'string',
+  AROct: 'string',
+  ARNov: 'string',
+  ARDec: 'string',
+  ARTotalAmount: 'string',
+  ID: 0,
+  lineID: 0
+};
