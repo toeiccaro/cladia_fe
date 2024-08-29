@@ -81,6 +81,23 @@ export default {
     }
   },
 
+  //-Bank balance
+  SET_PAYLOAD_BANK_BALANCE_QUERY(state, data) {
+    state.payloadBankBalanceQuery = data;
+  },
+
+  UPDATE_PAYLOAD_BANK_BALANCE_QUERY(state, data) {
+    state.payloadBankBalanceQuery = {
+      ...state.payloadBankBalanceQuery,
+      ...data,
+    };
+
+    for (const prop in state.payloadBankBalanceQuery) {
+      isEmptyValue(state.payloadBankBalanceQuery[prop]) &&
+        delete state.payloadBankBalanceQuery[prop];
+    }
+  },
+
   UPDATE_PAYLOAD_SALE_DN_BROWSE(state, data) {
     state.payloadSaleDNBrowse = {
       ...state.payloadSaleDNBrowse,

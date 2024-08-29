@@ -400,6 +400,10 @@ const api = (config) => ({
 
   querySearchPayTable: (payload) => config('post', 'account-pay-annual-table/query', payload),
   exportPayableAnnuaTable: (payload) => config('post', `account-pay-annual-table/export`, payload),
+
+  //bank balance
+  queryBankBalanceTable: (payload) => config('post', 'bank-balance/list', payload),
+
   // Stock Detail
   getListStockDetail: (payload) => config('post', 'stock_detail', payload),
   exportExcelStock: (payload) => config('post', 'stock_detail/excel', payload),
