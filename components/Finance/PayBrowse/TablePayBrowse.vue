@@ -430,6 +430,7 @@ export default {
         if (validResponse) {
           this.dataTable = res.data.tableContent?.content
           this.total = res.data.tableContent?.totalElements
+          this.dataFooter = res.data?.tableFooter || {}
         }
       } catch (err) {
         console.error(err)

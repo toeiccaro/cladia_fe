@@ -79,4 +79,5 @@ export default {
   //- Bank balance
   getPayloadBankBalanceQuery: (state) => state.payloadBankBalanceQuery,
 
+  getPayloadDepositWithdrawQuery: (state) => state.payloadDepositWithdrawQuery,
 };

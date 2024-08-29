@@ -3,7 +3,7 @@
     <tr class="tr-2 form-year">
       <td class="label">
         <span id="year">
-          {{ $t('lbl_APYear_0') }}
+          {{ $t('lbl_StYear_0') }}
         </span>
       </td>
       <td class="input">
@@ -26,7 +26,6 @@
       @search="filterAndSort"
       @row="handleDetailId"
       @changeLayout="changeLayout"
-      is-line-set-color
 
     >
       <slot v-for="(item, index) in dataTable" :slot="'icon-' + index">
@@ -62,7 +61,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import { SERVER_RESPONSE_CODE } from '@/constants'
-import { saleOrderSchema } from '@/schemas/sales/sale-order'
+import {receivableAnnualTableSchema } from '@/schemas/finance/receivable-annual-table'
 import api from '@/api/api'
 import BasePagination from '~/components/UI/BasePagination.vue'
 import BaseTableDraggable from '~/components/UI/BaseTableDraggable.vue'
@@ -87,6 +86,7 @@ export default {
       selectedYear: null, 
       yearOptions: [], 
       isDisabled: false, 
+      dataFooter: {}
     }
   },
   async fetch() {
@@ -95,7 +95,7 @@ export default {
       this.UPDATE_PAYLOAD_RECEIVABLE_ANNUAL_QUERY({
         language: this.lang,
       })
-      await Promise.all([this.getData(), this.getUnitOptions(this.lang)])
+      await Promise.all([this.getData()])
     } catch (err) {
       console.error(err)
     } finally {
@@ -105,42 +105,31 @@ export default {
 
   computed: {
     ...mapGetters({
-      unitOptions: 'base/getUnitOptions',
       payloadReceivableQuery: 'filterSort/getPayloadReceivableQuery',
     }),
     ...mapGetters('base', ['getActiveButtonToolBar']),
-    checkAccountOptions() {
-      return [
-        { text: '', value: '' },
-        { text: 'Yes', value: 1 },
-        { text: 'No', value: 0 },
-      ]
-    },
     listDataShow() {
       return this.dataHeader
         .filter((_el) => !this.listIgnoreFieldName.includes(_el.fieldName))
         .filter((item) => !item.hidden)
         .sort((a, b) => a.fieldOrder - b.fieldOrder)
     },
-    totalAmount() {
-      let sum = 0
-      this.dataTable.forEach((item) => {
-        if (item.amount) {
-          sum += parseFloat(item.amount)
-        }
-      })
-      return sum
-    },
-    totalQuantity() {
-      let sum = 0
-      this.dataTable.forEach((item) => {
-        if (item.quantity) {
-          sum += parseFloat(item.quantity)
-        }
-      })
-      return sum
-    },
     dataTotalMapping() {
+      const listTotalFields = [
+        'ARJan',
+        'ARFeb',
+        'ARMar',
+        'ARApr',
+        'ARMay',
+        'ARJune',
+        'ARJuly',
+        'ARAug',
+        'ARSep',
+        'AROct',
+        'ARNov',
+        'ARDec',
+        'ARTotalAmount',
+      ]
       return this.headerMapping.map((item) => {
         const temp = {
           key: item.key,
@@ -148,24 +137,33 @@ export default {
           type: 'text',
         }
         if (item.key === 'AREndingBalance') {
-          console.log(item.key)
           temp.value = 'Total: '
           temp.align = 'center'
+        }
+        if (listTotalFields.includes(item.key)) {
+            temp.align = 'right'
+            temp.type = 'amount'
+            temp.value = this.dataFooter[item.key]
         }
         return temp
       })
     },
     dataTableMapping() {
       const listAlignRightFields = [
-        'Quantity',
-        'Amount',
-        'Price',
-        'StopQty',
-        'TaxRate',
-        'SODiscountRate',
-        'SOAmountIncludeTax',
-        'SOPriceIncludeTax',
-        'SOPriceIncludeDiscount',
+        'AREndingBalance',
+        'ARJan',
+        'ARFeb',
+        'ARMar',
+        'ARApr',
+        'ARMay',
+        'ARJune',
+        'ARJuly',
+        'ARAug',
+        'ARSep',
+        'AROct',
+        'ARNov',
+        'ARDec',
+        'ARTotalAmount',
       ]
 
       const data = this.dataTable?.map((item, index) => {
@@ -183,7 +181,7 @@ export default {
             type: 'slot',
             value: false,
           },
-          keyRow: item.sono,
+          keyRow: item.ARCompanyName,
         }
 
         this.listDataShow?.forEach((headerItem) => {
@@ -197,6 +195,27 @@ export default {
 
           if (listAlignRightFields.includes(headerItem.fieldName)) {
             obj[mappingFieldName].align = 'right'
+            obj[mappingFieldName].value 
+              = obj[mappingFieldName].value 
+              === 0
+                ? 0
+                : formatNumberWithCommas(obj[mappingFieldName].value)
+            obj[mappingFieldName].color = (index % 3 === 1) ? 'blue' : (index % 3 === 2) ? 'red' : ''
+
+          }
+          switch (headerItem.fieldName) {
+              case 'ARCompanyName':
+              obj[mappingFieldName].align = 'left';
+              break;
+              case 'ARSubject':
+              case 'ARCurrency':
+                obj[mappingFieldName].align = 'center';
+                break;
+              case 'ARType':
+              case 'ARYear':
+                obj[mappingFieldName].align = 'center'
+                obj[mappingFieldName].color = (index % 3 === 1) ? 'blue' : (index % 3 === 2) ? 'red' : '';
+                break;
           }
         })
 
@@ -212,20 +231,15 @@ export default {
           name: '',
           width: 40,
         },
-        {
-          key: 'icon',
-          name: '',
-          width: 40,
-        },
       ]
       const getHeaderItem = (item) => {
         const headerItem = {
           key: this.mappingProperty(
-            this.dataTable[0] || saleOrderSchema,
+            this.dataTable[0] || receivableAnnualTableSchema,
             item.fieldName
           ),
           name: this.$t(`lbl_${item.fieldName}_0`),
-          filter: item.fieldName === 'IsCheck' ? 'select' : 'input',
+          filter: 'input',
           width: item.fieldWide * 1,
           fieldName: item.fieldName,
           fieldOrder: item.fieldOrder,
@@ -292,6 +306,7 @@ export default {
         if (validResponse) {
           this.dataHeader = res.data?.scolumnHides
           this.dataTable = res.data.tableContent?.content
+          this.dataFooter = res.data?.tableFooter || {}
           this.total = res.data.tableContent?.totalElements
           this.SET_DATA_COLUMN_HIDE(
             this.dataHeader.filter(
@@ -345,11 +360,6 @@ export default {
           this.dataHeader = res.data?.scolumnHides
           this.dataTable = res.data.tableContent?.content
           this.total = res.data.tableContent?.totalElements
-          this.SET_DATA_COLUMN_HIDE(
-            this.dataHeader.filter(
-              (_el) => !this.listIgnoreFieldName.includes(_el.fieldName)
-            )
-          )
         }
       } catch (err) {
         console.error(err)
@@ -376,12 +386,6 @@ export default {
       return ''
     },
 
-    mapUnit(unitId) {
-      return (
-        this.unitOptions.find((item) => unitId && item.value === unitId)
-          ?.text || ''
-      )
-    },
 
     generateYearOptions() {
       const currentYear = new Date().getFullYear();

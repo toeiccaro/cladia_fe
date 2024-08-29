@@ -5,10 +5,8 @@
       :is-error="true"
       :list-error-message="listErrorMessage"
     ></BaseValidateMessage>
-    <PayBrowseDetailForm
-      :data="payBrowseData"
-    ></PayBrowseDetailForm>
-    <base-table-item-detail
+    <PayBrowseDetailForm :data="payBrowseData"></PayBrowseDetailForm>
+    <BaseTableItemDetail
       ref="PBFormTableItems"
       class="pb-table-details"
       :table-content="dataTable"
@@ -19,7 +17,8 @@
       :new-line="newLine"
       :form="payBrowseData"
       @changeTable="changeDataDetailTable"
-    />
+      :onDelete="handleDelete"
+    ></BaseTableItemDetail>
     <BaseTableLoader v-if="loading" />
   </div>
 </template>
@@ -95,7 +94,7 @@ export default {
     ...mapGetters('base', ['getActiveButtonToolBar']),
 
     ...mapGetters('base', {
-      listAccountingItems: "getListAccountingItems",
+      listAccountingItems: 'getListAccountingItems',
     }),
 
     listEmployeeName() {
@@ -134,7 +133,7 @@ export default {
       return {
         amount: 0,
         otherAmount: '',
-        expenseCategory:'',
+        expenseCategory: '',
         date: '',
         apUser: '',
         memo: '',
@@ -249,9 +248,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('base', [
-      'getListAccountingItems',
-    ]),
+    ...mapActions('base', ['getListAccountingItems']),
 
     async getScolumnHides() {
       const response = await api('getScolumnHides', {
@@ -261,7 +258,7 @@ export default {
         this.columnHides = response?.data || []
       }
     },
-    
+
     setArAmount(data) {
       this.payBrowseData.amount = formatNumberWithCommas(data) || 0
     },
@@ -281,20 +278,30 @@ export default {
     handleAmountTable(data = []) {
       //amount
       const totalAmount = data.reduce((sum, item, index) => {
-        return index < data.length - 1 ? sum + Number(item.amount) : sum;
-      }, 0);
-      this.payBrowseData.PBBalanceAmount = formatNumberWithCommas(parseToNumber(this.payBrowseData.PBTotalAmount) - totalAmount);
+        return index < data.length - 1 ? sum + Number(item.amount) : sum
+      }, 0)
+      this.payBrowseData.PBBalanceAmount = formatNumberWithCommas(
+        parseToNumber(this.payBrowseData.PBTotalAmount) - totalAmount
+      )
 
       //orther Amount
-      const totalOrtherAmount = data.reduce((sum, item) => sum + Number(item.otherAmount), 0);
-      this.payBrowseData.PBOtherExpensesAmount = formatNumberWithCommas(totalOrtherAmount);
+      const totalOrtherAmount = data.reduce(
+        (sum, item) => sum + Number(item.otherAmount),
+        0
+      )
+      this.payBrowseData.PBOtherExpensesAmount =
+        formatNumberWithCommas(totalOrtherAmount)
 
       //actual Amount
-      this.payBrowseData.PBActualAmount = formatNumberWithCommas(parseToNumber(this.payBrowseData.PBTotalAmount) - totalOrtherAmount);
+      this.payBrowseData.PBActualAmount = formatNumberWithCommas(
+        parseToNumber(this.payBrowseData.PBTotalAmount) - totalOrtherAmount
+      )
     },
 
     handleDate(data = []) {
-      data.forEach(item => {item.date = this.convertDate(item.date) });  
+      data.forEach((item) => {
+        item.date = this.convertDate(item.date)
+      })
     },
 
     changeDataDetailTable(data) {
@@ -306,14 +313,17 @@ export default {
         if (key === 'add') {
           const confirm = window.confirm(this.$t('msg_ConfirmContinue_0'))
           if (confirm) {
-            const lastPB =  this.payBrowseData.payBrowsDTL[this.payBrowseData.payBrowsDTL.length - 1]
-            if(lastPB) {
-              lastPB.amount = '';
-              lastPB.otherAmount = '';
-              lastPB.expenseCategory = '';
-              lastPB.date = '';
-              lastPB.apUser = '';
-              lastPB.memo = '';
+            const lastPB =
+              this.payBrowseData.payBrowsDTL[
+                this.payBrowseData.payBrowsDTL.length - 1
+              ]
+            if (lastPB) {
+              lastPB.amount = ''
+              lastPB.otherAmount = ''
+              lastPB.expenseCategory = ''
+              lastPB.date = ''
+              lastPB.apUser = ''
+              lastPB.memo = ''
             }
           }
         }
@@ -358,7 +368,7 @@ export default {
         })
 
         this.listFieldRequired.forEach((item) => {
-          if (!this.payBrowseData[item.key]){
+          if (!this.payBrowseData[item.key]) {
             this.listErrorMessage.push({
               fieldName: item.fieldName,
               text: this.$t('msg_NoInput_0'),
@@ -366,32 +376,35 @@ export default {
           }
         })
 
-        this.payBrowseData.payBrowsDTL = this.dataTable;
+        this.payBrowseData.payBrowsDTL = this.dataTable
 
         this.payBrowseData.payBrowsDTL.map((item) => {
           const requiredFields = {
             otherAmount: 'PBOtherAmount',
             expenseCategory: 'PBExpenseCategory',
-          };
+          }
 
-          let otherAmount = !!item['otherAmount'];
-          let expenseCategory = !!item['expenseCategory'];
+          let otherAmount = !!item['otherAmount']
+          let expenseCategory = !!item['expenseCategory']
 
-          if (!(otherAmount && expenseCategory) && (otherAmount || expenseCategory)) {
+          if (
+            !(otherAmount && expenseCategory) &&
+            (otherAmount || expenseCategory)
+          ) {
             for (const key in requiredFields) {
               if (!item[key]) {
                 this.listErrorMessage.push({
                   fieldName: `${this.$t('lbl_LineID_0')} ${
-                  item.lineID
-                } - ${this.$t(`lbl_${requiredFields[key]}_0`)}`,
-                text: this.$t('msg_NoInput_0'),
-                });
+                    item.lineID
+                  } - ${this.$t(`lbl_${requiredFields[key]}_0`)}`,
+                  text: this.$t('msg_NoInput_0'),
+                })
               }
             }
           }
         })
-        
-        if(this.listErrorMessage.length > 0){
+
+        if (this.listErrorMessage.length > 0) {
           return
         }
 
@@ -404,7 +417,7 @@ export default {
     },
 
     async addOrUpdateItem(data) {
-      data.payBrowsDTL.pop();
+      data.payBrowsDTL.pop()
       try {
         const payload = {
           PBMstId: data.PBMstId,
@@ -419,10 +432,9 @@ export default {
           PBActualAmount: parseToNumber(data.PBActualAmount),
           PBOtherExpensesAmount: parseToNumber(data.PBOtherExpensesAmount),
           payBrowsDTL: data.payBrowsDTL.map((item) => {
-            console.log('item', item);
             const PBExpenseCategory = this.findValueByText(
               this.listAccountingItems,
-              item.expenseCategory,
+              item.expenseCategory
             )
 
             return {
@@ -433,9 +445,9 @@ export default {
               PBDate: item.date,
               PBApUser: item.apUser,
               PBMemo: item.memo,
-              PBItemID: item.itemID ? item.itemID : null
+              RBItemID: item.itemID ? item.itemID : null,
             }
-          })
+          }),
         }
         // return console.log('payload', payload);
         const res = await api('editInvoicePB', payload)
@@ -487,26 +499,26 @@ export default {
         if (validPayResponse) {
           this.payBrowseData = res?.data
 
-          this.dataTable = res?.data?.payBrowsDTL.map((item) => {
-            const newObject = {}
-            for (const key in item) {
-              let newKey = key.replace(/^PB/, '')
-              newKey = newKey[0].toLowerCase() + newKey.slice(1)
-              newObject[newKey] = item[key]
+          this.dataTable =
+            res?.data?.payBrowsDTL.map((item) => {
+              const newObject = {}
+              for (const key in item) {
+                let newKey = key.replace(/^PB/, '')
+                newKey = newKey[0].toLowerCase() + newKey.slice(1)
+                newObject[newKey] = item[key]
 
-              let expenseCategoryID = 0
-              setTimeout(() => {
-                if(newKey == 'expenseCategory' && this.listAccountingItems) {
-                expenseCategoryID = this.listAccountingItems.find(
-                  (item) => item.value == newObject.expenseCategory
-                )
-                newObject.expenseCategory = expenseCategoryID.text
+                let expenseCategoryID = 0
+                setTimeout(() => {
+                  if (newKey == 'expenseCategory' && this.listAccountingItems) {
+                    expenseCategoryID = this.listAccountingItems.find(
+                      (item) => item.value == newObject.expenseCategory
+                    )
+                    newObject.expenseCategory = expenseCategoryID.text
+                  }
+                }, 100)
               }
-              }, 100);
-            }
-            return newObject
-          }) || [];
-
+              return newObject
+            }) || []
 
           const totalAmount = this.dataTable.reduce(
             (sum, item) => sum + item.amount,
@@ -515,16 +527,18 @@ export default {
 
           this.dataTable.push({
             lineID: this.dataTable.length + 1,
-            amount: formatNumberWithCommas(res?.data?.PBTotalAmount - totalAmount),
+            amount: formatNumberWithCommas(
+              res?.data?.PBTotalAmount - totalAmount
+            ),
             otherAmount: '',
-            expenseCategory:'',
+            expenseCategory: '',
             date: '',
             apUser: '',
             memo: '',
             isUpdate: true,
             isNewLine: true,
           })
-          
+
           this.payBrowseData.PBBalanceAmount = formatNumberWithCommas(
             this.payBrowseData.PBBalanceAmount
           )
@@ -539,6 +553,39 @@ export default {
         console.error(err)
       } finally {
         this.loading = false
+      }
+    },
+
+    async handleDelete(selectedRows) {
+      const itemIDs = selectedRows.map((row) => row.itemID)
+
+      const queryString = itemIDs.map((id) => `PBItemIDs=${id}`).join('&')
+      const params = {
+        PBMstId: this.payBrowseData?.PBMstId,
+        ID: queryString,
+      }
+      const confirm = window.confirm(this.$t('msg_ConfirmDel_0'))
+
+      if (confirm) {
+        if (params.PBMstId) {
+          const response = await api(
+            'deletePayBrowsedDetailDeleteInvoice',
+            params
+          )
+          const errorCode = response?.data?.response?.status
+
+          if (errorCode === SERVER_RESPONSE_CODE.FORBIDDEN) {
+            window.alert(this.$t(response?.data?.response?.data?.message))
+            return
+          }
+          if (response.status === SERVER_RESPONSE_CODE.OK) {
+            window.alert(this.$t('msg_IsDeleted_0'))
+            return this.$router.push(
+              this.localePath({ path: '/finance/pay-browse' })
+            )
+          }
+          window.alert(`${response?.message}`)
+        }
       }
     },
 

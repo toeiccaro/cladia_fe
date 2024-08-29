@@ -326,7 +326,10 @@ const api = (config) => ({
     config('delete', `receive-browse/deleteAR?orderNo=${params.orderNo}`),
 
   deleteReceiveBrowsedDetailDeleteAR: (params) =>
-    config('delete', `receive-browse/detail/deleteAR?orderNo=${params.orderNo}&ID=${params.ID}`),
+    config('delete', `receive-browse/detail/deleteAR?orderNo=${params.orderNo}&${params.ID}`),
+
+  deleteReceiveBrowsedDetailDeleteInvoice: (params) =>
+    config('delete', `receive-browse/detail/delete-invoice?RBMstId=${params.RBMstId}&${params.ID}`, ),
 
 
   // Pay Browse
@@ -396,7 +399,9 @@ const api = (config) => ({
     config('delete', `pay-browse/deleteAP?orderNo=${params.orderNo}`),
 
   deletePayBrowsedDetailDeleteAR: (params) =>
-    config('delete', `pay-browse/detail/deleteAP?orderNo=${params.orderNo}&ID=${params.ID}`),
+    config('delete', `pay-browse/detail/deleteAP?orderNo=${params.orderNo}&${params.ID}`, ),
+  deletePayBrowsedDetailDeleteInvoice: (params) =>
+    config('delete', `pay-browse/detail/delete-invoice?PBMstId=${params.PBMstId}&${params.ID}`, ),
 
   querySearchPayTable: (payload) => config('post', 'account-pay-annual-table/query', payload),
   exportPayableAnnuaTable: (payload) => config('post', `account-pay-annual-table/export`, payload),
@@ -524,6 +529,11 @@ const api = (config) => ({
   getApprovalPendingOptions: () => config('get', 'dashboard/getListCanUsing'),
   getAllApprovalPending: () =>
     config('get', `dashboard/getAllApprovalPending?sortType=asc`),
+
+  //Deposit with draw detail
+  saveSettingBlance: (payload) => config('post', 'transaction-detail/init-balance-setting', payload),
+  querySearchDepositWithdrawTable: (payload) => config('post', `transaction-detail/search?${payload.queryString}`, payload),
+  exportDepositWithdrawTable: (payload) => config('post', `transaction-detail/export?${payload.queryString}`, payload),
 });
 
 export default api;
