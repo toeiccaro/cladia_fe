@@ -169,6 +169,7 @@ export default {
           filter: 'number',
           width: `12%`,
           align: 'right',
+          fieldRequired: true,
         },
         {
           key: 'otherAmount',
@@ -189,6 +190,7 @@ export default {
           name: this.$t('lbl_PBPaymentDate_0'),
           filter: 'datetime',
           width: `12%`,
+          fieldRequired: true,
         },
         {
           key: 'apUser',
@@ -196,6 +198,7 @@ export default {
           filter: 'select',
           width: `12%`,
           options: this.listEmployeeName,
+          fieldRequired: true,
         },
         {
           key: 'memo',
@@ -378,19 +381,38 @@ export default {
 
         this.payBrowseData.payBrowsDTL = this.dataTable
 
-        this.payBrowseData.payBrowsDTL.map((item) => {
-          const requiredFields = {
-            otherAmount: 'PBOtherAmount',
-            expenseCategory: 'PBExpenseCategory',
-          }
+        this.payBrowseData.payBrowsDTL.map((item, index) => {
+          if(index < this.payBrowseData.payBrowsDTL.length - 1 ) {
+            const sameFields = {
+              otherAmount: 'PBOtherAmount',
+              expenseCategory: 'PBExpenseCategory',
+            }
 
-          let otherAmount = !!item['otherAmount']
-          let expenseCategory = !!item['expenseCategory']
+            let otherAmount = !!item['otherAmount']
+            let expenseCategory = !!item['expenseCategory']
 
-          if (
-            !(otherAmount && expenseCategory) &&
-            (otherAmount || expenseCategory)
-          ) {
+            if (
+              !(otherAmount && expenseCategory) &&
+              (otherAmount || expenseCategory)
+            ) {
+              for (const key in sameFields) {
+                if (!item[key]) {
+                  this.listErrorMessage.push({
+                    fieldName: `${this.$t('lbl_LineID_0')} ${
+                      item.lineID
+                    } - ${this.$t(`lbl_${sameFields[key]}_0`)}`,
+                    text: this.$t('msg_NoInput_0'),
+                  })
+                }
+              }
+            }
+
+            const requiredFields = {
+              amount: 'PBAmount',
+              date: 'PBDate',
+              apUser: 'PBApUser',
+            }
+
             for (const key in requiredFields) {
               if (!item[key]) {
                 this.listErrorMessage.push({

@@ -57,7 +57,7 @@ import { mapGetters, mapActions } from 'vuex'
 import { compact } from 'lodash'
 import OrderForm from './OrderForm.vue'
 import ModalImport from './ModalImport.vue'
-import { getUnique, formatNumberWithCommas } from '@/utils/utils'
+import { getUnique, formatNumberWithCommas, parseToNumber } from '@/utils/utils'
 import api from '@/api/api'
 import ToolBar from '@/components/UI/ToolBar.vue'
 import BaseModalAttach from '@/components/UI/BaseModalAttach.vue'
@@ -452,11 +452,15 @@ export default {
 
     updateTable(val) {
       this.dataTable = this.dataTable.map((item) => {
-        const quantity = item.quantity
-        const price = item.price
+        console.log('item', item);
+        const quantity = parseToNumber(item.quantity)
+        const price = parseToNumber(item.price)
         const discountRate = val.discountRate
         const taxRate = val.taxRate
-
+        console.log('check', quantity,
+          price,
+          discountRate,
+          taxRate,);
         const {
           priceIncludeDiscount,
           amount,
@@ -468,6 +472,11 @@ export default {
           discountRate,
           taxRate,
         })
+
+        console.log( priceIncludeDiscount,
+          amount,
+          priceIncludeTax,
+          amountIncludeTax,);
 
         return Object.assign({}, item, {
           amount,
@@ -530,6 +539,7 @@ export default {
               lineID: this.dataTable.length + 1,
             })
           }
+          console.log('this.dataTable', this.dataTable);
         }
       } catch (error) {
         console.error(error)
