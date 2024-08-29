@@ -1,11 +1,12 @@
 <template>
     <div class="table-order d-flex flex-column position-relative">
-      <tr class="tr-2">
+      <tr class="tr-2" style="margin-bottom: 10px;">
         <td class="label">
           <span id="departmentID">
             {{ $t('lbl_SearchDate_0') }}
           </span>
         </td>
+
         <td class="input">
           <datepicker
             v-only-date="{
@@ -122,8 +123,8 @@
 
       itemCurrencyOptions() {
         return this.currencyOptions.map((item) => ({
-          text: item.text,
-          value: item.value,
+          text: item?.text,
+          value: item?.value,
         }))
       },
       
@@ -182,7 +183,7 @@
             type: 'text'
           }
           switch (item.key) {
-            case 'BBCreditId':
+            case 'BBCreditID':
               temp.value = 'Total: '
               break
             case 'BBImportAmount':
@@ -257,7 +258,8 @@
                 break
               case 'BBCurrencyID':
                 const valueCurrency = this.currencyOptions.find(item => Number(item.value - 1) == obj[mappingFieldName].value)
-                obj[mappingFieldName].value = valueCurrency.text
+                if(valueCurrency)
+                  obj[mappingFieldName].value = valueCurrency?.text;
                 break
             }
           })
