@@ -3,7 +3,7 @@
     <tr class="tr-2 form-year">
       <td class="label">
         <span id="year">
-          {{ $t('lbl_APYear_0') }}
+          {{ $t('lbl_StYear_0') }}
         </span>
       </td>
       <td class="input">
@@ -205,11 +205,13 @@ export default {
           }
           switch (headerItem.fieldName) {
               case 'ARCompanyName':
-              case 'ARSubjectID':
-              case 'ARCurrencyID':
+              obj[mappingFieldName].align = 'left';
+              break;
+              case 'ARSubject':
+              case 'ARCurrency':
                 obj[mappingFieldName].align = 'center';
                 break;
-              case 'ARTypeID':
+              case 'ARType':
               case 'ARYear':
                 obj[mappingFieldName].align = 'center'
                 obj[mappingFieldName].color = (index % 3 === 1) ? 'blue' : (index % 3 === 2) ? 'red' : '';
@@ -226,11 +228,6 @@ export default {
       const header = [
         {
           key: 'index',
-          name: '',
-          width: 40,
-        },
-        {
-          key: 'icon',
           name: '',
           width: 40,
         },
