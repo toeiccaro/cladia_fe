@@ -1,9 +1,9 @@
 <template>
   <div class="table-order d-flex flex-column position-relative">
-    <tr class="tr-2 ml-4">
+    <tr class="tr-2 form-year">
       <td class="label">
         <span id="departmentID">
-          {{ $t('lbl_APYear_0') }}
+          {{ $t('lbl_StYear_0') }}
         </span>
       </td>
       <td class="input pl-2">
@@ -20,7 +20,7 @@
       :header="headerMapping"
       :data="dataTableMapping"
       :data-total="dataTotalMapping"
-      class="table-order--body mt-4"
+      class="table-order--body"
       :initial-filters="payloadPayableQuery"
       :update-filters-function="UPDATE_PAYLOAD_PAYABLE_ANNUAL_QUERY"
       @search="filterAndSort"
@@ -60,7 +60,8 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import { SERVER_RESPONSE_CODE } from '@/constants'
-import { saleOrderSchema } from '@/schemas/sales/sale-order'
+import {payableAnnualTableSchema } from '@/schemas/finance/receivable-annual-table'
+
 import api from '@/api/api'
 import BasePagination from '~/components/UI/BasePagination.vue'
 import BaseTableDraggable from '~/components/UI/BaseTableDraggable.vue'
@@ -83,9 +84,10 @@ export default {
       selectedYear: null,
       yearOptions: [],
       isDisabled: false,
-      selectedYear: null, 
-      yearOptions: [], 
-      isDisabled: false, 
+      selectedYear: null,
+      yearOptions: [],
+      isDisabled: false,
+      dataFooter: {}
     }
   },
 
@@ -102,47 +104,44 @@ export default {
       this.loading = false
     }
   },
-
-  computed: {
-    ...mapGetters({
-      unitOptions: 'base/getUnitOptions',
-      payloadPayableQuery: 'filterSort/getPayloadPayableQuery',
-    }),
-    ...mapGetters('base', ['getActiveButtonToolBar']),
-    checkAccountOptions() {
+  checkAccountOptions() {
       return [
         { text: '', value: '' },
         { text: 'Yes', value: 1 },
         { text: 'No', value: 0 },
       ]
     },
+    //
+  computed: {
+    ...mapGetters({
+      unitOptions: 'base/getUnitOptions',
+      payloadPayableQuery: 'filterSort/getPayloadPayableQuery',
+    }),
+    ...mapGetters('base', ['getActiveButtonToolBar']),
+   
     listDataShow() {
       return this.dataHeader
         .filter((_el) => !this.listIgnoreFieldName.includes(_el.fieldName))
         .filter((item) => !item.hidden)
         .sort((a, b) => a.fieldOrder - b.fieldOrder)
     },
-    
-    totalAmount() {
-      let sum = 0
-      this.dataTable.forEach((item) => {
-        if (item.amount) {
-          sum += parseFloat(item.amount)
-        }
-      })
-      return sum
-    },
-    totalQuantity() {
-      let sum = 0
-      this.dataTable.forEach((item) => {
-        if (item.quantity) {
-          sum += parseFloat(item.quantity)
-        }
-      })
-      return sum
-    },
-   
+
     dataTotalMapping() {
+      const listTotalFields = [
+        'APJan',
+        'APFeb',
+        'APMar',
+        'APApr',
+        'APMay',
+        'APJune',
+        'APJuly',
+        'APAug',
+        'APSep',
+        'APOct',
+        'APNov',
+        'APDec',
+        'APTotalAmount',
+      ]
       return this.headerMapping.map((item) => {
         const temp = {
           key: item.key,
@@ -153,21 +152,32 @@ export default {
           temp.value = 'Total: '
           temp.align = 'center'
         }
+        if (listTotalFields.includes(item.key)) {
+            temp.align = 'right'
+            temp.type = 'amount'
+            temp.value = this.dataFooter[item.key]
+        }
         return temp
       })
     },
-    
+   
+   
     dataTableMapping() {
       const listAlignRightFields = [
-        'Quantity',
-        'Amount',
-        'Price',
-        'StopQty',
-        'TaxRate',
-        'SODiscountRate',
-        'SOAmountIncludeTax',
-        'SOPriceIncludeTax',
-        'SOPriceIncludeDiscount',
+        'APEndingBalance',
+        'APJan',
+        'APFeb',
+        'APMar',
+        'APApr',
+        'APMay',
+        'APJune',
+        'APJuly',
+        'APAug',
+        'APSep',
+        'APOct',
+        'APNov',
+        'APDec',
+        'APTotalAmount',
       ]
 
       const data = this.dataTable?.map((item, index) => {
@@ -185,7 +195,7 @@ export default {
             type: 'slot',
             value: false,
           },
-          keyRow: item.sono,
+          keyRow: item.APCompanyName,
         }
 
         this.listDataShow?.forEach((headerItem) => {
@@ -199,9 +209,26 @@ export default {
 
           if (listAlignRightFields.includes(headerItem.fieldName)) {
             obj[mappingFieldName].align = 'right'
-          }
+            obj[mappingFieldName].value 
+              = obj[mappingFieldName].value 
+              === 0
+                ? 0
+                : formatNumberWithCommas(obj[mappingFieldName].value)
+            obj[mappingFieldName].color = (index % 3 === 1) ? 'blue' : (index % 3 === 2) ? 'red' : ''
 
-          
+          }
+          switch (headerItem.fieldName) {
+              case 'APCompanyName':
+              case 'APSubjectID':
+              case 'APCurrencyID':
+                obj[mappingFieldName].align = 'center';
+                break;
+              case 'APTypeID':
+              case 'APYear':
+                obj[mappingFieldName].align = 'center'
+                obj[mappingFieldName].color = (index % 3 === 1) ? 'blue' : (index % 3 === 2) ? 'red' : '';
+                break;
+          }
         })
 
         return obj
@@ -210,7 +237,6 @@ export default {
       return data
     },
     headerMapping() {
-    
       const header = [
         {
           key: 'index',
@@ -226,11 +252,11 @@ export default {
       const getHeaderItem = (item) => {
         const headerItem = {
           key: this.mappingProperty(
-            this.dataTable[0] || saleOrderSchema,
+            this.dataTable[0] || payableAnnualTableSchema,
             item.fieldName
           ),
           name: this.$t(`lbl_${item.fieldName}_0`),
-          filter: item.fieldName === 'IsCheck' ? 'select' : 'input',
+          filter: 'input',
           width: item.fieldWide * 1,
           fieldName: item.fieldName,
           fieldOrder: item.fieldOrder,
@@ -245,6 +271,7 @@ export default {
 
       return header
     },
+   
   },
   created() {
     this.generateYearOptions()
@@ -341,7 +368,7 @@ export default {
           pageNo: this.payloadPayableQuery.pageNo,
           pageSize: this.payloadPayableQuery.pageSize,
           language: this.payloadPayableQuery.language,
-          year: this.selectedYear
+          year: this.selectedYear,
         }
         this.SET_PAYLOAD_PAYABLE_ANNUAL_QUERY(payload)
         const res = await api('querySearchPayTable', this.payloadPayableQuery)

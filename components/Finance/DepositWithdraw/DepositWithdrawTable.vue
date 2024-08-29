@@ -198,14 +198,13 @@ export default {
       const header = [
         {
           key: 'index',
-          name: '',
           width: 40,
         },
-        {
-          key: 'icon',
-          name: '',
-          width: 40,
-        },
+        // {
+        //   key: 'icon',
+        //   name: '',
+        //   width: 40,
+        // },
       ]
       const getHeaderItem = (item) => {
         const maxLength = listNumberField.includes(item.fieldName)

@@ -49,6 +49,7 @@
               :disabled="isDisabled"
             ></b-form-select>
           </td>
+          <td class="info">*</td>
         </tr>
         <tr>
           <td class="label">
@@ -76,7 +77,7 @@
                 isAppendToChild: true,
                 childClass: 'input__orderDate',
               }"
-              :value="form.startDate"
+              :value="form.startDate ?? this.defaultStartDate"
               typeable
               format="yyyy-MM-dd"
               :disabled="isDisabled"
@@ -85,6 +86,7 @@
               @input="changeStartDate"
             ></datepicker>
           </td>
+          <td class="info">*</td>
         </tr>
       </div>
     </div>
@@ -182,6 +184,7 @@ export default {
       form: {
         startDate: new Date(),
       },
+      defaultStartDate:new Date(),
       highlighted: {
         dates: [new Date()],
       },
@@ -402,6 +405,7 @@ export default {
 
   td.info {
     padding: 3px;
+    color: red;
   }
 }
 
