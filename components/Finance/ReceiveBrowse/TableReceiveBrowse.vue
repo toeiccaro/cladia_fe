@@ -231,8 +231,6 @@ export default {
                 : `/${this.$i18n.locale}/finance/receive-browse/detailAROrAP?sono=${obj['orderNO'].value}`
           }
 
-         
-
           if (headerItem.fieldName === 'Date') {
             obj[mappingFieldName].value = this.convertDate(item.Date)
             obj[mappingFieldName].align = 'center'
@@ -432,6 +430,7 @@ export default {
         if (validResponse) {
           this.dataTable = res.data.tableContent?.content
           this.total = res.data.tableContent?.totalElements
+          this.dataFooter = res.data?.tableFooter || {}
         }
       } catch (err) {
         console.error(err)

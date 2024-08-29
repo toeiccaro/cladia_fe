@@ -1,28 +1,14 @@
 <template>
   <div class="table-order d-flex flex-column position-relative">
-    <tr class="tr-2 form-year">
-      <td class="label">
-        <span id="departmentID">
-          {{ $t('lbl_StYear_0') }}
-        </span>
-      </td>
-      <td class="input pl-2">
-        <b-form-select
-          v-model="selectedYear"
-          :options="yearOptions"
-          class="select"
-          :disabled="isDisabled"
-        ></b-form-select>
-      </td>
-    </tr>
+    <DepositWithdrawForm :key="refreshAddPBFormKey" :data="form" />
     <BaseTableDraggable
       v-if="!isLoadingTable"
       :header="headerMapping"
       :data="dataTableMapping"
       :data-total="dataTotalMapping"
-      class="table-order--body"
-      :initial-filters="payloadPayableQuery"
-      :update-filters-function="UPDATE_PAYLOAD_PAYABLE_ANNUAL_QUERY"
+      class="table-order--body mt-4"
+      :initial-filters="payloadDepositWithdrawQuery"
+      :update-filters-function="UPDATE_PAYLOAD_DEPOSIT_WITHDRAW_QUERY"
       @search="filterAndSort"
       @row="handleDetailId"
       @changeLayout="changeLayout"
@@ -47,8 +33,8 @@
     <BasePagination
       v-if="!isLoadingTable"
       :total="total"
-      :per-page="payloadPayableQuery.pageSize"
-      :current-page="payloadPayableQuery.pageNo"
+      :per-page="payloadDepositWithdrawQuery.pageSize"
+      :current-page="payloadDepositWithdrawQuery.pageNo"
       :number-item="dataTable.length"
       class="table-order--footer"
       @changePage="(value) => setCurrentPage(value)"
@@ -60,16 +46,21 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import { SERVER_RESPONSE_CODE } from '@/constants'
-import {payableAnnualTableSchema } from '@/schemas/finance/receivable-annual-table'
-
+import { saleOrderSchema } from '@/schemas/sales/sale-order'
 import api from '@/api/api'
 import BasePagination from '~/components/UI/BasePagination.vue'
 import BaseTableDraggable from '~/components/UI/BaseTableDraggable.vue'
+import DepositWithdrawForm from '~/components/Finance/DepositWithdraw/DepositWithdrawForm'
 import dateTime from '~/mixins/dateTime'
 import BaseTableLoader from '~/components/loaders/BaseTableLoader'
 import { formatNumberWithCommas } from '@/utils/utils'
 export default {
-  components: { BaseTableDraggable, BasePagination, BaseTableLoader },
+  components: {
+    BaseTableDraggable,
+    BasePagination,
+    BaseTableLoader,
+    DepositWithdrawForm,
+  },
   mixins: [dateTime],
 
   data() {
@@ -84,17 +75,23 @@ export default {
       selectedYear: null,
       yearOptions: [],
       isDisabled: false,
-      selectedYear: null,
-      yearOptions: [],
-      isDisabled: false,
-      dataFooter: {}
+      refreshAddPBFormKey: 0,
+
+      defaultFormData: {
+        startDate: this.convertDate(new Date()),
+        endDate: this.convertDate(new Date()),
+        bankId: '',
+        currencyId: 1,
+      },
+      form: {},
     }
   },
 
   async fetch() {
     try {
+      this.form = Object.assign({}, this.defaultFormData)
       this.loading = true
-      this.UPDATE_PAYLOAD_PAYABLE_ANNUAL_QUERY({
+      this.UPDATE_PAYLOAD_DEPOSIT_WITHDRAW_QUERY({
         language: this.lang,
       })
       await Promise.all([this.getData(), this.getUnitOptions(this.lang)])
@@ -104,21 +101,20 @@ export default {
       this.loading = false
     }
   },
-  checkAccountOptions() {
+
+  computed: {
+    ...mapGetters({
+      unitOptions: 'base/getUnitOptions',
+      payloadDepositWithdrawQuery: 'filterSort/getPayloadDepositWithdrawQuery',
+    }),
+    ...mapGetters('base', ['getActiveButtonToolBar']),
+    checkAccountOptions() {
       return [
         { text: '', value: '' },
         { text: 'Yes', value: 1 },
         { text: 'No', value: 0 },
       ]
     },
-    //
-  computed: {
-    ...mapGetters({
-      unitOptions: 'base/getUnitOptions',
-      payloadPayableQuery: 'filterSort/getPayloadPayableQuery',
-    }),
-    ...mapGetters('base', ['getActiveButtonToolBar']),
-   
     listDataShow() {
       return this.dataHeader
         .filter((_el) => !this.listIgnoreFieldName.includes(_el.fieldName))
@@ -127,21 +123,6 @@ export default {
     },
 
     dataTotalMapping() {
-      const listTotalFields = [
-        'APJan',
-        'APFeb',
-        'APMar',
-        'APApr',
-        'APMay',
-        'APJune',
-        'APJuly',
-        'APAug',
-        'APSep',
-        'APOct',
-        'APNov',
-        'APDec',
-        'APTotalAmount',
-      ]
       return this.headerMapping.map((item) => {
         const temp = {
           key: item.key,
@@ -152,40 +133,29 @@ export default {
           temp.value = 'Total: '
           temp.align = 'center'
         }
-        if (listTotalFields.includes(item.key)) {
-            temp.align = 'right'
-            temp.type = 'amount'
-            temp.value = this.dataFooter[item.key]
-        }
         return temp
       })
     },
-   
-   
+
     dataTableMapping() {
       const listAlignRightFields = [
-        'APEndingBalance',
-        'APJan',
-        'APFeb',
-        'APMar',
-        'APApr',
-        'APMay',
-        'APJune',
-        'APJuly',
-        'APAug',
-        'APSep',
-        'APOct',
-        'APNov',
-        'APDec',
-        'APTotalAmount',
+        'Quantity',
+        'Amount',
+        'Price',
+        'StopQty',
+        'TaxRate',
+        'SODiscountRate',
+        'SOAmountIncludeTax',
+        'SOPriceIncludeTax',
+        'SOPriceIncludeDiscount',
       ]
 
       const data = this.dataTable?.map((item, index) => {
         const obj = {
           index: {
             value:
-              this.payloadPayableQuery.pageSize *
-                (this.payloadPayableQuery.pageNo - 1) +
+              this.payloadDepositWithdrawQuery.pageSize *
+                (this.payloadDepositWithdrawQuery.pageNo - 1) +
               index +
               1,
             align: 'center',
@@ -195,7 +165,7 @@ export default {
             type: 'slot',
             value: false,
           },
-          keyRow: item.APCompanyName,
+          keyRow: item.sono,
         }
 
         this.listDataShow?.forEach((headerItem) => {
@@ -209,25 +179,6 @@ export default {
 
           if (listAlignRightFields.includes(headerItem.fieldName)) {
             obj[mappingFieldName].align = 'right'
-            obj[mappingFieldName].value 
-              = obj[mappingFieldName].value 
-              === 0
-                ? 0
-                : formatNumberWithCommas(obj[mappingFieldName].value)
-            obj[mappingFieldName].color = (index % 3 === 1) ? 'blue' : (index % 3 === 2) ? 'red' : ''
-
-          }
-          switch (headerItem.fieldName) {
-              case 'APCompanyName':
-              case 'APSubjectID':
-              case 'APCurrencyID':
-                obj[mappingFieldName].align = 'center';
-                break;
-              case 'APTypeID':
-              case 'APYear':
-                obj[mappingFieldName].align = 'center'
-                obj[mappingFieldName].color = (index % 3 === 1) ? 'blue' : (index % 3 === 2) ? 'red' : '';
-                break;
           }
         })
 
@@ -237,29 +188,60 @@ export default {
       return data
     },
     headerMapping() {
+      const listNumberField = [
+        'Quantity',
+        'Amount',
+        'Price',
+        'StopQty',
+        'TaxRate',
+      ]
       const header = [
         {
           key: 'index',
-          name: '',
           width: 40,
         },
-        {
-          key: 'icon',
-          name: '',
-          width: 40,
-        },
+        // {
+        //   key: 'icon',
+        //   name: '',
+        //   width: 40,
+        // },
       ]
       const getHeaderItem = (item) => {
+        const maxLength = listNumberField.includes(item.fieldName)
+          ? '30'
+          : '256'
         const headerItem = {
           key: this.mappingProperty(
-            this.dataTable[0] || payableAnnualTableSchema,
+            this.dataTable[0] || saleOrderSchema,
             item.fieldName
           ),
           name: this.$t(`lbl_${item.fieldName}_0`),
-          filter: 'input',
+          filter: item.fieldName === 'IsCheck' ? 'select' : 'input',
           width: item.fieldWide * 1,
           fieldName: item.fieldName,
           fieldOrder: item.fieldOrder,
+          maxLength,
+        }
+
+        if (item.fieldName === 'IsCheck') {
+          headerItem.options = this.checkAccountOptions
+        }
+
+        switch (item.fieldName) {
+          case 'Editdate':
+            headerItem.name = this.$t('lbl_EditDate_0')
+            break
+          case 'Orderdate':
+            headerItem.name = this.$t('lbl_OrderDate_0')
+            break
+          case 'Department':
+            headerItem.name =
+              this.lang === 'japanese'
+                ? this.$t('lbl_DepartType_0')
+                : this.$t('lbl_Department_0')
+            break
+          default:
+            break
         }
 
         return headerItem
@@ -271,31 +253,31 @@ export default {
 
       return header
     },
-   
   },
   created() {
     this.generateYearOptions()
-
     const isCheck = this.$route.query?.isCheck
     const payload = {
-      language: this.lang,
-      pageNo: 1,
-      pageSize: 30,
+      form: {
+        language: this.lang,
+        pageNo: 1,
+        pageSize: 30,
+      },
     }
 
     if (isCheck) {
       payload.isCheck = 0
     }
     this.$router.replace({ query: null })
-    this.SET_PAYLOAD_PAYABLE_ANNUAL_QUERY(payload)
+    this.SET_PAYLOAD_DEPOSIT_WITHDRAW_QUERY(payload)
   },
   methods: {
     ...mapActions('base', ['getUnitOptions']),
     ...mapMutations({
-      UPDATE_PAYLOAD_PAYABLE_ANNUAL_QUERY:
-        'filterSort/UPDATE_PAYLOAD_PAYABLE_ANNUAL_QUERY',
-      SET_PAYLOAD_PAYABLE_ANNUAL_QUERY:
-        'filterSort/SET_PAYLOAD_PAYABLE_ANNUAL_QUERY',
+      UPDATE_PAYLOAD_DEPOSIT_WITHDRAW_QUERY:
+        'filterSort/UPDATE_PAYLOAD_DEPOSIT_WITHDRAW_QUERY',
+      SET_PAYLOAD_DEPOSIT_WITHDRAW_QUERY:
+        'filterSort/SET_PAYLOAD_DEPOSIT_WITHDRAW_QUERY',
       SET_DATA_COLUMN_HIDE: 'SET_DATA_COLUMN_HIDE',
     }),
     changePerPage(value) {
@@ -303,24 +285,30 @@ export default {
         pageSize: Number(value),
         pageNo: 1,
       }
-      this.UPDATE_PAYLOAD_PAYABLE_ANNUAL_QUERY(filterPayload)
+      this.UPDATE_PAYLOAD_DEPOSIT_WITHDRAW_QUERY(filterPayload)
       this.getData()
     },
     setCurrentPage(value) {
-      this.UPDATE_PAYLOAD_PAYABLE_ANNUAL_QUERY({
+      this.UPDATE_PAYLOAD_DEPOSIT_WITHDRAW_QUERY({
         pageNo: Number(value),
       })
       this.getData()
     },
     async getData() {
+      const queryString = new URLSearchParams(this.form).toString()
+
       try {
         this.isLoadingTable = true
-        this.UPDATE_PAYLOAD_PAYABLE_ANNUAL_QUERY({
-          ...this.payloadPayableQuery,
-          year: this.selectedYear,
+
+        this.UPDATE_PAYLOAD_DEPOSIT_WITHDRAW_QUERY({
+          ...this.payloadDepositWithdrawQuery,
+          queryString,
         })
 
-        const res = await api('querySearchPayTable', this.payloadPayableQuery)
+        const res = await api(
+          'querySearchDepositWithdrawTable',
+          this.payloadDepositWithdrawQuery
+        )
 
         const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK
         if (validResponse) {
@@ -342,11 +330,16 @@ export default {
     async filterAndSort() {
       try {
         this.loading = true
-        this.UPDATE_PAYLOAD_PAYABLE_ANNUAL_QUERY({
-          ...this.payloadPayableQuery,
-          year: this.selectedYear,
+        this.UPDATE_PAYLOAD_DEPOSIT_WITHDRAW_QUERY({
+          ...this.payloadDepositWithdrawQuery,
+          ...this.form,
+
+          // form:{},
         })
-        const res = await api('querySearchPayTable', this.payloadPayableQuery)
+        const res = await api(
+          'querySearchDepositWithdrawTable',
+          this.payloadDepositWithdrawQuery
+        )
         this.loading = false
 
         const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK
@@ -358,36 +351,6 @@ export default {
         window.alert(err?.data?.response?.data?.message)
       } finally {
         this.loading = false
-      }
-    },
-
-    async query() {
-      try {
-        this.isLoadingTable = true
-        const payload = {
-          pageNo: this.payloadPayableQuery.pageNo,
-          pageSize: this.payloadPayableQuery.pageSize,
-          language: this.payloadPayableQuery.language,
-          year: this.selectedYear,
-        }
-        this.SET_PAYLOAD_PAYABLE_ANNUAL_QUERY(payload)
-        const res = await api('querySearchPayTable', this.payloadPayableQuery)
-
-        const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK
-        if (validResponse) {
-          this.dataHeader = res.data?.scolumnHides
-          this.dataTable = res.data.tableContent?.content
-          this.total = res.data.tableContent?.totalElements
-          this.SET_DATA_COLUMN_HIDE(
-            this.dataHeader.filter(
-              (_el) => !this.listIgnoreFieldName.includes(_el.fieldName)
-            )
-          )
-        }
-      } catch (err) {
-        console.error(err)
-      } finally {
-        this.isLoadingTable = false
       }
     },
 
