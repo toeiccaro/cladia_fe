@@ -123,8 +123,8 @@
 
       itemCurrencyOptions() {
         return this.currencyOptions.map((item) => ({
-          text: item.text,
-          value: item.value,
+          text: item?.text,
+          value: item?.value,
         }))
       },
       
@@ -258,7 +258,8 @@
                 break
               case 'BBCurrencyID':
                 const valueCurrency = this.currencyOptions.find(item => Number(item.value - 1) == obj[mappingFieldName].value)
-                obj[mappingFieldName].value = valueCurrency.text
+                if(valueCurrency)
+                  obj[mappingFieldName].value = valueCurrency?.text;
                 break
             }
           })
