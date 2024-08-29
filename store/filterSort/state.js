@@ -250,4 +250,8 @@ export default {
     pageNo: 1,
     pageSize: 30,
   },
+  payloadBankBalanceQuery: {
+    pageNo: 1,
+    pageSize: 30,
+  },
 };

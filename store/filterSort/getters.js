@@ -75,9 +75,9 @@ export default {
   getPayloadPurchaseRNBrowse: (state) => state.payloadPurchaseRNBrowse,
 
   //Finance
-
   getPayloadPayableQuery: (state) => state.payloadPayableQuery,
+  //- Bank balance
+  getPayloadBankBalanceQuery: (state) => state.payloadBankBalanceQuery,
 
   getPayloadDepositWithdrawQuery: (state) => state.payloadDepositWithdrawQuery,
-
 };

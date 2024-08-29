@@ -81,6 +81,23 @@ export default {
     }
   },
 
+  //-Bank balance
+  SET_PAYLOAD_BANK_BALANCE_QUERY(state, data) {
+    state.payloadBankBalanceQuery = data;
+  },
+
+  UPDATE_PAYLOAD_BANK_BALANCE_QUERY(state, data) {
+    state.payloadBankBalanceQuery = {
+      ...state.payloadBankBalanceQuery,
+      ...data,
+    };
+
+    for (const prop in state.payloadBankBalanceQuery) {
+      isEmptyValue(state.payloadBankBalanceQuery[prop]) &&
+        delete state.payloadBankBalanceQuery[prop];
+    }
+  },
+
   SET_PAYLOAD_DEPOSIT_WITHDRAW_QUERY(state, data) {
     state.payloadDepositWithdrawQuery = data;
   },
