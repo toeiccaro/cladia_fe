@@ -9,7 +9,7 @@
     <div class="modal-item-master" @click="closeModal"></div>
     <div class="modal-content">
       <div class="bg-cladia d-flex align-items-center justify-content-between">
-        <div class="text-white pl-2">{{ $t('lbl_columnset_0') }}</div>
+        <div class="text-white pl-2">{{ $t('lbl_DWDInitialBalanceSetting_0') }}</div>
         <div class="text-white pr-2 cursor-pointer" @click="closeModal">x</div>
       </div>
       <ToolBar
@@ -23,14 +23,14 @@
       <div class="base-set-column pl-10 py-10">
         <tr>
           <td class="label">
-            <span id="amount">{{ $t('lbl_DWDBankAccount_0') }}</span>
+            <span id="amount">{{ $t('lbl_Amount_0') }}</span>
           </td>
           <td class="input">
             <input
               class="w-100 border"
-              v-model="form.amount"
+              v-model.number="form.amount"
               name="amount"
-              type="text"
+              type="input-number"
               :disabled="isDisabled"
             />
           </td>
@@ -77,7 +77,7 @@
                 isAppendToChild: true,
                 childClass: 'input__orderDate',
               }"
-              :value="form.startDate ?? this.defaultStartDate"
+              :value="form.startDate ? form.startDate : this.defaultStartDate"
               typeable
               format="yyyy-MM-dd"
               :disabled="isDisabled"
@@ -106,12 +106,14 @@
 <script>
 import { BIconArrowUp, BIconArrowDown } from 'bootstrap-vue'
 import BaseValidateMessage from '@/components/UI/BaseValidateMessage'
+import { SERVER_RESPONSE_CODE } from '@/constants'
 import { mapGetters, mapActions } from 'vuex'
 import ToolBar from '../UI/ToolBar.vue'
 import api from '~/api/api'
 import BaseTable from '~/components/UI/BaseTable.vue'
 import dateTime from '@/mixins/dateTime'
 import { getUnique } from '@/utils/utils'
+import { formatNumberWithCommas } from '@/utils/utils'
 export default {
   name: 'BaseSetColumn',
   // eslint-disable-next-line vue/no-unused-components
@@ -212,36 +214,8 @@ export default {
 
       return 'calc(100% - 215px)'
     },
-    dataMapping() {
-      return this.data.map((item, index) => {
-        return {
-          FieldText: {
-            orderByList: 0,
-            value:
-              this.labelMapping && this.labelMapping[item.fieldName]
-                ? this.labelMapping[item.fieldName]
-                : this.$t(`lbl_${item.fieldName}_0`),
-            text: 'center',
-          },
-          FieldWide: {
-            orderByList: 1,
-            value: item.fieldWide,
-            text: 'right',
-          },
-          Order: {
-            orderByList: 2,
-            value: index + 1,
-            text: 'right',
-          },
-          IsHidden: {
-            orderByList: 3,
-            value: item.hidden,
-            text: 'center',
-            type: 'slot',
-          },
-        }
-      })
-    },
+
+  
   },
   watch: {
     getDataColumnHides: {
@@ -259,7 +233,9 @@ export default {
       immediate: true,
     },
   },
-  created() {},
+  created() {
+    // this.changeStartDate()
+  },
 
   async fetch() {
     try {
@@ -274,9 +250,13 @@ export default {
 
   methods: {
     ...mapActions('base', ['getCurrencyOptions', 'getListCurrentAssets']),
+
+    changeStartDate(value) {
+      this.form.startDate = this.convertDate(value)
+    },
     validateForm() {
       const errors = []
-      const dataTable = this.availableListDetails
+      // const dataTable = this.availableListDetails
 
       const requiredFields = {
         startDate: 'DWDStartDate',
@@ -299,11 +279,11 @@ export default {
       }
 
       return {
-        dataTableFilter: dataTable,
+        // dataTableFilter: dataTable,
         payload: this.form,
       }
     },
-    changeHidden(event) {},
+    
     async changeActiveToolBar(key) {
       if (key === 'close') {
         return this.closeModal()
@@ -317,17 +297,17 @@ export default {
       if (validateInfo) {
         const params = {
           amount: this.form.amount,
-          startDate: this.form.startDate,
+          startDate: this.form.startDate ,
           bankId: this.form.bankName,
-          currencyId: this.form.currencyId,
+          currencyId: this.form.currencyId ,
         }
         try {
           this.loading = true
-          await api('saveSettingBlance', params)
-
-          const errorCode = response?.data?.response?.message
+          const response =  await api('saveSettingBlance', params)
           
-          if (errorCode === SERVER_RESPONSE_CODE.FORBIDDEN) {
+          const errorCode =  response?.data?.response?.data?.status
+          
+          if (errorCode === SERVER_RESPONSE_CODE.SERVER_RESPONSE_ERROR) {
             window.alert(this.$t(response?.data?.response?.data?.message))
           }
           if (response.status === 200) {
@@ -337,25 +317,23 @@ export default {
             this.showModal = false
           }
         } catch (error) {
-          window.alert(this.$t(response?.message))
+          window.alert(this.$t(message))
           console.error(error)
         } finally {
           this.loading = false
         }
       }
     },
-    changeStartDate(value) {
-      this.form.startDate = this.convertDate(value)
-    },
 
-    emitPayload() {
-      const payload = {
-        startDate: this.form.startDate,
-        bankId: this.form.bankName,
-        currencyId: this.form.currencyId,
-      }
-      this.$emit('updatePayload', payload)
-    },
+
+    // emitPayload() {
+    //   const payload = {
+    //     startDate: this.form.startDate,
+    //     bankId: this.form.bankName,
+    //     currencyId: this.form.currencyId,
+    //   }
+    //   this.$emit('updatePayload', payload)
+    // },
     closeModal() {
       this.showModal = false
     },
@@ -456,4 +434,14 @@ a.move-arrow:-webkit-any-link {
   cursor: pointer;
   text-decoration: underline;
 }
+
+// input[type="number"]::-webkit-outer-spin-button,
+// input[type="number"]::-webkit-inner-spin-button {
+//   -webkit-appearance: none;
+//   margin: 0;
+// }
+
+// input[type="number"] {
+//   -moz-appearance: textfield;
+// }
 </style>

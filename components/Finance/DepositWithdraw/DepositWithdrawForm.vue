@@ -22,7 +22,6 @@
             ></datepicker>
           </td>
           <td class="info">*</td>
-
           <td class="label">
             <span id="endDate">{{ $t('lbl_DWDEndDate_0') }}</span>
           </td>
@@ -42,7 +41,6 @@
             ></datepicker>
           </td>
           <td class="info">*</td>
-
           <td class="label">
             <span id="departmentID">
               {{ $t('lbl_DWDBankName_0') }}
@@ -56,11 +54,13 @@
               :disabled="isDisabled"
             ></b-form-select>
           </td>
+          <td class="info"></td>
           <td class="label">
             <span id="departmentID">
               {{ $t('cmb_Currency_0') }}
             </span>
           </td>
+          
           <td class="input">
             <b-form-select
               v-model="form.currencyId"
@@ -70,6 +70,7 @@
             ></b-form-select>
           </td>
           <td class="info">*</td>
+          
         </tr>
       </tbody>
     </table>
@@ -173,6 +174,7 @@ select {
   font-size: 12px;
 }
 
+
 .add-form-enterprise {
   font-size: 12px;
   margin: 0px 1px;
@@ -222,6 +224,7 @@ select {
     }
   }
 }
+
 
 input[disabled] {
   opacity: 0.5;
