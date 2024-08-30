@@ -408,7 +408,7 @@ export default {
 
             const requiredFields = {
               amount: 'RAmount',
-              date: 'PBDate',
+              paymentDate: 'PBPaymentDate',
               arUser: 'RBArUser',
             }
 
