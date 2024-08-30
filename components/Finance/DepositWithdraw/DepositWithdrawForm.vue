@@ -157,7 +157,7 @@ export default {
         to: new Date(
           date.getFullYear(),
           date.getMonth(),
-          date.getDate() + 1
+          date.getDate() 
         ),
       }
     },
