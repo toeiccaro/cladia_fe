@@ -125,6 +125,24 @@ export default {
       currencyOption: 'getCurrencyOptions',
       currentAsset: 'getListCurrentAssets',
     }),
+    // disabledStartDates() {
+    //   return {
+    //     from: new Date(
+    //       this.form.endDate.getFullYear(),
+    //       this.form.endDate.getMonth(),
+    //       this.form.endDate.getDate()
+    //     ),
+    //   }
+    // },
+    // disabledEndDates() {
+    //   return {
+    //     to: new Date(
+    //       this.form.startDate.getFullYear(),
+    //       this.form.startDate.getMonth(),
+    //       this.form.startDate.getDate() + 1
+    //     ),
+    //   }
+    // },
   },
   watch: {
     data: {
@@ -145,6 +163,7 @@ export default {
 
     changeStartDate(value) {
       this.form.startDate = this.convertDate(value)
+      
     },
     changeEndDate(value) {
       this.form.endDate = this.convertDate(value)

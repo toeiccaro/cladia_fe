@@ -83,7 +83,7 @@ export default {
         bankId: '',
         currencyId: '',
       },
-      form: {},
+      // form: {},
     }
   },
 
@@ -123,24 +123,20 @@ export default {
     },
 
     dataTotalMapping() {
-    
       return this.headerMapping.map((item) => {
         const temp = {
           key: item.key,
           value: '',
           type: 'text',
         }
-       
+
         return temp
       })
     },
 
     dataTableMapping() {
-      const listAlignRightFields = [
-     
-      ]
-
-      
+      const listAlignRightFields = ['DWDDebit', 'DWDCredit', 'DWDBankBalance']
+      const listAlignCenterFields = ['DWDDate', 'DWDCurrency']
       const data = this.dataTable?.map((item, index) => {
         const obj = {
           index: {
@@ -169,7 +165,18 @@ export default {
           }
 
           if (listAlignRightFields.includes(headerItem.fieldName)) {
+            obj[mappingFieldName] = {
+              value: formatNumberWithCommas(item[mappingFieldName]) || 0,
+              align: 'right',
+              type: 'amount',
+            }
+          }
+
+          if (listAlignRightFields.includes(headerItem.fieldName)) {
             obj[mappingFieldName].align = 'right'
+          }
+          if (listAlignCenterFields.includes(headerItem.fieldName)) {
+            obj[mappingFieldName].align = 'center'
           }
         })
 
@@ -179,9 +186,7 @@ export default {
       return data
     },
     headerMapping() {
-      const listNumberField = [
-       
-      ]
+      const listNumberField = []
       const header = [
         {
           key: 'index',
@@ -241,11 +246,9 @@ export default {
     this.generateYearOptions()
     const isCheck = this.$route.query?.isCheck
     const payload = {
-      form: {
         language: this.lang,
         pageNo: 1,
         pageSize: 30,
-      },
     }
 
     if (isCheck) {
@@ -378,35 +381,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-// .table-order {
-//   height: calc(100% - 70px);
-
-//   .table-order--body {
-//     height: calc(100% - 26px);
-//   }
-
-//   .table-order--footer {
-//     color: #000000;
-//     background: #eff3ff 50% 50% repeat-x;
-//     border: 1px solid #5180d8;
-//     border-top: 0;
-//   }
-// }
-
-// .total-item {
-//   border-right: 1px solid #5180d8;
-//   font-size: 12px;
-//   font-weight: bold;
-//   padding: 0 2px;
-// }
-
-// .total-item:last-child {
-//   border-right: none !important;
-// }
-
 .table__receive-browse {
   height: calc(100% - 70px);
- 
+
   .table__receive-browse--body {
     height: calc(100% - 60px);
   }

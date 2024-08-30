@@ -28,9 +28,9 @@
           <td class="input">
             <input
               class="w-100 border"
-              v-model.number="form.amount"
+              v-model="form.amount"
               name="amount"
-              type="input-number"
+              type="number"
               :disabled="isDisabled"
             />
           </td>
@@ -131,16 +131,7 @@ export default {
       required: false,
       default: () => {},
     },
-    body: {
-      type: Object,
-      required: false,
-      default: () => {},
-    },
-    fullWidth: {
-      type: Boolean,
-      default: () => false,
-    },
-
+  
     isDisabled: {
       type: Boolean,
       default: false,
@@ -150,6 +141,13 @@ export default {
     return {
       loading: false,
       showModal: false,
+      form: {
+        amount:'',
+        currencyId:'',
+        currentAsset:'',
+        startDate: new Date(),
+      },
+      defaultStartDate:new Date(),
       listErrorMessage: [],
       listToolBars: [
         {
@@ -165,28 +163,6 @@ export default {
       ],
       data: [],
       ratio: ['40%', '20%', '20%', '20%'],
-      header: [
-        {
-          key: 'FieldText',
-          name: this.$t('lbl_FieldText_0'),
-        },
-        {
-          key: 'FieldWide',
-          name: this.$t('lbl_Wide_0'),
-        },
-        {
-          key: 'Order',
-          name: '表示順',
-        },
-        {
-          key: 'IsHidden',
-          name: this.$t('lbl_Hidden_0'),
-        },
-      ],
-      form: {
-        startDate: new Date(),
-      },
-      defaultStartDate:new Date(),
       highlighted: {
         dates: [new Date()],
       },
@@ -234,7 +210,7 @@ export default {
     },
   },
   created() {
-    // this.changeStartDate()
+    this.form.startDate = new Date()
   },
 
   async fetch() {
@@ -256,14 +232,13 @@ export default {
     },
     validateForm() {
       const errors = []
-      // const dataTable = this.availableListDetails
 
       const requiredFields = {
         startDate: 'DWDStartDate',
         bankName: 'DWDBankName',
         currencyId: 'DWDCurrency',
       }
-
+      
       Object.keys(requiredFields).forEach((field) => {
         if (!this.form[field]) {
           errors.push({
@@ -277,11 +252,10 @@ export default {
       if (this.listErrorMessage.length > 0) {
         return
       }
-
       return {
-        // dataTableFilter: dataTable,
-        payload: this.form,
+        payload: this.form
       }
+   
     },
     
     async changeActiveToolBar(key) {
@@ -289,15 +263,19 @@ export default {
         return this.closeModal()
       }
       // eslint-disable-next-line no-use-before-define
+     if(key ==="save"){
       const confirm = window.confirm(this.$t('msg_ConfirmSave_0'))
       if (!confirm) {
         return
       }
+      
+     
+     if(confirm){
       const validateInfo = this.validateForm()
       if (validateInfo) {
         const params = {
           amount: this.form.amount,
-          startDate: this.form.startDate ,
+          startDate: this.form.startDate ?? this.defaultStartDate ,
           bankId: this.form.bankName,
           currencyId: this.form.currencyId ,
         }
@@ -323,19 +301,15 @@ export default {
           this.loading = false
         }
       }
+     }
+     }
     },
 
-
-    // emitPayload() {
-    //   const payload = {
-    //     startDate: this.form.startDate,
-    //     bankId: this.form.bankName,
-    //     currencyId: this.form.currencyId,
-    //   }
-    //   this.$emit('updatePayload', payload)
-    // },
     closeModal() {
       this.showModal = false
+      this.listErrorMessage=[]
+      this.form=[]
+    
     },
   },
 }
