@@ -64,13 +64,13 @@ export default {
           ],
         },
         {
-          key: 'setOrder',
+          key: 'set',
           label: this.$t('btn_btnSet_0'),
           icon: '/images/set.png',
         },
 
         {
-          key: 'closeOrder',
+          key: 'close',
           label: this.$t('btn_btnClose_0'),
           icon: '/images/close.png',
         },
@@ -154,7 +154,7 @@ export default {
       }
 
       const sortFormOptional = {
-        language: this.$i18n.locale,
+        ...this.payloadBankBalanceQuery,
         exportAllData: true,
       }
       this.handleExportExcel(sortFormOptional)
@@ -162,15 +162,11 @@ export default {
     
     changeActiveToolBar(key) {
       if (key === 'queryTableBankBalanceAnnual') {
-        console.log('acctionn')
-
         this.functionReload()
-      } else if (key === 'setOrder') {
+      } else if (key === 'set') {
         this.$refs.modalSetColumn.showModal = true
-      } else if (key === 'closeOrder') {
+      } else if (key === 'close') {
         this.$router.push(this.localePath({ path: '/' }))
-      } else if (key === 'saveLayout') {
-        this.handleSaveLayout()
       }
     },
     handleDetailId(data) {
