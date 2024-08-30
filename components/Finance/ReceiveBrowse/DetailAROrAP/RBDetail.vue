@@ -292,6 +292,7 @@ export default {
           align: 'right',
           fieldRequired: true,
           hidden: false,
+          disabled: this.isCheck,
         },
         {
           key: 'opponentSubject',
@@ -351,6 +352,7 @@ export default {
           hidden: false,
           options: this.checkboxOptions,
           headerFilter: 'select',
+          disabled: this.isCheck,
         },
         {
           key: 'invoiceNumber',
@@ -371,6 +373,7 @@ export default {
           disabled: false,
           fieldRequired: false,
           hidden: false,
+          disabled: this.isCheck,
         },
         {
           key: 'invoiceNotes',
@@ -757,6 +760,8 @@ export default {
         debitAmount: 'DebitAmount',
         currency: 'Currency',
       }
+
+      
 
       Object.keys(requiredFields).forEach((field) => {
         if (!this.form[field]) {
