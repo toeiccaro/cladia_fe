@@ -407,9 +407,9 @@ export default {
             }
 
             const requiredFields = {
-              amount: 'PBAmount',
+              amount: 'RAmount',
               date: 'PBDate',
-              apUser: 'PBApUser',
+              arUser: 'RBArUser',
             }
 
             for (const key in requiredFields) {
