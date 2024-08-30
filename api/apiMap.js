@@ -408,6 +408,7 @@ const api = (config) => ({
 
   //bank balance
   queryBankBalanceTable: (payload) => config('post', 'bank-balance/list', payload),
+  exportBankBalanceTable: (payload) => config('post', `bank-balance/export-excel`, payload),
 
   // Stock Detail
   getListStockDetail: (payload) => config('post', 'stock_detail', payload),
