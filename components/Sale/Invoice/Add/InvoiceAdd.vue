@@ -690,8 +690,8 @@ export default {
         const { dataTableFilter, payload } = validateInfo
         const params = {
           ...payload,
-          discountRate: dataTableFilter[0]?.discountRate,
-          taxRate: dataTableFilter[0]?.taxRate,
+          discountRate: dataTableFilter[0]?.SIDiscountRate,
+          taxRate: dataTableFilter[0]?.SITaxRate,
           salesInDtl: dataTableFilter.map((item) => {
             return {
               customerPO: item.customerPO,
