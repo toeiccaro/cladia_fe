@@ -183,7 +183,7 @@
             type: 'text'
           }
           switch (item.key) {
-            case 'BBCreditID':
+            case 'BBCreditName':
               temp.value = 'Total: '
               break
             case 'BBImportAmount':
