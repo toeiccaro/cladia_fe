@@ -8,11 +8,11 @@
       </td>
       <td class="input">
         <b-form-select
-      v-model="selectedYear"
-      :options="yearOptions"
-      class="select"
-      :disabled="isDisabled"
-    ></b-form-select>
+          v-model="selectedYear"
+          :options="yearOptions"
+          class="select"
+          :disabled="isDisabled"
+        ></b-form-select>
       </td>
     </tr>
     <BaseTableDraggable
@@ -26,7 +26,6 @@
       @search="filterAndSort"
       @row="handleDetailId"
       @changeLayout="changeLayout"
-
     >
       <slot v-for="(item, index) in dataTable" :slot="'icon-' + index">
         <div
@@ -61,7 +60,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import { SERVER_RESPONSE_CODE } from '@/constants'
-import {receivableAnnualTableSchema } from '@/schemas/finance/receivable-annual-table'
+import { receivableAnnualTableSchema } from '@/schemas/finance/receivable-annual-table'
 import api from '@/api/api'
 import BasePagination from '~/components/UI/BasePagination.vue'
 import BaseTableDraggable from '~/components/UI/BaseTableDraggable.vue'
@@ -83,10 +82,10 @@ export default {
       selectedYear: null,
       yearOptions: [],
       isDisabled: false,
-      selectedYear: null, 
-      yearOptions: [], 
-      isDisabled: false, 
-      dataFooter: {}
+      selectedYear: null,
+      yearOptions: [],
+      isDisabled: false,
+      dataFooter: {},
     }
   },
   async fetch() {
@@ -141,9 +140,9 @@ export default {
           temp.align = 'center'
         }
         if (listTotalFields.includes(item.key)) {
-            temp.align = 'right'
-            temp.type = 'amount'
-            temp.value = this.dataFooter[item.key]
+          temp.align = 'right'
+          temp.type = 'amount'
+          temp.value = this.dataFooter[item.key]
         }
         return temp
       })
@@ -165,6 +164,8 @@ export default {
         'ARDec',
         'ARTotalAmount',
       ]
+
+      const listAlignRightFieldsAREndingBalance = ['AREndingBalance']
 
       const data = this.dataTable?.map((item, index) => {
         const obj = {
@@ -195,27 +196,44 @@ export default {
 
           if (listAlignRightFields.includes(headerItem.fieldName)) {
             obj[mappingFieldName].align = 'right'
-            obj[mappingFieldName].value 
-              = obj[mappingFieldName].value 
-              === 0
+            obj[mappingFieldName].value =
+              obj[mappingFieldName].value === 0
                 ? 0
                 : formatNumberWithCommas(obj[mappingFieldName].value)
-            obj[mappingFieldName].color = (index % 3 === 1) ? 'blue' : (index % 3 === 2) ? 'red' : ''
-
+            obj[mappingFieldName].color =
+              index % 3 === 1 ? 'blue' : index % 3 === 2 ? 'red' : ''
           }
+
+          if (
+            listAlignRightFieldsAREndingBalance.includes(headerItem.fieldName)
+          ) {
+            const color =
+              index % 3 === 1 ? 'blue' : index % 3 === 2 ? 'red' : ''
+
+            obj[mappingFieldName] = {
+              value:
+                item[mappingFieldName] !== 0 || color === ''
+                  ? formatNumberWithCommas(item[mappingFieldName])
+                  : '',
+              align: 'right',
+              color: color,
+            }
+          }
+
           switch (headerItem.fieldName) {
-              case 'ARCompanyName':
-              obj[mappingFieldName].align = 'left';
-              break;
-              case 'ARSubject':
-              case 'ARCurrency':
-                obj[mappingFieldName].align = 'center';
-                break;
-              case 'ARType':
-              case 'ARYear':
-                obj[mappingFieldName].align = 'center'
-                obj[mappingFieldName].color = (index % 3 === 1) ? 'blue' : (index % 3 === 2) ? 'red' : '';
-                break;
+            case 'ARCompanyName':
+              obj[mappingFieldName].align = 'left'
+              break
+            case 'ARSubject':
+            case 'ARCurrency':
+              obj[mappingFieldName].align = 'center'
+              break
+            case 'ARType':
+            case 'ARYear':
+              obj[mappingFieldName].align = 'center'
+              obj[mappingFieldName].color =
+                index % 3 === 1 ? 'blue' : index % 3 === 2 ? 'red' : ''
+              break
           }
         })
 
@@ -256,7 +274,7 @@ export default {
     },
   },
   created() {
-    this.generateYearOptions();
+    this.generateYearOptions()
     const isCheck = this.$route.query?.isCheck
 
     const payload = {
@@ -274,8 +292,10 @@ export default {
   methods: {
     ...mapActions('base', ['getUnitOptions']),
     ...mapMutations({
-      UPDATE_PAYLOAD_RECEIVABLE_ANNUAL_QUERY: 'filterSort/UPDATE_PAYLOAD_RECEIVABLE_ANNUAL_QUERY',
-      SET_PAYLOAD_RECEIVABLE_ANNUAL_QUERY: 'filterSort/SET_PAYLOAD_RECEIVABLE_ANNUAL_QUERY',
+      UPDATE_PAYLOAD_RECEIVABLE_ANNUAL_QUERY:
+        'filterSort/UPDATE_PAYLOAD_RECEIVABLE_ANNUAL_QUERY',
+      SET_PAYLOAD_RECEIVABLE_ANNUAL_QUERY:
+        'filterSort/SET_PAYLOAD_RECEIVABLE_ANNUAL_QUERY',
       SET_DATA_COLUMN_HIDE: 'SET_DATA_COLUMN_HIDE',
     }),
     changePerPage(value) {
@@ -298,9 +318,12 @@ export default {
 
         this.UPDATE_PAYLOAD_RECEIVABLE_ANNUAL_QUERY({
           ...this.payloadReceivableQuery,
-          year: this.selectedYear
+          year: this.selectedYear,
         })
-        const res = await api('querySearchReceiveTable', this.payloadReceivableQuery)
+        const res = await api(
+          'querySearchReceiveTable',
+          this.payloadReceivableQuery
+        )
 
         const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK
         if (validResponse) {
@@ -326,10 +349,13 @@ export default {
 
         this.UPDATE_PAYLOAD_RECEIVABLE_ANNUAL_QUERY({
           ...this.payloadReceivableQuery,
-          year: this.selectedYear
+          year: this.selectedYear,
         })
 
-        const res = await api('querySearchReceiveTable', this.payloadReceivableQuery)
+        const res = await api(
+          'querySearchReceiveTable',
+          this.payloadReceivableQuery
+        )
         this.loading = false
 
         const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK
@@ -351,10 +377,13 @@ export default {
           pageNo: this.payloadReceivableQuery.pageNo,
           pageSize: this.payloadReceivableQuery.pageSize,
           language: this.payloadReceivableQuery.language,
-          year: this.selectedYear
+          year: this.selectedYear,
         }
         this.SET_PAYLOAD_RECEIVABLE_ANNUAL_QUERY(payload)
-        const res = await api('querySearchReceiveTable', this.payloadReceivableQuery)
+        const res = await api(
+          'querySearchReceiveTable',
+          this.payloadReceivableQuery
+        )
 
         const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK
         if (validResponse) {
@@ -388,22 +417,20 @@ export default {
       return ''
     },
 
-
     generateYearOptions() {
-      const currentYear = new Date().getFullYear();
-      const startYear = currentYear - 5; 
-      const endYear = currentYear + 5; 
+      const currentYear = new Date().getFullYear()
+      const startYear = currentYear - 5
+      const endYear = currentYear + 5
 
-      this.yearOptions = [];
+      this.yearOptions = []
       for (let year = startYear; year <= endYear; year++) {
-        this.yearOptions.push({ value: year, text: year.toString() });
+        this.yearOptions.push({ value: year, text: year.toString() })
       }
     },
   },
 }
 </script>
 <style lang="scss" scoped>
-
 .table__receive-browse {
   height: calc(100% - 70px);
   .table__receive-browse--body {
@@ -432,8 +459,7 @@ export default {
 .form-year {
   margin-bottom: 15px;
   span {
-    margin-right: 10px
+    margin-right: 10px;
   }
 }
-
 </style>

@@ -123,7 +123,6 @@ export default {
     },
 
     dataTotalMapping() {
-    
       return this.headerMapping.map((item) => {
         const temp = {
           key: item.key,
@@ -167,7 +166,10 @@ export default {
 
           if (listAlignRightFields.includes(headerItem.fieldName)) {
             obj[mappingFieldName] = {
-              value: formatNumberWithCommas(item[mappingFieldName]) || 0,
+              value:
+                item[mappingFieldName] !== null
+                  ? formatNumberWithCommas(item[mappingFieldName])
+                  : '',
               align: 'right',
               type: 'amount',
             }
@@ -247,9 +249,9 @@ export default {
     this.generateYearOptions()
     const isCheck = this.$route.query?.isCheck
     const payload = {
-        language: this.lang,
-        pageNo: 1,
-        pageSize: 30,
+      language: this.lang,
+      pageNo: 1,
+      pageSize: 30,
     }
 
     if (isCheck) {
@@ -307,6 +309,7 @@ export default {
               (_el) => !this.listIgnoreFieldName.includes(_el.fieldName)
             )
           )
+          console.log('this.dataTable ', this.dataTable)
         }
       } catch (err) {
         console.error(err)
