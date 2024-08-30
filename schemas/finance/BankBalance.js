@@ -1,4 +1,4 @@
-export const receiveBrowseSchema = {
+export const BankBalance = {
   BBCreditID: "string",
   BBCreditName: "string",
   BBCurrencyID: "string",

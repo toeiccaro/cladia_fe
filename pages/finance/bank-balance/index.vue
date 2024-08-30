@@ -30,7 +30,7 @@
 import { mapGetters } from 'vuex'
 import { SERVER_RESPONSE_CODE } from '@/constants'
 import ToolBar from '@/components/UI/ToolBar.vue'
-import Table from '@/components/Finance/BankBalanceTable/BankBlanceTable.vue'
+import Table from '@/components/Finance/BankBalanceTable/BankBlanceTable'
 import api from '@/api/api'
 import { downloadFileExcel } from '@/utils/utils'
 import BaseSetColumn from '~/components/UI/BaseSetColumn.vue'
