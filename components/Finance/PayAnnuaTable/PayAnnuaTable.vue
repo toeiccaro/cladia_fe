@@ -178,7 +178,7 @@ export default {
         'APDec',
         'APTotalAmount',
       ]
-
+      const listAlignRightFieldsAREndingBalance = ['APEndingBalance']
       const data = this.dataTable?.map((item, index) => {
         const obj = {
           index: {
@@ -214,6 +214,22 @@ export default {
                 : formatNumberWithCommas(obj[mappingFieldName].value)
             obj[mappingFieldName].color =
               index % 3 === 1 ? 'blue' : index % 3 === 2 ? 'red' : ''
+          }
+
+          if (
+            listAlignRightFieldsAREndingBalance.includes(headerItem.fieldName)
+          ) {
+            const color =
+              index % 3 === 1 ? 'blue' : index % 3 === 2 ? 'red' : ''
+
+            obj[mappingFieldName] = {
+              value:
+                item[mappingFieldName] !== 0 || color === ''
+                  ? formatNumberWithCommas(item[mappingFieldName])
+                  : '',
+              align: 'right',
+              color: color,
+            }
           }
           switch (headerItem.fieldName) {
             case 'APCompanyName':
