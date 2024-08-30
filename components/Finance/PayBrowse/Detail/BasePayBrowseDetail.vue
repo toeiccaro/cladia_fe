@@ -342,7 +342,7 @@ export default {
         }
         if (key === 'back') {
           return this.$router.push(
-            this.localePath({ path: '/finance/receive-browse' })
+            this.localePath({ path: '/finance/pay-browse' })
           )
         }
       } catch (err) {
@@ -467,7 +467,7 @@ export default {
               PBDate: item.date,
               PBApUser: item.apUser,
               PBMemo: item.memo,
-              RBItemID: item.itemID ? item.itemID : null,
+              PBItemID: item.itemID ? item.itemID : null,
             }
           }),
         }
@@ -602,9 +602,7 @@ export default {
           }
           if (response.status === SERVER_RESPONSE_CODE.OK) {
             window.alert(this.$t('msg_IsDeleted_0'))
-            return this.$router.push(
-              this.localePath({ path: '/finance/pay-browse' })
-            )
+           this.getData()
           }
           window.alert(`${response?.message}`)
         }

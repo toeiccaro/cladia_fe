@@ -1,5 +1,5 @@
 <template>
-  <div class="table-order d-flex flex-column position-relative">
+  <div class="table__receive-browse d-flex flex-column position-relative">
     <tr class="tr-2 form-year">
       <td class="label">
         <span id="year">
@@ -20,7 +20,7 @@
       :header="headerMapping"
       :data="dataTableMapping"
       :data-total="dataTotalMapping"
-      class="table-order--body"
+      class="table__receive-browse--body"
       :initial-filters="payloadReceivableQuery"
       :update-filters-function="UPDATE_PAYLOAD_RECEIVABLE_ANNUAL_QUERY"
       @search="filterAndSort"
@@ -51,7 +51,7 @@
       :per-page="payloadReceivableQuery.pageSize"
       :current-page="payloadReceivableQuery.pageNo"
       :number-item="dataTable.length"
-      class="table-order--footer"
+      class="table__receive-browse--footer"
       @changePage="(value) => setCurrentPage(value)"
       @changePerPage="(value) => changePerPage(value)"
     ></BasePagination>
@@ -336,6 +336,7 @@ export default {
         if (validResponse) {
           this.dataTable = res.data.tableContent?.content
           this.total = res.data.tableContent?.totalElements
+          this.dataFooter = res.data?.tableFooter || {}
         }
       } catch (err) {
         window.alert(err?.data?.response?.data?.message)
@@ -360,6 +361,7 @@ export default {
           this.dataHeader = res.data?.scolumnHides
           this.dataTable = res.data.tableContent?.content
           this.total = res.data.tableContent?.totalElements
+          this.dataFooter = res.data?.tableFooter || {}
         }
       } catch (err) {
         console.error(err)
@@ -401,21 +403,22 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.table-order {
+
+.table__receive-browse {
   height: calc(100% - 70px);
-
-  .table-order--body {
-    height: calc(100% - 26px);
+  .table__receive-browse--body {
+    height: calc(100% - 70px);
   }
-
-  .table-order--footer {
+  .table__receive-browse--footer {
     color: #000000;
     background: #eff3ff 50% 50% repeat-x;
     border: 1px solid #5180d8;
     border-top: 0;
   }
+  .border--full {
+    border-top: 1px solid #5180d8 !important;
+  }
 }
-
 .total-item {
   border-right: 1px solid #5180d8;
   font-size: 12px;
@@ -432,4 +435,5 @@ export default {
     margin-right: 10px
   }
 }
+
 </style>

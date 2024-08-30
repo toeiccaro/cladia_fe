@@ -1,12 +1,12 @@
 <template>
-  <div class="table-order d-flex flex-column position-relative">
+  <div class="table__receive-browse d-flex flex-column position-relative">
     <DepositWithdrawForm :key="refreshAddPBFormKey" :data="form" />
     <BaseTableDraggable
       v-if="!isLoadingTable"
       :header="headerMapping"
       :data="dataTableMapping"
       :data-total="dataTotalMapping"
-      class="table-order--body mt-4"
+      class="table__receive-browse--body"
       :initial-filters="payloadDepositWithdrawQuery"
       :update-filters-function="UPDATE_PAYLOAD_DEPOSIT_WITHDRAW_QUERY"
       @search="filterAndSort"
@@ -36,7 +36,7 @@
       :per-page="payloadDepositWithdrawQuery.pageSize"
       :current-page="payloadDepositWithdrawQuery.pageNo"
       :number-item="dataTable.length"
-      class="table-order--footer"
+      class="table__receive-browse--footer"
       @changePage="(value) => setCurrentPage(value)"
       @changePerPage="(value) => changePerPage(value)"
     ></BasePagination>
@@ -78,10 +78,10 @@ export default {
       refreshAddPBFormKey: 0,
 
       defaultFormData: {
-        startDate: this.convertDate(new Date()),
-        endDate: this.convertDate(new Date()),
+        startDate: '',
+        endDate: '',
         bankId: '',
-        currencyId: 1,
+        currencyId: '',
       },
       form: {},
     }
@@ -123,33 +123,24 @@ export default {
     },
 
     dataTotalMapping() {
+    
       return this.headerMapping.map((item) => {
         const temp = {
           key: item.key,
           value: '',
           type: 'text',
         }
-        if (item.key === 'APCompanyName') {
-          temp.value = 'Total: '
-          temp.align = 'center'
-        }
+       
         return temp
       })
     },
 
     dataTableMapping() {
       const listAlignRightFields = [
-        'Quantity',
-        'Amount',
-        'Price',
-        'StopQty',
-        'TaxRate',
-        'SODiscountRate',
-        'SOAmountIncludeTax',
-        'SOPriceIncludeTax',
-        'SOPriceIncludeDiscount',
+     
       ]
 
+      
       const data = this.dataTable?.map((item, index) => {
         const obj = {
           index: {
@@ -165,7 +156,7 @@ export default {
             type: 'slot',
             value: false,
           },
-          keyRow: item.sono,
+          keyRow: item.DWDBankBalance,
         }
 
         this.listDataShow?.forEach((headerItem) => {
@@ -189,22 +180,14 @@ export default {
     },
     headerMapping() {
       const listNumberField = [
-        'Quantity',
-        'Amount',
-        'Price',
-        'StopQty',
-        'TaxRate',
+       
       ]
       const header = [
         {
           key: 'index',
+          name: '',
           width: 40,
         },
-        // {
-        //   key: 'icon',
-        //   name: '',
-        //   width: 40,
-        // },
       ]
       const getHeaderItem = (item) => {
         const maxLength = listNumberField.includes(item.fieldName)
@@ -395,29 +378,46 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.table-order {
+// .table-order {
+//   height: calc(100% - 70px);
+
+//   .table-order--body {
+//     height: calc(100% - 26px);
+//   }
+
+//   .table-order--footer {
+//     color: #000000;
+//     background: #eff3ff 50% 50% repeat-x;
+//     border: 1px solid #5180d8;
+//     border-top: 0;
+//   }
+// }
+
+// .total-item {
+//   border-right: 1px solid #5180d8;
+//   font-size: 12px;
+//   font-weight: bold;
+//   padding: 0 2px;
+// }
+
+// .total-item:last-child {
+//   border-right: none !important;
+// }
+
+.table__receive-browse {
   height: calc(100% - 70px);
-
-  .table-order--body {
-    height: calc(100% - 26px);
+ 
+  .table__receive-browse--body {
+    height: calc(100% - 60px);
   }
-
-  .table-order--footer {
+  .table__receive-browse--footer {
     color: #000000;
     background: #eff3ff 50% 50% repeat-x;
     border: 1px solid #5180d8;
     border-top: 0;
   }
-}
-
-.total-item {
-  border-right: 1px solid #5180d8;
-  font-size: 12px;
-  font-weight: bold;
-  padding: 0 2px;
-}
-
-.total-item:last-child {
-  border-right: none !important;
+  .border--full {
+    border-top: 1px solid #5180d8 !important;
+  }
 }
 </style>
