@@ -9,7 +9,9 @@
     <div class="modal-item-master" @click="closeModal"></div>
     <div class="modal-content">
       <div class="bg-cladia d-flex align-items-center justify-content-between">
-        <div class="text-white pl-2">{{ $t('lbl_DWDInitialBalanceSetting_0') }}</div>
+        <div class="text-white pl-2">
+          {{ $t('lbl_DWDInitialBalanceSetting_0') }}
+        </div>
         <div class="text-white pr-2 cursor-pointer" @click="closeModal">x</div>
       </div>
       <ToolBar
@@ -27,10 +29,10 @@
           </td>
           <td class="input">
             <input
-              class="w-100 border"
-              v-model.number="form.amount"
-              name="amount"
-              type="number"
+              v-model="form.amount"
+              type="text"
+              class="number"
+              oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
               :disabled="isDisabled"
             />
           </td>
@@ -131,7 +133,7 @@ export default {
       required: false,
       default: () => {},
     },
-  
+
     isDisabled: {
       type: Boolean,
       default: false,
@@ -142,12 +144,12 @@ export default {
       loading: false,
       showModal: false,
       form: {
-        amount:'',
-        currencyId:'',
-        currentAsset:'',
+        amount: '',
+        currencyId: '',
+        currentAsset: '',
         startDate: new Date(),
       },
-      defaultStartDate:new Date(),
+      defaultStartDate: new Date(),
       listErrorMessage: [],
       listToolBars: [
         {
@@ -190,8 +192,6 @@ export default {
 
       return 'calc(100% - 215px)'
     },
-
-  
   },
   watch: {
     getDataColumnHides: {
@@ -211,6 +211,7 @@ export default {
   },
   created() {
     this.form.startDate = new Date()
+    this.defaultStartDate = new Date()
   },
 
   async fetch() {
@@ -238,7 +239,7 @@ export default {
         bankName: 'DWDBankName',
         currencyId: 'DWDCurrency',
       }
-      
+
       Object.keys(requiredFields).forEach((field) => {
         if (!this.form[field]) {
           errors.push({
@@ -253,64 +254,64 @@ export default {
         return
       }
       return {
-        payload: this.form
+        payload: this.form,
       }
-   
     },
-    
-    
+
     async changeActiveToolBar(key) {
       if (key === 'close') {
         return this.closeModal()
       }
       // eslint-disable-next-line no-use-before-define
-     if(key ==="save"){
-      const confirm = window.confirm(this.$t('msg_ConfirmSave_0'))
-      if (!confirm) {
-        return
-      }
-      
-     
-     if(confirm){
-      const validateInfo = this.validateForm()
-      if (validateInfo) {
+      if (key === 'save') {
+        const confirm = window.confirm(this.$t('msg_ConfirmSave_0'))
+        if (!confirm) {
+          return
+        }
         const params = {
           amount: this.form.amount,
-          startDate: this.form.startDate ?? this.defaultStartDate ,
+          startDate: this.form.startDate
+            ? this.form.startDate
+            : this.defaultStartDate,
           bankId: this.form.bankName,
-          currencyId: this.form.currencyId ,
+          currencyId: this.form.currencyId,
         }
-        try {
-          this.loading = true
-          const response =  await api('saveSettingBlance', params)
-          
-          const errorCode =  response?.data?.response?.data?.status
-          
-          if (errorCode === SERVER_RESPONSE_CODE.SERVER_RESPONSE_ERROR) {
-            window.alert(this.$t(response?.data?.response?.data?.message))
+
+        if (confirm) {
+          const validateInfo = this.validateForm()
+          if (validateInfo) {
+            try {
+              this.loading = true
+              const response = await api('saveSettingBlance', params)
+
+              const errorCode = response?.data?.response?.data?.status
+
+              if (errorCode === SERVER_RESPONSE_CODE.SERVER_RESPONSE_ERROR) {
+                window.alert(this.$t(response?.data?.response?.data?.message))
+              }
+              if (response.status === 200) {
+                window.alert(this.$t('msg_IsSaved_0'))
+                this.$emit('on-close')
+                this.$emit('reloadSet')
+                this.showModal = false
+              }
+            } catch (error) {
+              window.alert(this.$t(message))
+              console.error(error)
+            } finally {
+              this.loading = false
+            }
           }
-          if (response.status === 200) {
-            window.alert(this.$t('msg_IsSaved_0'))
-            this.$emit('on-close')
-            this.$emit('reloadSet')
-            this.showModal = false
-          }
-        } catch (error) {
-          window.alert(this.$t(message))
-          console.error(error)
-        } finally {
-          this.loading = false
         }
       }
-     }
-     }
     },
 
     closeModal() {
       this.showModal = false
-      this.listErrorMessage=[]
-      this.form=[]
-    
+      this.listErrorMessage = []
+      this.form.amount ='',
+      this.form.currencyId ='',
+      this.form.bankName=''
     },
   },
 }

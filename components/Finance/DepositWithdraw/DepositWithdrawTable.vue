@@ -389,7 +389,6 @@ export default {
     height: calc(100% - 60px);
   }
   .table__receive-browse--footer {
-  .table__receive-browse--footer {
     color: #000000;
     background: #eff3ff 50% 50% repeat-x;
     border: 1px solid #5180d8;
@@ -401,6 +400,5 @@ export default {
   .border--full {
     border-top: 1px solid #5180d8 !important;
   }
-}
 }
 </style>
