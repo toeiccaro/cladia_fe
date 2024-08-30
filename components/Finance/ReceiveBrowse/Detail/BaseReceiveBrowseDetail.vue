@@ -461,15 +461,16 @@ export default {
       }
     },
     async addOrUpdateItem(data) {
-      data.receiveBrowsDTL.pop()
       try {
+        data.receiveBrowsDTL.pop()
+        const SubjectId = this.listAccountingItems.find(item => item.text == 'Revenue').value;
         const payload = {
           RBMstId: data.RBMstId,
           RBOrderNumber: data.RBOrderNumber,
           RBCustomerId: data.RBCustomerId,
           RBTotalAmount: parseToNumber(data.RBTotalAmount),
           RBMemo: data.RBMemo,
-          RBSubjectId: data.RBSubjectId,
+          RBSubjectId: SubjectId,
           RBOpponentSubjectId: data.RBOpponentSubjectId,
           RBCurrencyId: data.RBCurrencyId,
           RBBalanceAmount: parseToNumber(data.RBBalanceAmount),

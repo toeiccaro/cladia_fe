@@ -2,7 +2,7 @@
     <div class="table-order d-flex flex-column position-relative">
       <tr class="tr-2" style="margin-bottom: 10px;">
         <td class="label">
-          <span id="departmentID">
+          <span id="departmentID" style="margin-right: 10px;">
             {{ $t('lbl_SearchDate_0') }}
           </span>
         </td>
@@ -219,6 +219,10 @@
           'BBBalance',
           'BBRevenue',
         ]
+
+        const listAlignCenterFields = [
+          'BBCurrency'
+        ]
   
         const data = this.dataTable?.map((item, index) => {
           const obj = {
@@ -246,6 +250,10 @@
               obj[mappingFieldName].align = 'right'
             }
   
+            if (listAlignCenterFields.includes(headerItem.fieldName)) {
+              obj[mappingFieldName].align = 'center'
+            }
+
             switch (headerItem.fieldName) {
               case 'BBImportAmount':
               case 'BBExportAmount':
@@ -256,8 +264,8 @@
                     ? 0
                     : formatNumberWithCommas(obj[mappingFieldName].value)
                 break
-              case 'BBCurrencyID':
-                const valueCurrency = this.currencyOptions.find(item => Number(item.value - 1) == obj[mappingFieldName].value)
+              case 'BBCurrency':
+                const valueCurrency = this.currencyOptions.find(item => item.value == obj[mappingFieldName].value)
                 if(valueCurrency)
                   obj[mappingFieldName].value = valueCurrency?.text;
                 break
@@ -288,14 +296,14 @@
               item.fieldName
             ),
             name: this.$t(`lbl_${item.fieldName}_0`),
-            filter: item.fieldName === 'BBCurrencyID' ? 'select' : 'input',
+            filter: item.fieldName === 'BBCurrency' ? 'select' : 'input',
             width: item.fieldWide * 1,
             fieldName: item.fieldName,
             fieldOrder: item.fieldOrder,
             maxLength,
           }
 
-          if (item.fieldName === 'BBCurrencyID') {
+          if (item.fieldName === 'BBCurrency') {
             headerItem.options = this.itemCurrencyOptions
           }
   

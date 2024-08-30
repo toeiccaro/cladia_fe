@@ -439,15 +439,17 @@ export default {
     },
 
     async addOrUpdateItem(data) {
-      data.payBrowsDTL.pop()
       try {
+        data.payBrowsDTL.pop();
+        const SubjectId = this.listAccountingItems.find(item => item.text == 'Purchase').value;
+
         const payload = {
           PBMstId: data.PBMstId,
           PBOrderNumber: data.PBOrderNumber,
           PBCustomerId: data.PBCustomerId,
           PBTotalAmount: parseToNumber(data.PBTotalAmount),
           PBMemo: data.PBMemo,
-          PBSubjectId: data.PBSubjectId,
+          PBSubjectId: SubjectId,
           PBOpponentSubjectId: data.PBOpponentSubjectId,
           PBCurrencyId: data.PBCurrencyId,
           PBBalanceAmount: parseToNumber(data.PBBalanceAmount),
