@@ -289,7 +289,7 @@ export default {
           filter: 'number',
           width: 150,
           align: 'right',
-          fieldRequired: false,
+          fieldRequired: true,
           hidden: false,
         },
         {
@@ -637,6 +637,7 @@ export default {
       const requiredTableDetail = {
         itemCode: 'ItemCode',
         quantity: 'Quantity',
+        price: 'Price',
         promiseDate: 'PromiseDate',
       }
 

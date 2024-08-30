@@ -18,6 +18,7 @@
               :disabled="isDisabled"
               input-class="input__orderDate"
               :highlighted="highlighted"
+               :disabled-dates="disabledStartDates"
               @input="changeStartDate"
             ></datepicker>
           </td>
@@ -37,6 +38,7 @@
               :disabled="isDisabled"
               input-class="input__orderDate"
               :highlighted="highlighted"
+              :disabled-dates="disabledEndDates"
               @input="changeEndDate"
             ></datepicker>
           </td>
@@ -125,24 +127,40 @@ export default {
       currencyOption: 'getCurrencyOptions',
       currentAsset: 'getListCurrentAssets',
     }),
+
     // disabledStartDates() {
-    //   return {
-    //     from: new Date(
-    //       this.form.endDate.getFullYear(),
-    //       this.form.endDate.getMonth(),
-    //       this.form.endDate.getDate()
-    //     ),
+    //   if(this.form.endDate) {
+    //     const date = new Date(this.form.endDate)
+    //     console.log('this.form.endDate', this.form.endDate);
+    //     return {
+    //       from: new Date(
+    //         date.getFullYear(),
+    //         date.getMonth(),
+    //         date.getDate() + 1
+    //       ),
+    //     }
     //   }
     // },
-    // disabledEndDates() {
-    //   return {
-    //     to: new Date(
-    //       this.form.startDate.getFullYear(),
-    //       this.form.startDate.getMonth(),
-    //       this.form.startDate.getDate() + 1
-    //     ),
-    //   }
-    // },
+    disabledStartDates() {
+      const date = new Date(this.form.endDate)
+      return {
+        from: new Date(
+         date.getFullYear(),
+         date.getMonth(),
+         date.getDate()
+        ),
+      }
+    },
+    disabledEndDates() {
+      const date = new Date(this.form.startDate)
+      return {
+        to: new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate() + 1
+        ),
+      }
+    },
   },
   watch: {
     data: {
