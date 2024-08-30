@@ -17,7 +17,6 @@
     <BaseSettingInitBlance
       ref="modalSetBlance"
       @reloadSet="functionReload"
-     :data="form"
     ></BaseSettingInitBlance>
     <div
       v-if="loading"

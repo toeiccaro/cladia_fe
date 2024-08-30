@@ -407,7 +407,7 @@ export default {
             }
 
             const requiredFields = {
-              amount: 'RAmount',
+              amount: 'RBAmount',
               paymentDate: 'PBPaymentDate',
               arUser: 'RBArUser',
             }
@@ -599,9 +599,7 @@ export default {
           }
           if (response.status === SERVER_RESPONSE_CODE.OK) {
             window.alert(this.$t('msg_IsDeleted_0'))
-            return this.$router.push(
-              this.localePath({ path: '/finance/receive-browse' })
-            )
+            this.getData()
           }
           window.alert(`${response?.message}`)
         }

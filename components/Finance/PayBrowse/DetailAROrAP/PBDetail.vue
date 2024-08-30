@@ -8,7 +8,12 @@
       :is-error="true"
       :list-error-message="listErrorMessage"
     />
-    <PBForm ref="addPBForm" :key="refreshAddPBFormKey" :data="form"  :isDisabled="isCheck"/>
+    <PBForm
+      ref="addPBForm"
+      :key="refreshAddPBFormKey"
+      :data="form"
+      :isDisabled="isCheck"
+    />
     <BaseTableItemDetail
       ref="tableDetails"
       class="add-sale-order-table-details"
@@ -233,7 +238,7 @@ export default {
     },
 
     isCheck() {
-      return !!(this.form?.checker )
+      return !!this.form?.checker
     },
 
     tableHeaders() {
@@ -287,6 +292,7 @@ export default {
           align: 'right',
           fieldRequired: true,
           hidden: false,
+          disabled: this.isCheck,
         },
         {
           key: 'opponentSubject',
@@ -346,6 +352,7 @@ export default {
           hidden: false,
           options: this.checkboxOptions,
           headerFilter: 'select',
+          disabled: this.isCheck,
         },
         {
           key: 'invoiceNumber',
@@ -366,6 +373,7 @@ export default {
           disabled: false,
           fieldRequired: false,
           hidden: false,
+          disabled: this.isCheck,
         },
         {
           key: 'invoiceNotes',
@@ -435,7 +443,7 @@ export default {
       return this.listToolBars.map((item) => {
         switch (item.key) {
           case 'delete':
-            item.disabled = !this.getActiveButtonToolBar?.isDelete
+            item.disabled = !this.getActiveButtonToolBar?.isDelete|| checker
             break
           case 'check':
             item.disabled = !this.getActiveButtonToolBar?.isCheck || checker
@@ -443,6 +451,9 @@ export default {
           case 'unCheck':
             item.disabled =
               !this.getActiveButtonToolBar?.isCheck || checker === null
+            break
+          case 'save':
+            item.disabled = !this.getActiveButtonToolBar?.isCheck || checker
             break
           case 'print':
             item.disabled = !this.getActiveButtonToolBar?.isPrint
@@ -611,9 +622,7 @@ export default {
           break
 
         case 'backAdd':
-          this.$router.push(
-            this.localePath({ path: '/finance/pay-browse' })
-          )
+          this.$router.push(this.localePath({ path: '/finance/pay-browse' }))
           break
 
         case 'close':
@@ -672,10 +681,6 @@ export default {
 
         if (response.status === SERVER_RESPONSE_CODE.OK) {
           window.alert(this.$t('msg_IsChecked_0'))
-          this.dataDetail.checker = response.data.checker
-          this.dataDetail.checkDate = this.convertDateTillSecond(
-            response.data.checkDate
-          )
           await this.getData()
         } else {
           window.alert(`${response?.message}`)
@@ -701,7 +706,7 @@ export default {
         const response = await api('uncheckPB', params)
         const errorCode = response?.data?.response?.status
 
-        if (errorCode === SERVER_RESPONSE_CODE.FOPBIDDEN) {
+        if (errorCode === SERVER_RESPONSE_CODE.FORBIDDEN) {
           window.alert(this.$t(response?.message))
           return
         }
@@ -709,9 +714,7 @@ export default {
         const validResponse = response.status === SERVER_RESPONSE_CODE.OK
         if (validResponse) {
           window.alert(this.$t('msg_IsUnChecked_0'))
-          this.dataDetail.checker = response.data.checker
-          this.dataDetail.checkDate = response.data.checkDate
-
+        
           return await this.getData()
         }
 
@@ -780,7 +783,7 @@ export default {
               })
             }
           })
-          if(item.creditAmount !== item.debitAmount) {
+          if (item.creditAmount !== item.debitAmount) {
             errors.push({
               fieldName: `${this.$t('lbl_PBLineID_0')} ${
                 item.lineID
@@ -890,7 +893,7 @@ export default {
           const response = await api('editPB', params)
           const errorCode = response?.data?.response?.status
 
-          if (errorCode === SERVER_RESPONSE_CODE.FOPBIDDEN) {
+          if (errorCode === SERVER_RESPONSE_CODE.FORBIDDEN) {
             window.alert(this.$t(response?.data?.response?.data?.message))
             return
           }
@@ -987,9 +990,7 @@ export default {
           }
           if (response.status === SERVER_RESPONSE_CODE.OK) {
             window.alert(this.$t('msg_IsDeleted_0'))
-            return this.$router.push(
-              this.localePath({ path: '/finance/pay-browse' })
-            )
+           this.getData()
           }
           window.alert(`${response?.message}`)
         }

@@ -1,5 +1,5 @@
 <template>
-  <div class="table-order d-flex flex-column position-relative">
+  <div class="table__receive-browse d-flex flex-column position-relative">
     <tr class="tr-2 form-year">
       <td class="label">
         <span id="departmentID">
@@ -20,7 +20,7 @@
       :header="headerMapping"
       :data="dataTableMapping"
       :data-total="dataTotalMapping"
-      class="table-order--body"
+      class="table__receive-browse--body"
       :initial-filters="payloadPayableQuery"
       :update-filters-function="UPDATE_PAYLOAD_PAYABLE_ANNUAL_QUERY"
       @search="filterAndSort"
@@ -50,7 +50,7 @@
       :per-page="payloadPayableQuery.pageSize"
       :current-page="payloadPayableQuery.pageNo"
       :number-item="dataTable.length"
-      class="table-order--footer"
+      class="table__receive-browse--footer"
       @changePage="(value) => setCurrentPage(value)"
       @changePerPage="(value) => changePerPage(value)"
     ></BasePagination>
@@ -60,7 +60,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import { SERVER_RESPONSE_CODE } from '@/constants'
-import {payableAnnualTableSchema } from '@/schemas/finance/receivable-annual-table'
+import { payableAnnualTableSchema } from '@/schemas/finance/receivable-annual-table'
 
 import api from '@/api/api'
 import BasePagination from '~/components/UI/BasePagination.vue'
@@ -87,7 +87,7 @@ export default {
       selectedYear: null,
       yearOptions: [],
       isDisabled: false,
-      dataFooter: {}
+      dataFooter: {},
     }
   },
 
@@ -105,20 +105,20 @@ export default {
     }
   },
   checkAccountOptions() {
-      return [
-        { text: '', value: '' },
-        { text: 'Yes', value: 1 },
-        { text: 'No', value: 0 },
-      ]
-    },
-    //
+    return [
+      { text: '', value: '' },
+      { text: 'Yes', value: 1 },
+      { text: 'No', value: 0 },
+    ]
+  },
+  //
   computed: {
     ...mapGetters({
       unitOptions: 'base/getUnitOptions',
       payloadPayableQuery: 'filterSort/getPayloadPayableQuery',
     }),
     ...mapGetters('base', ['getActiveButtonToolBar']),
-   
+
     listDataShow() {
       return this.dataHeader
         .filter((_el) => !this.listIgnoreFieldName.includes(_el.fieldName))
@@ -153,15 +153,14 @@ export default {
           temp.align = 'center'
         }
         if (listTotalFields.includes(item.key)) {
-            temp.align = 'right'
-            temp.type = 'amount'
-            temp.value = this.dataFooter[item.key]
+          temp.align = 'right'
+          temp.type = 'amount'
+          temp.value = this.dataFooter[item.key]
         }
         return temp
       })
     },
-   
-   
+
     dataTableMapping() {
       const listAlignRightFields = [
         'APEndingBalance',
@@ -209,25 +208,27 @@ export default {
 
           if (listAlignRightFields.includes(headerItem.fieldName)) {
             obj[mappingFieldName].align = 'right'
-            obj[mappingFieldName].value 
-              = obj[mappingFieldName].value 
-              === 0
+            obj[mappingFieldName].value =
+              obj[mappingFieldName].value === 0
                 ? 0
                 : formatNumberWithCommas(obj[mappingFieldName].value)
-            obj[mappingFieldName].color = (index % 3 === 1) ? 'blue' : (index % 3 === 2) ? 'red' : ''
-
+            obj[mappingFieldName].color =
+              index % 3 === 1 ? 'blue' : index % 3 === 2 ? 'red' : ''
           }
           switch (headerItem.fieldName) {
-              case 'APCompanyName':
-              case 'APSubjectID':
-              case 'APCurrencyID':
-                obj[mappingFieldName].align = 'center';
-                break;
-              case 'APTypeID':
-              case 'APYear':
-                obj[mappingFieldName].align = 'center'
-                obj[mappingFieldName].color = (index % 3 === 1) ? 'blue' : (index % 3 === 2) ? 'red' : '';
-                break;
+            case 'APCompanyName':
+              obj[mappingFieldName].align = 'left'
+              break
+            case 'APSubject':
+            case 'APCurrency':
+              obj[mappingFieldName].align = 'center'
+              break
+            case 'APType':
+            case 'APYear':
+              obj[mappingFieldName].align = 'center'
+              obj[mappingFieldName].color =
+                index % 3 === 1 ? 'blue' : index % 3 === 2 ? 'red' : ''
+              break
           }
         })
 
@@ -240,11 +241,6 @@ export default {
       const header = [
         {
           key: 'index',
-          name: '',
-          width: 40,
-        },
-        {
-          key: 'icon',
           name: '',
           width: 40,
         },
@@ -271,7 +267,6 @@ export default {
 
       return header
     },
-   
   },
   created() {
     this.generateYearOptions()
@@ -327,6 +322,7 @@ export default {
           this.dataHeader = res.data?.scolumnHides
           this.dataTable = res.data.tableContent?.content
           this.total = res.data.tableContent?.totalElements
+          this.dataFooter = res.data?.tableFooter || {}
           this.SET_DATA_COLUMN_HIDE(
             this.dataHeader.filter(
               (_el) => !this.listIgnoreFieldName.includes(_el.fieldName)
@@ -353,6 +349,7 @@ export default {
         if (validResponse) {
           this.dataTable = res.data.tableContent?.content
           this.total = res.data.tableContent?.totalElements
+          this.dataFooter = res.data?.tableFooter || {}
         }
       } catch (err) {
         window.alert(err?.data?.response?.data?.message)
@@ -378,6 +375,7 @@ export default {
           this.dataHeader = res.data?.scolumnHides
           this.dataTable = res.data.tableContent?.content
           this.total = res.data.tableContent?.totalElements
+          this.dataFooter = res.data?.tableFooter || {}
           this.SET_DATA_COLUMN_HIDE(
             this.dataHeader.filter(
               (_el) => !this.listIgnoreFieldName.includes(_el.fieldName)
@@ -432,21 +430,21 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.table-order {
+.table__receive-browse {
   height: calc(100% - 70px);
-
-  .table-order--body {
-    height: calc(100% - 26px);
+  .table__receive-browse--body {
+    height: calc(100% - 70px);
   }
-
-  .table-order--footer {
+  .table__receive-browse--footer {
     color: #000000;
     background: #eff3ff 50% 50% repeat-x;
     border: 1px solid #5180d8;
     border-top: 0;
   }
+  .border--full {
+    border-top: 1px solid #5180d8 !important;
+  }
 }
-
 .total-item {
   border-right: 1px solid #5180d8;
   font-size: 12px;
@@ -456,5 +454,11 @@ export default {
 
 .total-item:last-child {
   border-right: none !important;
+}
+.form-year {
+  margin-bottom: 15px;
+  span {
+    margin-right: 10px
+  }
 }
 </style>

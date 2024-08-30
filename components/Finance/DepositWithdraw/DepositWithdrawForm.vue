@@ -22,7 +22,6 @@
             ></datepicker>
           </td>
           <td class="info">*</td>
-
           <td class="label">
             <span id="endDate">{{ $t('lbl_DWDEndDate_0') }}</span>
           </td>
@@ -42,7 +41,6 @@
             ></datepicker>
           </td>
           <td class="info">*</td>
-
           <td class="label">
             <span id="departmentID">
               {{ $t('lbl_DWDBankName_0') }}
@@ -56,11 +54,13 @@
               :disabled="isDisabled"
             ></b-form-select>
           </td>
+          <td class="info"></td>
           <td class="label">
             <span id="departmentID">
               {{ $t('cmb_Currency_0') }}
             </span>
           </td>
+          
           <td class="input">
             <b-form-select
               v-model="form.currencyId"
@@ -70,6 +70,7 @@
             ></b-form-select>
           </td>
           <td class="info">*</td>
+          
         </tr>
       </tbody>
     </table>
@@ -124,6 +125,24 @@ export default {
       currencyOption: 'getCurrencyOptions',
       currentAsset: 'getListCurrentAssets',
     }),
+    // disabledStartDates() {
+    //   return {
+    //     from: new Date(
+    //       this.form.endDate.getFullYear(),
+    //       this.form.endDate.getMonth(),
+    //       this.form.endDate.getDate()
+    //     ),
+    //   }
+    // },
+    // disabledEndDates() {
+    //   return {
+    //     to: new Date(
+    //       this.form.startDate.getFullYear(),
+    //       this.form.startDate.getMonth(),
+    //       this.form.startDate.getDate() + 1
+    //     ),
+    //   }
+    // },
   },
   watch: {
     data: {
@@ -144,6 +163,7 @@ export default {
 
     changeStartDate(value) {
       this.form.startDate = this.convertDate(value)
+      
     },
     changeEndDate(value) {
       this.form.endDate = this.convertDate(value)
@@ -172,6 +192,7 @@ export default {
 select {
   font-size: 12px;
 }
+
 
 .add-form-enterprise {
   font-size: 12px;
@@ -222,6 +243,7 @@ select {
     }
   }
 }
+
 
 input[disabled] {
   opacity: 0.5;

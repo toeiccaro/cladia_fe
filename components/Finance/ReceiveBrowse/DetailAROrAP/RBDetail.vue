@@ -292,6 +292,7 @@ export default {
           align: 'right',
           fieldRequired: true,
           hidden: false,
+          disabled: this.isCheck,
         },
         {
           key: 'opponentSubject',
@@ -351,6 +352,7 @@ export default {
           hidden: false,
           options: this.checkboxOptions,
           headerFilter: 'select',
+          disabled: this.isCheck,
         },
         {
           key: 'invoiceNumber',
@@ -371,6 +373,7 @@ export default {
           disabled: false,
           fieldRequired: false,
           hidden: false,
+          disabled: this.isCheck,
         },
         {
           key: 'invoiceNotes',
@@ -451,6 +454,9 @@ export default {
             break
           case 'print':
             item.disabled = !this.getActiveButtonToolBar?.isPrint
+            break
+          case 'save':
+          item.disabled = !this.getActiveButtonToolBar?.isCheck || checker
             break
           default:
             break
@@ -676,10 +682,7 @@ export default {
 
         if (response.status === SERVER_RESPONSE_CODE.OK) {
           window.alert(this.$t('msg_IsChecked_0'))
-          this.dataDetail.checker = response.data.checker
-          this.dataDetail.checkDate = this.convertDateTillSecond(
-            response.data.checkDate
-          )
+         
           await this.getData()
         } else {
           window.alert(`${response?.message}`)
@@ -713,9 +716,6 @@ export default {
         const validResponse = response.status === SERVER_RESPONSE_CODE.OK
         if (validResponse) {
           window.alert(this.$t('msg_IsUnChecked_0'))
-          this.dataDetail.checker = response.data.checker
-          this.dataDetail.checkDate = response.data.checkDate
-
           return await this.getData()
         }
 
@@ -761,6 +761,8 @@ export default {
         currency: 'Currency',
       }
 
+      
+
       Object.keys(requiredFields).forEach((field) => {
         if (!this.form[field]) {
           errors.push({
@@ -786,7 +788,7 @@ export default {
               })
             }
           })
-          if(item.creditAmount !== item.debitAmount) {
+          if (item.creditAmount !== item.debitAmount) {
             errors.push({
               fieldName: `${this.$t('lbl_PBLineID_0')} ${
                 item.lineID
@@ -996,9 +998,7 @@ export default {
           }
           if (response.status === SERVER_RESPONSE_CODE.OK) {
             window.alert(this.$t('msg_IsDeleted_0'))
-            return this.$router.push(
-              this.localePath({ path: '/finance/receive-browse' })
-            )
+            this.getData()
           }
           window.alert(`${response?.message}`)
         }
