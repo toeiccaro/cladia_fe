@@ -28,7 +28,7 @@
           <td class="input">
             <input
               class="w-100 border"
-              v-model="form.amount"
+              v-model.number="form.amount"
               name="amount"
               type="number"
               :disabled="isDisabled"
@@ -257,6 +257,7 @@ export default {
       }
    
     },
+    
     
     async changeActiveToolBar(key) {
       if (key === 'close') {
