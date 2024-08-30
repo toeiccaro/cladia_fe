@@ -85,7 +85,7 @@ export default {
 
   computed: {
     ...mapGetters({
-      payloadBankBalanceQuery: 'filterSort/payloadBankBalanceQuery',
+      payloadBankBalanceQuery: 'filterSort/getPayloadBankBalanceQuery',
       activeButtonToolBar: 'base/getActiveButtonToolBar',
     }),
     listToolBarsCheckAuthority() {
@@ -152,16 +152,14 @@ export default {
       if (!confirm) {
         return
       }
-      const sortFilter = this.payloadBankBalanceQuery
-      delete sortFilter.pageNo
-      delete sortFilter.pageSize
+
       const sortFormOptional = {
-        ...sortFilter,
-        localLanguage: this.$i18n.locale,
+        language: this.$i18n.locale,
         exportAllData: true,
       }
       this.handleExportExcel(sortFormOptional)
     },
+    
     changeActiveToolBar(key) {
       if (key === 'queryTableBankBalanceAnnual') {
         console.log('acctionn')
@@ -193,11 +191,11 @@ export default {
     },
     async handleExportExcel(sortFormOptional) {
       this.loading = true
-      // const response = await api('exportBankBalanceAnnuaTable', sortFormOptional)
-      // this.loading = false
-      // if (response?.status === SERVER_RESPONSE_CODE.OK && response?.data) {
-      //   downloadFileExcel(response.data)
-      // }
+      const response = await api('exportBankBalanceTable', sortFormOptional)
+      this.loading = false
+      if (response?.status === SERVER_RESPONSE_CODE.OK && response?.data) {
+        downloadFileExcel(response.data)
+      }
     },
   },
 }

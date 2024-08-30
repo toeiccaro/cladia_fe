@@ -1,6 +1,6 @@
 export const BankBalance = {
   BBCreditName: "string",
-  BBCurrencyID: "string",
+  BBCurrency: "string",
   BBImportAmount: "string",
   BBExportAmount: "string",
   BBBalance: "string",
