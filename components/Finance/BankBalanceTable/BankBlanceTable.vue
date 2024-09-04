@@ -428,7 +428,7 @@
   </script>
   <style lang="scss" scoped>
   .table-order {
-    height: calc(100% - 70px);
+    height: calc(100% - 72px);
   
     .table-order--body {
       height: calc(100% - 26px);
