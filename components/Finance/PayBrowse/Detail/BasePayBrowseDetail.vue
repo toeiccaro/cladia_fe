@@ -126,7 +126,7 @@ export default {
     },
 
     isCheck() {
-      return !!(this.payBrowseData?.checker && this.payBrowseData.checkDate)
+      return this.payBrowseData?.PBIsStop === true
     },
 
     newLine() {
@@ -170,6 +170,7 @@ export default {
           width: `12%`,
           align: 'right',
           fieldRequired: true,
+          disabled: this.isCheck,
         },
         {
           key: 'otherAmount',
@@ -177,6 +178,7 @@ export default {
           filter: 'number',
           width: `12%`,
           align: 'right',
+          disabled: this.isCheck,
         },
         {
           key: 'expenseCategory',
@@ -184,6 +186,7 @@ export default {
           filter: 'select',
           width: `24%`,
           options: this.itemListAccountingItems,
+          disabled: this.isCheck,
         },
         {
           key: 'date',
@@ -191,6 +194,7 @@ export default {
           filter: 'datetime',
           width: `12%`,
           fieldRequired: true,
+          disabled: this.isCheck,
         },
         {
           key: 'apUser',
@@ -199,12 +203,14 @@ export default {
           width: `12%`,
           options: this.listEmployeeName,
           fieldRequired: true,
+          disabled: this.isCheck,
         },
         {
           key: 'memo',
           name: this.$t('lbl_PBMemo_0'),
           filter: 'input',
           width: `18%`,
+          disabled: this.isCheck,
         },
       ]
     },
@@ -225,7 +231,7 @@ export default {
           key: 'delete',
           label: this.$t('btn_btnDel_0'),
           icon: '/images/delete.png',
-          disabled: !this.getActiveButtonToolBar.isDelete,
+          disabled: !this.getActiveButtonToolBar.isDelete || this.isCheck,
         },
         {
           key: 'back',
