@@ -412,17 +412,18 @@ export default {
     },
 
     newLine() {
+      const lastItem = this.dataTable[this.dataTable.length - 1];
       return {
         lineID: 1,
         companyName: '',
         creditAmount: 0,
-        currency: '',
-        date: this.convertDate(new Date()),
+        currency: lastItem?.currency,
+        date: lastItem?.date,
         debitAmount: 0,
-        employee: '',
-        invoiceDate: '',
+        employee: lastItem?.employee,
+        invoiceDate: lastItem?.invoiceDate,
         invoiceNotes: '',
-        invoiceNumber: '',
+        invoiceNumber: lastItem?.invoiceNumber,
         isInvoice: false,
         itemID: 0,
         opponentSubject: '',
@@ -845,7 +846,7 @@ export default {
               const matchedItem = list.find(
                 (item) => item.companyName === companyName
               )
-              return matchedItem ? matchedItem.id : fallback
+              return matchedItem ? matchedItem.companyName : fallback
             }
 
             const PBSubject = findValueByText(

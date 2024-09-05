@@ -208,7 +208,7 @@ export default {
               type: 'amount',
             }
           }
-
+          
           if (headerItem.fieldName === 'OrderNO') {
             obj[mappingFieldName].type = this.getActiveButtonToolBar?.isEdit
               ? 'link'
@@ -249,6 +249,10 @@ export default {
 
           if (headerItem.fieldName === 'IsStop') {
             obj[mappingFieldName].type = 'slot'
+          }
+
+          if (headerItem.fieldName === 'InvoiceNo') {
+            obj[mappingFieldName].value = obj[mappingFieldName].value.replaceAll(';',';<br>')
           }
         })
         return obj
