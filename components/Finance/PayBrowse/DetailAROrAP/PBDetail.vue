@@ -157,7 +157,7 @@ export default {
           isInvoice: false,
           itemID: 0,
           opponentSubject: '',
-          reason: '',
+          reasonBr: '',
           subject: '',
 
           isUpdate: true,
@@ -398,7 +398,7 @@ export default {
           hidden: false,
         },
         {
-          key: 'reason',
+          key: 'reasonBr',
           name: this.$t('lbl_PBReason_0'),
           filter: 'input',
           width: 300,
@@ -412,7 +412,7 @@ export default {
     },
 
     newLine() {
-      const lastItem = this.dataTable[this.dataTable.length - 1];
+      const lastItem = this.dataTable[this.dataTable.length - 1]; 
       return {
         lineID: 1,
         companyName: '',
@@ -426,9 +426,9 @@ export default {
         invoiceNumber: lastItem?.invoiceNumber,
         isInvoice: false,
         itemID: 0,
-        opponentSubject: '',
-        reason: '',
-        subject: '',
+        opponentSubject: lastItem?.opponentSubject,
+        reasonBr: '',
+        subject: lastItem?.subject,
 
         isUpdate: true,
         isNewLine: true,
@@ -537,6 +537,9 @@ export default {
             for (const key in item) {
               let newKey = key.replace(/^PB/, '')
               newKey = newKey[0].toLowerCase() + newKey.slice(1)
+              if (newKey == 'reason') {
+                newKey = newKey + 'Br'
+              }
               if (newKey == 'date') {
                 item[key] = this.convertDate(item[key])
               }
@@ -883,7 +886,7 @@ export default {
               PBItemID: item.itemID,
               PBLineID: item.lineID,
               PBOpponentSubject: PBOppentSubject,
-              PBReason: item.reason,
+              PBReason: item.reasonBr,
               PBSubject: PBSubject,
             }
           }),

@@ -250,10 +250,6 @@ export default {
           if (headerItem.fieldName === 'IsStop') {
             obj[mappingFieldName].type = 'slot'
           }
-
-          if (headerItem.fieldName === 'InvoiceNo') {
-            obj[mappingFieldName].value = obj[mappingFieldName].value.replaceAll(';',';<br>')
-          }
         })
         return obj
       })

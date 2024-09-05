@@ -150,7 +150,7 @@ export default {
           isInvoice: false,
           itemID: 0,
           opponentSubject: '',
-          reason: '',
+          reasonBr: '',
           subject: '',
 
           isUpdate: true,
@@ -387,7 +387,7 @@ export default {
           hidden: false,
         },
         {
-          key: 'reason',
+          key: 'reasonBr',
           name: this.$t('lbl_PBReason_0'),
           filter: 'input',
           width: 300,
@@ -416,7 +416,7 @@ export default {
         isInvoice: false,
         itemID: 0,
         opponentSubject: '',
-        reason: '',
+        reasonBr: '',
         subject: '',
 
         isUpdate: true,
@@ -725,7 +725,7 @@ export default {
               PBItemID: item.itemID,
               PBLineID: item.lineID,
               PBOpponentSubject: PBOppenSubject,
-              PBReason: item.reason,
+              PBReason: item.reasonBr,
               PBSubject: PBSubject,
             }
           }),
