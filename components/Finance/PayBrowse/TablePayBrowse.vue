@@ -195,7 +195,7 @@ export default {
             item,
             headerItem.fieldName
           )
-
+          
           obj[mappingFieldName] = {
             value: item[mappingFieldName] || '',
           }
@@ -249,6 +249,9 @@ export default {
 
           if (headerItem.fieldName === 'PBIsStop') {
             obj[mappingFieldName].type = 'slot'
+          }
+          if (headerItem.fieldName === 'PBInvoiceNo') {
+            obj[mappingFieldName].value = obj[mappingFieldName].value.replaceAll(';',';<br>')
           }
         })
         return obj

@@ -150,7 +150,7 @@ export default {
           isInvoice: false,
           itemID: 0,
           opponentSubject: '',
-          reason: '',
+          reasonBr: '',
           subject: '',
 
           isUpdate: true,
@@ -387,7 +387,7 @@ export default {
           hidden: false,
         },
         {
-          key: 'reason',
+          key: 'reasonBr',
           name: this.$t('lbl_RBReason_0'),
           filter: 'input',
           width: 300,
@@ -401,21 +401,22 @@ export default {
     },
 
     newLine() {
+      const lastItem = this.dataTable[this.dataTable.length - 1];
       return {
         lineID: 1,
         companyName: '',
         creditAmount: 0,
-        currency: '',
-        date: this.convertDate(new Date()),
+        currency: lastItem?.currency,
+        date: lastItem?.date,
         debitAmount: 0,
-        employee: '',
-        invoiceDate: '',
+        employee: lastItem?.employee,
+        invoiceDate: lastItem?.invoiceDate,
         invoiceNotes: '',
-        invoiceNumber: '',
+        invoiceNumber: lastItem?.invoiceNumber,
         isInvoice: false,
         itemID: 0,
         opponentSubject: '',
-        reason: '',
+        reasonBr: '',
         subject: '',
 
         isUpdate: true,
@@ -687,7 +688,7 @@ export default {
               const matchedItem = list.find(
                 (item) => item.companyName === companyName
               )
-              return matchedItem ? matchedItem.id : fallback
+              return matchedItem ? matchedItem.companyName : fallback
             }
 
             const RBSubject = findValueByText(
@@ -725,7 +726,7 @@ export default {
               RBItemID: item.itemID,
               RBLineID: item.lineID,
               RBOpponentSubject: RBOppenSubject,
-              RBReason: item.reason,
+              RBReason: item.reasonBr,
               RBSubject: RBSubject,
             }
           }),

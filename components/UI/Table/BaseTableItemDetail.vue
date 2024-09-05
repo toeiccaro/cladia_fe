@@ -1273,8 +1273,6 @@ export default {
       const checkBeginDate = this.isDateExpired(value?.subBeginDate)
       const checkSubEndDate = this.isDateExpired(value?.subEndDate)
       const checkDeliveryDate = this.isDateExpired(value?.deliveryDate)
-      //Receive browse
-      const checkDate = this.isDateExpired(value?.date)
       const propertiesToCheck =
         value?.productionQuantity ||
         value?.quantity ||
@@ -1296,18 +1294,14 @@ export default {
         value?.reason ||
         value?.sono ||
         //Receive browse
-        value?.companyName ||
-        value?.creditAmount ||
-        value?.currency ||
-        value?.debitAmount ||
-        value?.employee ||
-        value?.invoiceDate ||
-        value?.invoiceNotes ||
-        value?.invoiceNumber ||
-        value?.isInvoice ||
-        value?.itemID ||
-        value?.opponentSubject ||
-        value?.subject ||
+        (
+          value?.date &&
+          value?.subject &&
+          value?.creditAmount != 0 &&
+          value?.opponentSubject &&
+          value?.debitAmount != 0 &&
+          value?.currency
+        ) ||
         value?.memo ||
         value?.otherAmount ||
         value?.expenseCategory ||
@@ -1318,8 +1312,7 @@ export default {
         checkEndDate ||
         checkBeginDate ||
         checkSubEndDate ||
-        checkDeliveryDate ||
-        checkDate
+        checkDeliveryDate
       return propertiesToCheck
     },
 
