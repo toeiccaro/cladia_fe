@@ -46,7 +46,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import { SERVER_RESPONSE_CODE } from '@/constants'
-import { saleOrderSchema } from '@/schemas/sales/sale-order'
+import { payDepositWithdraw } from '@/schemas/finance/deposit-withdraw'
 import api from '@/api/api'
 import BasePagination from '~/components/UI/BasePagination.vue'
 import BaseTableDraggable from '~/components/UI/BaseTableDraggable.vue'
@@ -203,7 +203,7 @@ export default {
           : '256'
         const headerItem = {
           key: this.mappingProperty(
-            this.dataTable[0] || saleOrderSchema,
+            this.dataTable[0] || payDepositWithdraw,
             item.fieldName
           ),
           name: this.$t(`lbl_${item.fieldName}_0`),
