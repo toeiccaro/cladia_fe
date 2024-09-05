@@ -426,9 +426,9 @@ export default {
         invoiceNumber: lastItem?.invoiceNumber,
         isInvoice: false,
         itemID: 0,
-        opponentSubject: '',
+        opponentSubject: lastItem?.opponentSubject,
         reasonBr: '',
-        subject: '',
+        subject: lastItem?.subject,
 
         isUpdate: true,
         isNewLine: true,
@@ -536,6 +536,9 @@ export default {
             for (const key in item) {
               let newKey = key.replace(/^RB/, '')
               newKey = newKey[0].toLowerCase() + newKey.slice(1)
+              if (newKey == 'reason') {
+                newKey = newKey + 'Br'
+              }
               if (newKey == 'date') {
                 item[key] = this.convertDate(item[key])
               }
