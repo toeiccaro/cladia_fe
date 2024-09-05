@@ -284,6 +284,7 @@ export default {
       this.getData()
     },
     async getData() {
+
       const queryString = new URLSearchParams(this.form).toString()
 
       try {
@@ -309,7 +310,6 @@ export default {
               (_el) => !this.listIgnoreFieldName.includes(_el.fieldName)
             )
           )
-          console.log('this.dataTable ', this.dataTable)
         }
       } catch (err) {
         console.error(err)
