@@ -93,6 +93,7 @@
         listIgnoreFieldName: ['Blance'],
         selectedDate: this.convertDate(new Date()),
         isDisabled: false,
+        dataTotal: {}
       }
     },
   
@@ -182,28 +183,29 @@
             value: '',
             type: 'text'
           }
+          
           switch (item.key) {
             case 'BBCreditName':
               temp.value = 'Total: '
               break
             case 'BBImportAmount':
-              temp.value = this.totalBBImportAmount
+              temp.value = this?.dataTotal?.totalImportAmount
               temp.align = 'right'
               temp.type = 'amount'
               break
             case 'BBExportAmount':
-              temp.value = this.totalBBExportAmount
+              temp.value = this?.dataTotal?.totalExportAmount
               temp.align = 'right'
               temp.type = 'amount'
               break
             case 'BBBalance':
-              temp.value = this.totalBBBalance
+              temp.value = this?.dataTotal?.totalBalance
               temp.align = 'right'
               temp.type = 'amount'
               break
             case 'BBRevenue':
-              temp.value = this.totalBBRevenue
-              temp.type = 'right'
+              temp.value = this?.dataTotal?.totalRevenue
+              temp.align = 'right'
               temp.type = 'amount'
               break
             default:
@@ -370,6 +372,7 @@
           if (validResponse) {
             this.dataHeader = res.data?.scolumnHides
             this.dataTable = res.data.tableContent?.content
+            this.dataTotal = res.data?.tableFooter
             this.total = res.data.tableContent?.totalElements
             this.SET_DATA_COLUMN_HIDE(
               this.dataHeader.filter(
