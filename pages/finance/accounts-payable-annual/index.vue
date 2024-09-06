@@ -85,7 +85,7 @@ export default {
 
   computed: {
     ...mapGetters({
-      payloadSaleOrder: 'filterSort/getPayloadSaleOrder',
+      payloadPayableQuery: 'filterSort/getPayloadPayableQuery',
       activeButtonToolBar: 'base/getActiveButtonToolBar',
     }),
     listToolBarsCheckAuthority() {
@@ -142,9 +142,11 @@ export default {
         return
       }
       const sortFormOptional = {
-        ...this.payloadSaleOrder,
+        ...this.payloadPayableQuery,
         exportAllData: false,
       }
+      console.log("sortFormOptionalllll",sortFormOptional);
+      
       this.handleExportExcel(sortFormOptional)
     },
     exportAll() {
@@ -152,7 +154,7 @@ export default {
       if (!confirm) {
         return
       }
-      const sortFilter = this.payloadSaleOrder
+      const sortFilter = this.payloadPayableQuery
       delete sortFilter.pageNo
       delete sortFilter.pageSize
       const sortFormOptional = {
