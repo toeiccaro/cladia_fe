@@ -218,7 +218,7 @@
           </td>
           <td class="input">
             <b-form-input
-              :value="totalAmount"
+              v-model="currentInvoiceData.totalRtAmount"
               name="TotalAmount"
               type="text"
               class="number"
@@ -231,7 +231,7 @@
           </td>
           <td class="input">
             <b-form-input
-              v-model="currentInvoiceData.totalRtAmount"
+              :value="totalAmount"
               name="Amount"
               type="text"
               class="number"
