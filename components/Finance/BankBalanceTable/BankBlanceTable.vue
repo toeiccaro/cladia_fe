@@ -365,7 +365,7 @@
             ...this.payloadBankBalanceQuery,
             BBTransDate: this.selectedDate,
           })
-  
+
           const res = await api('queryBankBalanceTable', this.payloadBankBalanceQuery)
   
           const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK
@@ -400,6 +400,7 @@
           if (validResponse) {
             this.dataTable = res.data.tableContent?.content
             this.total = res.data.tableContent?.totalElements
+            this.dataTotal = res.data?.tableFooter
           }
         } catch (err) {
           window.alert(err?.data?.response?.data?.message)

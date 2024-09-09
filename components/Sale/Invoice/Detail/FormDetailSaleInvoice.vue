@@ -218,7 +218,7 @@
           </td>
           <td class="input">
             <b-form-input
-              v-model="currentInvoiceData.totalRtAmount"
+              :value="totalAmount"
               name="TotalAmount"
               type="text"
               class="number"
@@ -231,7 +231,7 @@
           </td>
           <td class="input">
             <b-form-input
-              :value="totalAmount"
+              v-model="currentInvoiceData.totalRtAmount"
               name="Amount"
               type="text"
               class="number"
@@ -386,7 +386,7 @@ export default {
     }),
     totalAmount() {
       const amountsSelected = this.listDetails.map((item) =>
-        this.parseStringToFloat(item.amount)
+        this.parseStringToFloat(item.SIAmountIncludeTax)
       )
       return formatNumberWithCommas(sum(amountsSelected))
     },
