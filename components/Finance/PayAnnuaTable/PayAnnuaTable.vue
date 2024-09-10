@@ -60,7 +60,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import { SERVER_RESPONSE_CODE } from '@/constants'
-import { payableAnnualTableSchema } from '@/schemas/finance/receivable-annual-table'
+import { payableAnnualTableSchema } from '@/schemas/finance/payable-annual-table'
 
 import api from '@/api/api'
 import BasePagination from '~/components/UI/BasePagination.vue'
