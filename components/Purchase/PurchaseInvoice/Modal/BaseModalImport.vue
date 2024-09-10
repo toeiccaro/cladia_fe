@@ -206,7 +206,7 @@ export default {
       const finalSelectedItems = selectedItems.map((item) =>
         Object.assign({}, item, {
           quantity: item.receiptQty,
-          arrivalLineID: item.polineID,
+          arrivalLineID: item.lineID,
           noTaxAmount: item.noTaxAmount,
           tariffShare: 0,
           otherCostShare: 0,
