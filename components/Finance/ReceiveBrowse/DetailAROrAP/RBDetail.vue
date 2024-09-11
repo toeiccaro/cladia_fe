@@ -850,11 +850,18 @@ export default {
               return matchedItem ? matchedItem.value : fallback
             }
 
-            function findCompanyIdByName(list, companyName, fallback) {
+            function findCompanyName(list, companyName, fallback) {
               const matchedItem = list.find(
                 (item) => item.companyName === companyName
               )
               return matchedItem ? matchedItem.companyName : fallback
+            }
+
+            function findCompanyId(list, companyName) {
+              const matchedItem = list.find(
+                (item) => item.companyName === companyName
+              )
+              return matchedItem ? matchedItem.id : 0
             }
 
             const RBSubject = findValueByText(
@@ -872,14 +879,20 @@ export default {
               item.opponentSubject,
               item.opponentSubject
             )
-            const RBCompanyname = findCompanyIdByName(
+            const RBCompanyName = findCompanyName(
               this.customerNameList,
               item.companyName,
               item.companyName
             )
 
+            const RBCompanyID = findCompanyId(
+              this.customerNameList,
+              item.companyName,
+            )
+
             return {
-              RBCompanyName: RBCompanyname,
+              RBCompanyName,
+              RBCompanyID,
               RBCreditAmount: item.creditAmount,
               RBCurrency: RBCurrency,
               RBDate: item.date,

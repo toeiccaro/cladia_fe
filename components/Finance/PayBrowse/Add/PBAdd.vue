@@ -684,13 +684,20 @@ export default {
               return matchedItem ? matchedItem.value : fallback
             }
 
-            function findCompanyIdByName(list, companyName, fallback) {
+            function findCompanyName(list, companyName, fallback) {
               const matchedItem = list.find(
                 (item) => item.companyName === companyName
               )
               return matchedItem ? matchedItem.companyName : fallback
             }
 
+            function findCompanyId(list, companyName) {
+              const matchedItem = list.find(
+                (item) => item.companyName === companyName
+              )
+              return matchedItem ? matchedItem.id : 0
+            }
+            
             const PBSubject = findValueByText(
               this.listAccountingItems,
               item.subject,
@@ -706,13 +713,19 @@ export default {
               item.opponentSubject,
               item.opponentSubject
             )
-            const PBCompanyname = findCompanyIdByName(
+            const PBCompanyName = findCompanyName(
               this.customerNameList,
               item.companyName,
               item.companyName
             )
+
+            const PBCompanyID = findCompanyId(
+              this.customerNameList,
+              item.companyName,
+            )
             return {
-              PBCompanyName: PBCompanyname,
+              PBCompanyName,
+              PBCompanyID,
               PBCreditAmount: item.creditAmount,
               PBCurrency: PBCurrency,
               PBDate: item.date,
