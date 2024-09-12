@@ -23,7 +23,7 @@
       class="table__receive-browse--body"
       :initial-filters="payloadPayableQuery"
       :update-filters-function="UPDATE_PAYLOAD_PAYABLE_ANNUAL_QUERY"
-      :disabled-filter="true"
+      :disabled-sort="true"
       @search="filterAndSort"
       @row="handleDetailId"
       @changeLayout="changeLayout"
