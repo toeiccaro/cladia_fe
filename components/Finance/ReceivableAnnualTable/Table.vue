@@ -23,7 +23,7 @@
       class="table__receive-browse--body"
       :initial-filters="payloadReceivableQuery"
       :update-filters-function="UPDATE_PAYLOAD_RECEIVABLE_ANNUAL_QUERY"
-      :disabled-filter="true"
+      :disabled-sort="true"
       @search="filterAndSort"
       @row="handleDetailId"
       @changeLayout="changeLayout"

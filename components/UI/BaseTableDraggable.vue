@@ -26,7 +26,7 @@
                 }"
                 class="table-item row-header"
                 :class="{ 'header__cell-border--last': disabledFilter }"
-                @click="item.canNotSort ? null : sort(item.key)"
+                @click="!disabledSort ? (item.canNotSort ? null : sort(item.key)) : null"
               >
                 <div class="sys-flex-center w-100">
                   <slot
@@ -36,7 +36,7 @@
                   <div v-else class="hide-text w-100">{{ item.name }}</div>
                   <template
                     v-if="
-                      filters.sortByColumn && item.key === filters.sortByColumn
+                      !disabledSort && filters.sortByColumn && item.key === filters.sortByColumn
                     "
                   >
                     <b-icon-caret-down-fill
@@ -340,6 +340,10 @@ export default {
     updateFiltersFunction: {
       type: Function,
       default: () => null,
+    },
+    disabledSort: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
