@@ -1,8 +1,8 @@
 version: '3.7'
 services:
   its_hk_fe:
-    container_name: its-system-fe
-    image: its-system-fe
+    container_name: ueno-system-fe
+    image: ueno-system-fe
     build:
       dockerfile: Dockerfile
       context: .
@@ -10,6 +10,6 @@ services:
         ACTIVE_PROFILE: ${ACTIVE_PROFILE:-stagging}
     #command: npm run start -- --dotenv .env.${ACTIVE_PROFILE}
     ports:
-      - 60044:3000
+      - 60055:3000
     volumes:
-      - ${UPLOAD_FOLDER:-/upload}:/src/static/upload
+      - ${UPLOAD_FOLDER:-/ueno_upload}:/src/static/upload
