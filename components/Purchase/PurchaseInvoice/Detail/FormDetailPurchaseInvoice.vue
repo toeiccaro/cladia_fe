@@ -92,6 +92,7 @@
               v-model="purchaseInvoiceData.paymentID"
               :options="paymentOptions"
               class="select"
+              :disabled="isDisableInput"
             />
           </td>
           <td class="info">*</td>

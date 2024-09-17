@@ -157,7 +157,7 @@ export default {
           isInvoice: false,
           itemID: 0,
           opponentSubject: '',
-          reason: '',
+          reasonBr: '',
           subject: '',
 
           isUpdate: true,
@@ -398,7 +398,7 @@ export default {
           hidden: false,
         },
         {
-          key: 'reason',
+          key: 'reasonBr',
           name: this.$t('lbl_PBReason_0'),
           filter: 'input',
           width: 300,
@@ -412,22 +412,23 @@ export default {
     },
 
     newLine() {
+      const lastItem = this.dataTable[this.dataTable.length - 1]; 
       return {
         lineID: 1,
         companyName: '',
         creditAmount: 0,
-        currency: '',
-        date: this.convertDate(new Date()),
+        currency: lastItem?.currency,
+        date: lastItem?.date,
         debitAmount: 0,
-        employee: '',
-        invoiceDate: '',
+        employee: lastItem?.employee,
+        invoiceDate: lastItem?.invoiceDate,
         invoiceNotes: '',
-        invoiceNumber: '',
+        invoiceNumber: lastItem?.invoiceNumber,
         isInvoice: false,
         itemID: 0,
-        opponentSubject: '',
-        reason: '',
-        subject: '',
+        opponentSubject: lastItem?.opponentSubject,
+        reasonBr: '',
+        subject: lastItem?.subject,
 
         isUpdate: true,
         isNewLine: true,
@@ -536,6 +537,9 @@ export default {
             for (const key in item) {
               let newKey = key.replace(/^PB/, '')
               newKey = newKey[0].toLowerCase() + newKey.slice(1)
+              if (newKey == 'reason') {
+                newKey = newKey + 'Br'
+              }
               if (newKey == 'date') {
                 item[key] = this.convertDate(item[key])
               }
@@ -841,11 +845,18 @@ export default {
               return matchedItem ? matchedItem.value : fallback
             }
 
-            function findCompanyIdByName(list, companyName, fallback) {
+            function findCompanyName(list, companyName, fallback) {
               const matchedItem = list.find(
                 (item) => item.companyName === companyName
               )
-              return matchedItem ? matchedItem.id : fallback
+              return matchedItem ? matchedItem.companyName : fallback
+            }
+
+            function findCompanyId(list, companyName) {
+              const matchedItem = list.find(
+                (item) => item.companyName === companyName
+              )
+              return matchedItem ? matchedItem.id : 0
             }
 
             const PBSubject = findValueByText(
@@ -863,13 +874,18 @@ export default {
               item.opponentSubject,
               item.opponentSubject
             )
-            const PBCompanyname = findCompanyIdByName(
+            const PBCompanyName = findCompanyName(
               this.customerNameList,
               item.companyName,
               item.companyName
             )
+            const PBCompanyID = findCompanyId(
+              this.customerNameList,
+              item.companyName,
+            )
             return {
-              PBCompanyName: PBCompanyname,
+              PBCompanyName,
+              PBCompanyID,
               PBCreditAmount: item.creditAmount,
               PBCurrency: PBCurrency,
               PBDate: item.date,
@@ -882,7 +898,7 @@ export default {
               PBItemID: item.itemID,
               PBLineID: item.lineID,
               PBOpponentSubject: PBOppentSubject,
-              PBReason: item.reason,
+              PBReason: item.reasonBr,
               PBSubject: PBSubject,
             }
           }),

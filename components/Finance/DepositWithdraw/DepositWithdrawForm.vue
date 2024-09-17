@@ -50,7 +50,7 @@
           </td>
           <td class="input">
             <b-form-select
-              v-model="form.bankName"
+              v-model="form.bankId"
               :options="currentAsset"
               class="select"
               :disabled="isDisabled"
@@ -128,19 +128,6 @@ export default {
       currentAsset: 'getListCurrentAssets',
     }),
 
-    // disabledStartDates() {
-    //   if(this.form.endDate) {
-    //     const date = new Date(this.form.endDate)
-    //     console.log('this.form.endDate', this.form.endDate);
-    //     return {
-    //       from: new Date(
-    //         date.getFullYear(),
-    //         date.getMonth(),
-    //         date.getDate() + 1
-    //       ),
-    //     }
-    //   }
-    // },
     disabledStartDates() {
       const date = new Date(this.form.endDate)
       return {
@@ -157,7 +144,7 @@ export default {
         to: new Date(
           date.getFullYear(),
           date.getMonth(),
-          date.getDate() + 1
+          date.getDate() 
         ),
       }
     },
@@ -191,7 +178,7 @@ export default {
       const payload = {
         startDate: this.form.startDate,
         endDate: this.form.endDate,
-        bankId: this.form.bankName,
+        bankId: this.form.bankId,
         currencyId: this.form.currencyId,
       }
       this.$emit('updatePayload', payload)

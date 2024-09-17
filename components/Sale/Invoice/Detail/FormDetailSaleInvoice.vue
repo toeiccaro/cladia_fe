@@ -386,7 +386,7 @@ export default {
     }),
     totalAmount() {
       const amountsSelected = this.listDetails.map((item) =>
-        this.parseStringToFloat(item.amount)
+        this.parseStringToFloat(item.SIAmountIncludeTax)
       )
       return formatNumberWithCommas(sum(amountsSelected))
     },

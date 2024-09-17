@@ -127,8 +127,12 @@ export default {
       }))
     },
 
+    // isCheck() {
+    //   return !!this.receiveBrowseData?.checker 
+    // },
+
     isCheck() {
-      return !!this.receiveBrowseData?.checker
+      return this.receiveBrowseData?.RBIsStop  === true
     },
 
     newLine() {
@@ -143,7 +147,7 @@ export default {
         isNewLine: true,
       }
     },
-
+  
     tableHeaders() {
       return [
         {
@@ -172,6 +176,7 @@ export default {
           width: `12%`,
           align: 'right',
           fieldRequired: true,
+          disabled: this.isCheck,
         },
         {
           key: 'otherAmount',
@@ -179,6 +184,7 @@ export default {
           filter: 'number',
           width: `12%`,
           align: 'right',
+          disabled: this.isCheck,
         },
         {
           key: 'expenseCategory',
@@ -186,6 +192,7 @@ export default {
           filter: 'select',
           width: `24%`,
           options: this.itemListAccountingItems,
+          disabled: this.isCheck,
         },
         {
           key: 'paymentDate',
@@ -193,6 +200,7 @@ export default {
           filter: 'datetime',
           width: `12%`,
           fieldRequired: true,
+          disabled: this.isCheck,
         },
         {
           key: 'arUser',
@@ -201,12 +209,14 @@ export default {
           width: `12%`,
           options: this.listEmployeeName,
           fieldRequired: true,
+          disabled: this.isCheck,
         },
         {
           key: 'memo',
           name: this.$t('lbl_RBMemo_0'),
           filter: 'input',
           width: `18%`,
+          disabled: this.isCheck,
         },
       ]
     },

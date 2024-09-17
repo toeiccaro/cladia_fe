@@ -195,7 +195,7 @@ export default {
             item,
             headerItem.fieldName
           )
-
+          
           obj[mappingFieldName] = {
             value: item[mappingFieldName] || '',
           }
@@ -485,7 +485,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .table__receive-browse {
-  height: calc(100% - 70px);
+  height: calc(100% - 72px);
   .table__receive-browse--body {
     height: calc(100% - 26px);
   }

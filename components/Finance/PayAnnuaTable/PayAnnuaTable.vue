@@ -23,6 +23,7 @@
       class="table__receive-browse--body"
       :initial-filters="payloadPayableQuery"
       :update-filters-function="UPDATE_PAYLOAD_PAYABLE_ANNUAL_QUERY"
+      :disabled-sort="true"
       @search="filterAndSort"
       @row="handleDetailId"
       @changeLayout="changeLayout"
@@ -60,7 +61,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import { SERVER_RESPONSE_CODE } from '@/constants'
-import { payableAnnualTableSchema } from '@/schemas/finance/receivable-annual-table'
+import { payableAnnualTableSchema } from '@/schemas/finance/payable-annual-table'
 
 import api from '@/api/api'
 import BasePagination from '~/components/UI/BasePagination.vue'
@@ -178,7 +179,7 @@ export default {
         'APDec',
         'APTotalAmount',
       ]
-
+      const listAlignRightFieldsAREndingBalance = ['APEndingBalance']
       const data = this.dataTable?.map((item, index) => {
         const obj = {
           index: {
@@ -214,6 +215,22 @@ export default {
                 : formatNumberWithCommas(obj[mappingFieldName].value)
             obj[mappingFieldName].color =
               index % 3 === 1 ? 'blue' : index % 3 === 2 ? 'red' : ''
+          }
+
+          if (
+            listAlignRightFieldsAREndingBalance.includes(headerItem.fieldName)
+          ) {
+            const color =
+              index % 3 === 1 ? 'blue' : index % 3 === 2 ? 'red' : ''
+
+            obj[mappingFieldName] = {
+              value:
+                item[mappingFieldName] !== 0 || color === ''
+                  ? formatNumberWithCommas(item[mappingFieldName])
+                  : '',
+              align: 'right',
+              color: color,
+            }
           }
           switch (headerItem.fieldName) {
             case 'APCompanyName':
@@ -431,7 +448,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .table__receive-browse {
-  height: calc(100% - 70px);
+  height: calc(100% - 72px);
   .table__receive-browse--body {
     height: calc(100% - 70px);
   }

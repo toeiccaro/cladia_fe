@@ -23,6 +23,7 @@
       class="table__receive-browse--body"
       :initial-filters="payloadReceivableQuery"
       :update-filters-function="UPDATE_PAYLOAD_RECEIVABLE_ANNUAL_QUERY"
+      :disabled-sort="true"
       @search="filterAndSort"
       @row="handleDetailId"
       @changeLayout="changeLayout"
@@ -432,7 +433,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .table__receive-browse {
-  height: calc(100% - 70px);
+  height: calc(100% - 72px);
   .table__receive-browse--body {
     height: calc(100% - 70px);
   }

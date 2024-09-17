@@ -46,7 +46,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import { SERVER_RESPONSE_CODE } from '@/constants'
-import { saleOrderSchema } from '@/schemas/sales/sale-order'
+import { payDepositWithdraw } from '@/schemas/finance/deposit-withdraw'
 import api from '@/api/api'
 import BasePagination from '~/components/UI/BasePagination.vue'
 import BaseTableDraggable from '~/components/UI/BaseTableDraggable.vue'
@@ -203,7 +203,7 @@ export default {
           : '256'
         const headerItem = {
           key: this.mappingProperty(
-            this.dataTable[0] || saleOrderSchema,
+            this.dataTable[0] || payDepositWithdraw,
             item.fieldName
           ),
           name: this.$t(`lbl_${item.fieldName}_0`),
@@ -284,6 +284,7 @@ export default {
       this.getData()
     },
     async getData() {
+
       const queryString = new URLSearchParams(this.form).toString()
 
       try {
@@ -309,7 +310,6 @@ export default {
               (_el) => !this.listIgnoreFieldName.includes(_el.fieldName)
             )
           )
-          console.log('this.dataTable ', this.dataTable)
         }
       } catch (err) {
         console.error(err)
@@ -386,7 +386,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .table__receive-browse {
-  height: calc(100% - 70px);
+  height: calc(100% - 72px);
 
   .table__receive-browse--body {
     height: calc(100% - 60px);

@@ -77,6 +77,7 @@ export default {
           key: 'setBlance',
           label: this.$t('lbl_DWDInitialBalanceSetting_0'),
           icon: '/images/mode.png',
+          disabled: !this.activeButtonToolBar?.isCheck,
         },
 
         {
@@ -110,6 +111,9 @@ export default {
             break
           case 'exportOrder':
             item.disabled = !this.activeButtonToolBar?.isExport
+            break
+          case 'setBlance':
+            item.disabled = !this.activeButtonToolBar?.isCheck
             break
           default:
             break

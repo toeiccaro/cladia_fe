@@ -1,4 +1,4 @@
-const receivableAnnualTableSchema = {
+export const receivableAnnualTableSchema = {
   ARCompanyName: 'string',
   ARCurrency: 'string',
   ARSubject: 'string',
