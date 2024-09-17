@@ -16,14 +16,14 @@ pipeline {
             steps {
                 // Ensure the old container is removed if it exists
                 sh '''
-                CONTAINER_NAME="its-system-fe"
-                if sudo docker ps -a -q -f name=$CONTAINER_NAME; then
-                    sudo docker rm -f $CONTAINER_NAME
+                CONTAINER_NAME="ueno-system-fe"
+                if docker ps -a -q -f name=$CONTAINER_NAME; then
+                    docker rm -f $CONTAINER_NAME
                 fi
                 '''
-                sh 'sudo docker-compose -f docker-compose.yml down'
-                sh 'sudo docker-compose -f docker-compose.yml build'
-                sh 'sudo docker-compose -f docker-compose.yml up -d'
+                sh 'docker compose down'
+                sh 'docker compose build'
+                sh 'docker compose up -d'
                 echo 'deploy reactjs success'
             }
         }
