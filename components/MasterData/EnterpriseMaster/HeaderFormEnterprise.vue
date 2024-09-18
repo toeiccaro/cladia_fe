@@ -106,7 +106,7 @@
           </td>
           <td class="input">
             <b-form-select
-              v-model="paramsEnterprise.cocustom1"
+              v-model="paramsEnterprise.taxDebt"
               :options="listCOCustom1"
               class="select"
             ></b-form-select>
@@ -128,7 +128,7 @@
           </td>
           <td class="input">
             <b-form-select
-              v-model="paramsEnterprise.cocustom2"
+              v-model="paramsEnterprise.contractType"
               :options="listCOCustom2"
               class="select"
             ></b-form-select>
@@ -465,8 +465,8 @@ export default {
   },
   watch: {
     listCOCustom1(defaultValue) {
-      if (!this.paramsEnterprise.cocustom1 && defaultValue.length) {
-        this.paramsEnterprise.cocustom1 = defaultValue[2].value
+      if (!this.paramsEnterprise.taxDebt && defaultValue.length) {
+        this.paramsEnterprise.taxDebt = defaultValue[2].value
       }
     },
     dataFormEnterprise: {
