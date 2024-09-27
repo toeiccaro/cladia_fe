@@ -473,7 +473,8 @@ export default {
     async addOrUpdateItem(data) {
       try {
         data.receiveBrowsDTL.pop()
-        const SubjectId = this.listAccountingItems.find(item => item.text == 'Revenue').value;
+        
+        const SubjectId = this.listAccountingItems.find(item => item.text == this.$t('lbl_RBRevenue_0'))?.value;
         const payload = {
           RBMstId: data.RBMstId,
           RBOrderNumber: data.RBOrderNumber,
