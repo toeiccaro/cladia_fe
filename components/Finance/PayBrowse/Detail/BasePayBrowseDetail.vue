@@ -447,7 +447,7 @@ export default {
     async addOrUpdateItem(data) {
       try {
         data.payBrowsDTL.pop();
-        const SubjectId = this.listAccountingItems.find(item => item.text == 'Purchase').value;
+        const SubjectId = this.listAccountingItems.find(item => item.text == this.$t('lbl_RBPurchase_0'))?.value;
 
         const payload = {
           PBMstId: data.PBMstId,
