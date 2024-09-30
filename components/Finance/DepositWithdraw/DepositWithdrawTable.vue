@@ -369,7 +369,8 @@ export default {
       )
     },
     generateYearOptions() {
-      const currentYear = "2024"
+      const currentYear = ''
+      
       const secondYear = new Date().getFullYear()
       const startYear = secondYear - 5
       const endYear = secondYear + 5
