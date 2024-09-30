@@ -427,6 +427,7 @@ export default {
       for (let year = startYear; year <= endYear; year++) {
         this.yearOptions.push({ value: year, text: year.toString() })
       }
+      this.selectedYear = currentYear
     },
   },
 }
