@@ -85,9 +85,6 @@ export default {
       selectedYear: null,
       yearOptions: [],
       isDisabled: false,
-      selectedYear: null,
-      yearOptions: [],
-      isDisabled: false,
       dataFooter: {},
     }
   },
@@ -431,7 +428,7 @@ export default {
       )
     },
     generateYearOptions() {
-      const currentYear = ''
+      const currentYear = new Date().getFullYear()
       const secondYear = new Date().getFullYear()
       const startYear = secondYear - 5
       const endYear = secondYear + 5
