@@ -39,7 +39,10 @@ const api = (config) => ({
     config('put', `purchaseOrder/edit/${payload.purchaseNumber}`, payload.form),
   getPurchaseOrderPrice: (payload) =>
     config('get', `purchaseOrder/getPrice`, payload),
-
+  purchaseOrderimportToExcel: (payload) => { 
+    console.log("payloadpayload=", payload)
+    return config('post', 'purchaseOrder/import-to-excel', payload)
+  },
   // Purchase Arrival
   addPurchaseArrival: (payload) =>
     config('post', 'purchaseArrival/add', payload),
