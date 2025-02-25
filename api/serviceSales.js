@@ -109,7 +109,11 @@ const api = (config) => ({
     config('post', `invoice/${params.invoiceNo}/delete-detail`, [
       params.lineId,
     ]),
-  exportInvoice: (payload) => config('post', 'invoice/excel', payload),
+    exportInvoice: (payload) => {
+      console.log("Payload gửi lên API exportInvoice:", payload);
+      return config('post', 'invoice/excel', payload);
+    },
+    
   getInvoiceDetails: (payload) => {
     const urlQuery = new URLSearchParams()
 
