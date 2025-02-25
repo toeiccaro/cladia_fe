@@ -152,9 +152,11 @@ export default {
       if (confirm) {
         const payload = {
           ...this.$refs.tableSaleInvoice.statusPayload,
-          lang: this.$i18n.locale,
+          language: this.$i18n.locale,
           exportExcel: true,
         }
+        console.log("exportByPage", payload)
+
         this.handleExportExcel(payload)
       }
     },
@@ -163,9 +165,10 @@ export default {
       if (confirm) {
         const payload = {
           ...this.$refs.tableSaleInvoice.statusPayload,
-          lang: this.$i18n.locale,
+          language: this.$i18n.locale,
           exportExcel: false,
         }
+        console.log("exportAll", payload)
         this.handleExportExcel(payload)
       }
     },

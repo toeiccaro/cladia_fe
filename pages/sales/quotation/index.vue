@@ -193,6 +193,7 @@ export default {
     exportByPage() {
       const sortFormOptional = this.getStatusPayloadList
       sortFormOptional.isExportAll = false
+      sortFormOptional.language = this.$i18n.locale
       const confirm = window.confirm(this.$t('msg_ConfirmExport_0'))
       if (!confirm) {
         return
@@ -210,6 +211,7 @@ export default {
       const sortFormOptional = {
         ...sortFilter,
         isExportAll: true,
+        language: this.$i18n.locale
       }
       this.handleExportExcel(sortFormOptional)
     },
