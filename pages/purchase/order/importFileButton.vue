@@ -15,10 +15,10 @@
   
           <div class="modal-footer mt-3">
             <b-button variant="secondary" @click="showModal = false">
-              {{ $t("btn_Cancel") }}
+              {{ $t("btn_btnCancel_0") }}
             </b-button>
             <b-button variant="primary" @click="importFile">
-              {{ $t("btn_Import") }}
+              {{ $t("btn_btnOK_0") }}
             </b-button>
           </div>
         </div>
