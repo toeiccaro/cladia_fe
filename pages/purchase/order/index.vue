@@ -4,6 +4,7 @@
       :list-tools="listToolBarsCheckAuthority"
       @changeActiveToolBar="changeActiveToolBar"
     ></ToolBar>
+    <ImportFileButton ref="importFileButton" />
     <TablePurchaseOrder
       ref="tablePurchaseOrder"
       :label-mapping="labelMapping"
@@ -35,9 +36,10 @@ import TablePurchaseOrder from '@/components/Purchase/PurchaseOrder/TablePurchas
 import api from '@/api/api'
 import { downloadFileExcel } from '@/utils/utils'
 import BaseSetColumn from '~/components/UI/BaseSetColumn.vue'
+import ImportFileButton from './importFileButton.vue';
 
 export default {
-  components: { ToolBar, TablePurchaseOrder, BaseSetColumn },
+  components: { ImportFileButton, ToolBar, TablePurchaseOrder, BaseSetColumn },
   middleware: ['authenticated'],
   data() {
     return {
@@ -56,6 +58,11 @@ export default {
           key: 'refresh',
           label: this.$t('btn_btnRefresh_0'),
           icon: '/images/refresh.png',
+        },
+        {
+          key: "importFile",
+          label: this.$t("btn_btnImport_0"),
+          icon: "/images/import.png",
         },
         {
           key: 'export',
@@ -198,6 +205,9 @@ export default {
       this.currentId = data
     },
     changeActiveToolBar(key) {
+      if (key === "importFile") {
+        this.$refs.importFileButton.showModal = true;
+      }
       if (key === 'add') {
         this.$router.push(this.localePath({ path: '/purchase/order/add' }))
       }
@@ -237,6 +247,7 @@ export default {
         downloadFileExcel(response.data)
       }
     },
+
     exportByPage() {
       const sortFormOptional = this.getPayloadPurchaseOrder
       sortFormOptional.isExportAll = false

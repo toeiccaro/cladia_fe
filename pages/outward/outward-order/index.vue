@@ -4,6 +4,7 @@
       :list-tools="listToolBarsCheckAuthority"
       @changeActiveToolBar="changeActiveToolBar"
     ></ToolBar>
+    <ImportFileButton ref="importFileButton" />
     <TableOutwardOrder
       ref="tableOPOrder"
       @handleDetailId="handleDetailId"
@@ -25,8 +26,10 @@ import api from '@/api/api'
 import { downloadFileExcel } from '@/utils/utils'
 import BaseSetColumn from '~/components/UI/BaseSetColumn.vue'
 import BaseLoading from '@/components/UI/Loading/BaseLoading.vue'
+import ImportFileButton from './importFileButton.vue';
+
 export default {
-  components: { ToolBar, TableOutwardOrder, BaseSetColumn, BaseLoading },
+  components: { ImportFileButton, ToolBar, TableOutwardOrder, BaseSetColumn, BaseLoading },
   middleware: ['authenticated'],
   data() {
     return {
@@ -45,6 +48,11 @@ export default {
           key: 'refresh',
           label: this.$t('btn_btnRefresh_0'),
           icon: '/images/refresh.png',
+        },
+        {
+          key: "importFile",
+          label: this.$t("btn_btnImport_0"),
+          icon: "/images/import.png",
         },
         {
           key: 'export',
@@ -166,8 +174,11 @@ export default {
       }
       this.handleExportExcel(sortFormOptional)
     },
+
     changeActiveToolBar(key) {
-      if (key === 'add') {
+      if (key === "importFile") {
+        this.$refs.importFileButton.showModal = true;
+      } else if (key === 'add') {
         this.$router.push(
           this.localePath({ path: '/outward/outward-order/add' })
         )
