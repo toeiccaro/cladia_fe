@@ -94,6 +94,10 @@ const api = (config) => ({
     config('get', `outward-order/unCheck?orderNo=${orderNo}`),
   checkOutwardOrder: (orderNo) =>
     config('get', `outward-order/check?orderNo=${orderNo}`),
+  outwardOrderimportToExcel: (payload) => { 
+    console.log("payloadpayload=", payload)
+    return config('post', 'outward-order/import-to-excel', payload)
+  },
 
   // Outward Return
   getListOutwardReturn: (payload) =>
