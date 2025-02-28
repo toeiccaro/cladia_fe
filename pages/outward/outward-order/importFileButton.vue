@@ -14,10 +14,10 @@
           />
   
           <div class="modal-footer mt-3">
-            <b-button variant="secondary" @click="showModal = false">
+            <b-button class="btn-cancel" @click="showModal = false">
               {{ $t("btn_btnCancel_0") }}
             </b-button>
-            <b-button variant="primary" @click="importFile">
+            <b-button class="btn-ok" @click="importFile">
               {{ $t("btn_btnOK_0") }}
             </b-button>
           </div>
@@ -126,5 +126,17 @@ import { downloadFileExcel } from "@/utils/utils"; // Import hàm tải file
     display: flex;
     justify-content: space-between;
   }
+
+  .btn-ok {
+  background-color: green !important;
+  border-color: green !important;
+  color: white !important;
+}
+
+.btn-cancel {
+  background-color: gray !important;
+  border-color: gray !important;
+  color: white !important;
+}
   </style>
   
