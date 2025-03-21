@@ -356,7 +356,7 @@ export default {
           ...this.getPayloadOutwardOrder,
           memoDtl: this.getPayloadOutwardOrder?.memoDTL,
         }
-        const res = await api('getListOutwardOrder', finalPayload)
+        const res = await api('getListOutwardOrder=', finalPayload)
         this.loading = false
 
         const validResponse = res && res.status === SERVER_RESPONSE_CODE.OK
