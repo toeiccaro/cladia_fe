@@ -148,6 +148,16 @@ export default {
           hidden: false,
         },
         {
+          key: 'OOOrderNumber',
+          name: this.$t('lbl_OOOrderNumber_0'),
+          filter: 'input',
+          width: 300,
+          align: 'left',
+          disabled: this.isCheck,
+          fieldRequired: false,
+          hidden: false,
+        },
+        {
           key: 'itemCode',
           name: this.$t('lbl_ItemCode_0'),
           filter: 'autocomplete',
@@ -360,6 +370,7 @@ export default {
     newLine() {
       return {
         lineID: 1,
+        OOOrderNumber: '',
         itemCode: '',
         itemID: '',
         itemTypeID: '',
@@ -460,10 +471,13 @@ export default {
           this.joinAttachmentString(compact(this.dataDetail.attachments))
 
           this.dataTable = res?.data?.detail?.map((item, index) => {
-            item.promiseDate = this.convertDate(item.promiseDate)
-            item.lineID = index + 1
-            return item
-          })
+            return {
+          ...item,
+          lineID: index + 1,
+          OOOrderNumber: item.OOOrderNumber || '', // ✅ Thêm dữ liệu OOOrderNumber từ API
+          promiseDate: this.convertDate(item.promiseDate),
+        }
+      })
 
           if (!this.isCheck) {
             const newLine = {
@@ -710,12 +724,15 @@ export default {
                 promiseDate: item.promiseDate,
                 unitID: item.unitID,
                 isDeleted: item.isDeleted,
+                OOOrderNumber: item.OOOrderNumber || '',
               }
             }),
           },
           language: this.$i18n.locale,
           orderNo: this.form?.orderNo,
         }
+
+        console.log("paramsparams", params)
 
         try {
           this.SET_LOADING(true)
