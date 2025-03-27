@@ -470,7 +470,7 @@ export default {
           this.dataDetail = JSON.parse(JSON.stringify(this.form))
           this.joinAttachmentString(compact(this.dataDetail.attachments))
 
-          this.dataTable = res?.data?.detail?.map((item, index) => {
+          this.dataTable = res?.data?.detail?.reverse().map((item, index) => {
             return {
           ...item,
           lineID: index + 1,
@@ -705,6 +705,7 @@ export default {
       }
       if (this.validateData) {
         const { dataTableFilter, payload } = this.validateData()
+        console.log("dataTableFilter=", dataTableFilter)
 
         const params = {
           form: {
