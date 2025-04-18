@@ -340,7 +340,7 @@ export default {
         },
         {
           key: 'memoDTL1',
-          name: this.$t('lbl_MemoDTL_0'),
+          name: this.$t('lbl_MemoDTL1_0'),
           filter: 'input',
           width: 150,
           align: 'left',
