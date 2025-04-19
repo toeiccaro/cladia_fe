@@ -521,7 +521,7 @@ export default {
           this.form.editDate = this.convertDate(this.form.editDate)
           this.form.checkDate = this.convertDate(this.form.checkDate)
           this.form.taxRate = formatNumberWithCommas(this.form.taxRate)
-          this.dataTable = res?.data?.listDetail.map((item, index) => {
+          this.dataTable = res?.data?.listDetail.reverse().map((item, index) => {
             item.promiseDate = this.convertDate(item.promiseDate)
             item.price = this.parseStringToFloat(item.price || 0)
             item.quantity = this.parseStringToFloat(item.quantity || 0)
